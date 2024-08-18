@@ -1,0 +1,55 @@
+using UnityEngine;
+using UnityEngine.UI;
+
+public class VillagerMenuUI : MonoBehaviour
+{
+    public Text villagerNameText;
+    public Text classText;
+    public Text levelText;
+    public Text expText;
+    public Text skillsText;
+    public Text talentsText;
+    public Text equipmentText;
+
+    private Villager currentVillager;
+
+    public void Show(Villager villager)
+    {
+        currentVillager = villager;
+        UpdateUI();
+        gameObject.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void UpdateUI()
+    {
+        if (currentVillager == null) return;
+
+        villagerNameText.text = $"Name: {currentVillager.Name}";
+        classText.text = $"Class: {currentVillager.Class}";
+        levelText.text = $"Level: {currentVillager.Level}";
+        expText.text = $"EXP: {currentVillager.Experience}";
+        
+        skillsText.text = "Skills:\n";
+        foreach (var skill in currentVillager.Skills)
+        {
+            skillsText.text += $"{skill.Key}: {skill.Value}\n";
+        }
+
+        talentsText.text = "Talents:\n";
+        foreach (var talent in currentVillager.Talents)
+        {
+            talentsText.text += $"{talent}\n";
+        }
+
+        equipmentText.text = "Equipment:\n";
+        foreach (var equipment in currentVillager.Equipments)
+        {
+            equipmentText.text += $"{equipment.Name} ({equipment.Type})\n";
+        }
+    }
+}
