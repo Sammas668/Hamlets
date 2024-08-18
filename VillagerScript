@@ -3,51 +3,56 @@ using UnityEngine;
 
 public enum VillagerClass { Farmer, Warrior, Miner }
 public enum SkillType { Fighting, Gathering, Building }
-public enum EquipmentType { Weapon, Armor, Tool }
-
-public class Equipment
-{
-    public EquipmentType Type { get; private set; }
-    public string Name { get; private set; }
-    public int Power { get; private set; }
-
-    public Equipment(EquipmentType type, string name, int power)
-    {
-        Type = type;
-        Name = name;
-        Power = power;
-    }
-}
+public enum TalentType { Strong, QuickLearner, Resilient }
 
 public class Villager
 {
     public string Name { get; private set; }
     public VillagerClass Class { get; private set; }
+    public int Level { get; private set; } = 1;
+    public int Experience { get; private set; }
     public Dictionary<SkillType, int> Skills { get; private set; }
+    public Dictionary<SkillType, int> SkillInterests { get; private set; }
     public List<Equipment> Equipments { get; private set; }
+    public List<TalentType> Talents { get; private set; }
+
+    private const int minSkillLevel = 1;
+    private const int maxSkillLevel = 10;
+    private const int expToLevelUp = 100; // Example value for experience required to level up
 
     public Villager(string name, VillagerClass villagerClass)
     {
         Name = name;
         Class = villagerClass;
         Skills = InitializeSkills(villagerClass);
+        SkillInterests = InitializeSkillInterests(villagerClass);
         Equipments = new List<Equipment>();
+        Talents = new List<TalentType> { TalentType.Strong }; // Example starting talent
     }
 
     private Dictionary<SkillType, int> InitializeSkills(VillagerClass villagerClass)
     {
-        var skills = new Dictionary<SkillType, int>
+        return new Dictionary<SkillType, int>
         {
-            { SkillType.Fighting, villagerClass == VillagerClass.Warrior ? 10 : villagerClass == VillagerClass.Miner ? 5 : 2 },
-            { SkillType.Gathering, villagerClass == VillagerClass.Farmer ? 10 : villagerClass == VillagerClass.Miner ? 7 : 2 },
-            { SkillType.Building, villagerClass == VillagerClass.Farmer ? 5 : villagerClass == VillagerClass.Miner ? 4 : 3 }
+            { SkillType.Fighting, Random.Range(minSkillLevel, maxSkillLevel + 1) },
+            { SkillType.Gathering, Random.Range(minSkillLevel, maxSkillLevel + 1) },
+            { SkillType.Building, Random.Range(minSkillLevel, maxSkillLevel + 1) }
         };
+    }
 
-        return skills;
+    private Dictionary<SkillType, int> InitializeSkillInterests(VillagerClass villagerClass)
+    {
+        return new Dictionary<SkillType, int>
+        {
+            { SkillType.Fighting, Random.Range(1, 11) },
+            { SkillType.Gathering, Random.Range(1, 11) },
+            { SkillType.Building, Random.Range(1, 11) }
+        };
     }
 
     public void EquipItem(Equipment equipment)
     {
+        if (equipment == null) return;
         Equipments.Add(equipment);
         ApplyEquipmentEffect(equipment);
     }
@@ -60,12 +65,35 @@ public class Villager
             Skills[SkillType.Gathering] += equipment.Power;
     }
 
+    public void GainExperience(int amount)
+    {
+        Experience += amount;
+        while (Experience >= expToLevelUp)
+        {
+            Experience -= expToLevelUp;
+            LevelUp();
+        }
+    }
+
+    private void LevelUp()
+    {
+        Level++;
+        foreach (var skill in Skills.Keys)
+        {
+            int skillIncrease = Mathf.FloorToInt(SkillInterests[skill] * Random.Range(0.5f, 1.5f));
+            Skills[skill] += skillIncrease;
+        }
+        Debug.Log($"{Name} has leveled up to level {Level}!");
+    }
+
     public void DisplayInfo()
     {
-        Debug.Log($"Villager: {Name}, Class: {Class}");
+        Debug.Log($"Villager: {Name}, Class: {Class}, Level: {Level}, EXP: {Experience}");
         foreach (var skill in Skills)
             Debug.Log($"{skill.Key}: {skill.Value}");
         foreach (var equipment in Equipments)
             Debug.Log($"Equipped: {equipment.Name} ({equipment.Type})");
+        foreach (var talent in Talents)
+            Debug.Log($"Talent: {talent}");
     }
 }
