@@ -1,0 +1,71 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum VillagerClass { Farmer, Warrior, Miner }
+public enum SkillType { Fighting, Gathering, Building }
+public enum EquipmentType { Weapon, Armor, Tool }
+
+public class Equipment
+{
+    public EquipmentType Type { get; private set; }
+    public string Name { get; private set; }
+    public int Power { get; private set; }
+
+    public Equipment(EquipmentType type, string name, int power)
+    {
+        Type = type;
+        Name = name;
+        Power = power;
+    }
+}
+
+public class Villager
+{
+    public string Name { get; private set; }
+    public VillagerClass Class { get; private set; }
+    public Dictionary<SkillType, int> Skills { get; private set; }
+    public List<Equipment> Equipments { get; private set; }
+
+    public Villager(string name, VillagerClass villagerClass)
+    {
+        Name = name;
+        Class = villagerClass;
+        Skills = InitializeSkills(villagerClass);
+        Equipments = new List<Equipment>();
+    }
+
+    private Dictionary<SkillType, int> InitializeSkills(VillagerClass villagerClass)
+    {
+        var skills = new Dictionary<SkillType, int>
+        {
+            { SkillType.Fighting, villagerClass == VillagerClass.Warrior ? 10 : villagerClass == VillagerClass.Miner ? 5 : 2 },
+            { SkillType.Gathering, villagerClass == VillagerClass.Farmer ? 10 : villagerClass == VillagerClass.Miner ? 7 : 2 },
+            { SkillType.Building, villagerClass == VillagerClass.Farmer ? 5 : villagerClass == VillagerClass.Miner ? 4 : 3 }
+        };
+
+        return skills;
+    }
+
+    public void EquipItem(Equipment equipment)
+    {
+        Equipments.Add(equipment);
+        ApplyEquipmentEffect(equipment);
+    }
+
+    private void ApplyEquipmentEffect(Equipment equipment)
+    {
+        if (equipment.Type == EquipmentType.Weapon)
+            Skills[SkillType.Fighting] += equipment.Power;
+        else if (equipment.Type == EquipmentType.Tool)
+            Skills[SkillType.Gathering] += equipment.Power;
+    }
+
+    public void DisplayInfo()
+    {
+        Debug.Log($"Villager: {Name}, Class: {Class}");
+        foreach (var skill in Skills)
+            Debug.Log($"{skill.Key}: {skill.Value}");
+        foreach (var equipment in Equipments)
+            Debug.Log($"Equipped: {equipment.Name} ({equipment.Type})");
+    }
+}
