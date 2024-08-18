@@ -1,76 +1,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum VillagerClass { Farmer, Warrior, Miner }
-public enum SkillType { Fighting, Gathering, Building }
-public enum TalentType { Strong, QuickLearner, Resilient }
-
 public class Villager
 {
-    public string Name { get; private set; }
-    public VillagerClass Class { get; private set; }
+    public string Name { get; }
+    public VillagerClass Class { get; }
     public int Level { get; private set; } = 1;
     public int Experience { get; private set; }
-    public Dictionary<SkillType, int> Skills { get; private set; }
-    public Dictionary<SkillType, int> SkillInterests { get; private set; }
-    public List<Equipment> Equipments { get; private set; }
-    public List<TalentType> Talents { get; private set; }
+    public Dictionary<SkillType, int> Skills { get; }
+    public Dictionary<AttributeType, int> Attributes { get; }
+    public List<AbilityType> Abilities { get; }
+    public List<TraitType> Traits { get; }
 
-    private const int minSkillLevel = 1;
-    private const int maxSkillLevel = 10;
-    private const int expToLevelUp = 100; // Example value for experience required to level up
+    private const int ExpToLevelUp = 100;
 
     public Villager(string name, VillagerClass villagerClass)
     {
         Name = name;
         Class = villagerClass;
-        Skills = InitializeSkills(villagerClass);
-        SkillInterests = InitializeSkillInterests(villagerClass);
-        Equipments = new List<Equipment>();
-        Talents = new List<TalentType> { TalentType.Strong }; // Example starting talent
-    }
-
-    private Dictionary<SkillType, int> InitializeSkills(VillagerClass villagerClass)
-    {
-        return new Dictionary<SkillType, int>
-        {
-            { SkillType.Fighting, Random.Range(minSkillLevel, maxSkillLevel + 1) },
-            { SkillType.Gathering, Random.Range(minSkillLevel, maxSkillLevel + 1) },
-            { SkillType.Building, Random.Range(minSkillLevel, maxSkillLevel + 1) }
-        };
-    }
-
-    private Dictionary<SkillType, int> InitializeSkillInterests(VillagerClass villagerClass)
-    {
-        return new Dictionary<SkillType, int>
-        {
-            { SkillType.Fighting, Random.Range(1, 11) },
-            { SkillType.Gathering, Random.Range(1, 11) },
-            { SkillType.Building, Random.Range(1, 11) }
-        };
-    }
-
-    public void EquipItem(Equipment equipment)
-    {
-        if (equipment == null) return;
-        Equipments.Add(equipment);
-        ApplyEquipmentEffect(equipment);
-    }
-
-    private void ApplyEquipmentEffect(Equipment equipment)
-    {
-        if (equipment.Type == EquipmentType.Weapon)
-            Skills[SkillType.Fighting] += equipment.Power;
-        else if (equipment.Type == EquipmentType.Tool)
-            Skills[SkillType.Gathering] += equipment.Power;
+        Attributes = VillagerAttributeManager.GenerateAndAssignAttributes(villagerClass);
+        Skills = VillagerSkillManager.InitializeSkills(Attributes);
+        Abilities = new List<AbilityType>();
+        Traits = new List<TraitType>();
     }
 
     public void GainExperience(int amount)
     {
         Experience += amount;
-        while (Experience >= expToLevelUp)
+        while (Experience >= ExpToLevelUp)
         {
-            Experience -= expToLevelUp;
+            Experience -= ExpToLevelUp;
             LevelUp();
         }
     }
@@ -78,22 +37,31 @@ public class Villager
     private void LevelUp()
     {
         Level++;
-        foreach (var skill in Skills.Keys)
+        VillagerAttributeManager.UpgradeAttributes(Attributes);
+        VillagerSkillManager.UpdateSkills(Skills, Attributes);
+
+        if (Level % 4 == 0)
         {
-            int skillIncrease = Mathf.FloorToInt(SkillInterests[skill] * Random.Range(0.5f, 1.5f));
-            Skills[skill] += skillIncrease;
+            VillagerTraitManager.UnlockTrait(Traits, Class);
         }
+        else
+        {
+            VillagerAbilityManager.UnlockAbility(Abilities, Class);
+        }
+
         Debug.Log($"{Name} has leveled up to level {Level}!");
     }
 
     public void DisplayInfo()
     {
         Debug.Log($"Villager: {Name}, Class: {Class}, Level: {Level}, EXP: {Experience}");
+        foreach (var attribute in Attributes)
+            Debug.Log($"{attribute.Key}: {attribute.Value}");
         foreach (var skill in Skills)
             Debug.Log($"{skill.Key}: {skill.Value}");
-        foreach (var equipment in Equipments)
-            Debug.Log($"Equipped: {equipment.Name} ({equipment.Type})");
-        foreach (var talent in Talents)
-            Debug.Log($"Talent: {talent}");
+        foreach (var ability in Abilities)
+            Debug.Log(ability);
+        foreach (var trait in Traits)
+            Debug.Log(trait);
     }
 }
