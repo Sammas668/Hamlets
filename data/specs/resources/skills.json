@@ -1,0 +1,34 @@
+{
+  "attributes": ["STR","DEX","CON","WIS","INT","CHA"],
+  "skills": [
+	{ "id":"mining",        "name":"Mining",        "attr":"STR", "group":"Gathering", "icon":"res://ui/icons/skills/mining.png" },
+	{ "id":"smithing",      "name":"Smithing",      "attr":"STR", "group":"Artisan",   "icon":"res://ui/icons/skills/smithing.png" },
+	{ "id":"slayer",        "name":"Slayer",        "attr":"STR", "group":"Arcane",    "icon":"res://ui/icons/skills/slayer.png" },
+	{ "id":"attack",        "name":"Attack",        "attr":"STR", "group":"Combat",    "icon":"res://ui/icons/skills/attack.png" },
+
+	{ "id":"fishing",       "name":"Fishing",       "attr":"DEX", "group":"Gathering", "icon":"res://ui/icons/skills/fishing.png" },
+	{ "id":"construction",  "name":"Construction",  "attr":"DEX", "group":"Artisan",   "icon":"res://ui/icons/skills/constructuion.png" },
+	{ "id":"runecrafting",  "name":"Runecrafting",  "attr":"DEX", "group":"Arcane",    "icon":"res://ui/icons/skills/runecrafting.png" },
+	{ "id":"ranged",        "name":"Ranged",        "attr":"DEX", "group":"Combat",    "icon":"res://ui/icons/skills/ranged.png" },
+
+	{ "id":"woodcutting",   "name":"Woodcutting",   "attr":"CON", "group":"Gathering", "icon":"res://ui/icons/skills/woodcutting.png" },
+	{ "id":"tailoring",     "name":"Tailoring",     "attr":"CON", "group":"Artisan",   "icon":"res://ui/icons/skills/tailoring.png" },
+	{ "id":"transmutation", "name":"Transmutation", "attr":"CON", "group":"Arcane",    "icon":"res://ui/icons/skills/transmutation.png" },
+	{ "id":"defence",       "name":"Defence",       "attr":"CON", "group":"Combat",    "icon":"res://ui/icons/skills/defence.png" },
+
+	{ "id":"herbalism",     "name":"Herbalism",     "attr":"WIS", "group":"Gathering", "icon":"res://ui/icons/skills/herbalism.png" },
+	{ "id":"cooking",       "name":"Cooking",       "attr":"WIS", "group":"Artisan",   "icon":"res://ui/icons/skills/cooking.png" },
+	{ "id":"divination",    "name":"Divination",    "attr":"WIS", "group":"Arcane",    "icon":"res://ui/icons/skills/divination.png" },
+	{ "id":"prayer",        "name":"Prayer",        "attr":"WIS", "group":"Combat",    "icon":"res://ui/icons/skills/prayer.png" },
+
+	{ "id":"scrying",       "name":"Scrying",       "attr":"INT", "group":"Gathering", "icon":"res://ui/icons/skills/scrying.png" },
+	{ "id":"gemcrafting",   "name":"Gemcrafting",   "attr":"INT", "group":"Artisan",   "icon":"res://ui/icons/skills/gemcrafting.png" },
+	{ "id":"astromancy",    "name":"Astromancy",    "attr":"INT", "group":"Arcane",    "icon":"res://ui/icons/skills/astromancy.png" },
+	{ "id":"magic",         "name":"Magic",         "attr":"INT", "group":"Combat",    "icon":"res://ui/icons/skills/magic.png" },
+
+	{ "id":"farming",       "name":"Farming",       "attr":"CHA", "group":"Gathering", "icon":"res://ui/icons/skills/farming.png" },
+	{ "id":"entertaining",  "name":"Entertaining",  "attr":"CHA", "group":"Artisan",   "icon":"res://ui/icons/skills/entertaining.png" },
+	{ "id":"spiritbinding", "name":"Spiritbinding", "attr":"CHA", "group":"Arcane",    "icon":"res://ui/icons/skills/spiritbinding.png" },
+	{ "id":"summoning",     "name":"Summoning",     "attr":"CHA", "group":"Combat",    "icon":"res://ui/icons/skills/summoning.png" }
+  ]
+}

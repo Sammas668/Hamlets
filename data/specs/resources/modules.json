@@ -1,0 +1,2558 @@
+{
+  "alembic_workshop_catalyst_bench": {
+	"id": "alembic_workshop_catalyst_bench",
+	"building": "Alembic Workshop",
+	"skill": "transmutation",
+	"kind": "module",
+	"part": "Catalyst Bench",
+	"role": "Special",
+	"effect": "Chance the catalyst for a transmutation is not consumed.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "lockwork": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 8,
+	"req_con_lv": 68
+  },
+  "alembic_workshop_crystal_array": {
+	"id": "alembic_workshop_crystal_array",
+	"building": "Alembic Workshop",
+	"skill": "transmutation",
+	"kind": "module",
+	"part": "Crystal Array",
+	"role": "XP",
+	"effect": "Increased Transmutation XP at this workshop.",
+	"struct": {
+	  "frame": 2,
+	  "window_frame_mod": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 40
+  },
+  "alembic_workshop_essence_condenser": {
+	"id": "alembic_workshop_essence_condenser",
+	"building": "Alembic Workshop",
+	"skill": "transmutation",
+	"kind": "module",
+	"part": "Essence Condenser",
+	"role": "Yield",
+	"effect": "Slightly improved input→output ratios (more essence/resource per action).",
+	"struct": {
+	  "support_beam": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "rivets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 55
+  },
+  "alembic_workshop_flux_coils": {
+	"id": "alembic_workshop_flux_coils",
+	"building": "Alembic Workshop",
+	"skill": "transmutation",
+	"kind": "module",
+	"part": "Flux Coils",
+	"role": "Speed",
+	"effect": "Reduced Transmutation action time on this tile.",
+	"struct": {
+	  "beam": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "rivets": 2,
+	  "reinforcement_rod": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 43
+  },
+  "alembic_workshop_scrap_reel": {
+	"id": "alembic_workshop_scrap_reel",
+	"building": "Alembic Workshop",
+	"skill": "transmutation",
+	"kind": "module",
+	"part": "Scrap Reel",
+	"role": "Special",
+	"effect": "Occasionally converts junk/slag into a small amount of usable material.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "chains": 2,
+	  "gear": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 43
+  },
+  "arcanist_s_tower_channeling_circle": {
+	"id": "arcanist_s_tower_channeling_circle",
+	"building": "Arcanist’s Tower",
+	"skill": "magic",
+	"kind": "module",
+	"part": "Channeling Circle",
+	"role": "Speed",
+	"effect": "−cast / tick time for Magic training loops on this tile (clamp-aware).",
+	"struct": {
+	  "floor_section": 1,
+	  "palisade_segment_mod": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "reinforcement_rod": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 53
+  },
+  "arcanist_s_tower_familiar_niche": {
+	"id": "arcanist_s_tower_familiar_niche",
+	"building": "Arcanist’s Tower",
+	"skill": "magic",
+	"kind": "module",
+	"part": "Familiar Niche",
+	"role": "Special/XP",
+	"effect": "Familiars linked to this tile gain a small stat buff; Magic and Summoning XP from joint use here get a tiny bonus.",
+	"struct": {
+	  "wall_section": 1,
+	  "roof_truss": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "chains": 2,
+	  "lockwork": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 5,
+	"req_con_lv": 75
+  },
+  "arcanist_s_tower_rune_focus": {
+	"id": "arcanist_s_tower_rune_focus",
+	"building": "Arcanist’s Tower",
+	"skill": "magic",
+	"kind": "module",
+	"part": "Rune Focus",
+	"role": "Yield/Special",
+	"effect": "Small chance for Magic training actions to refund or generate extra runes.",
+	"struct": {
+	  "support_beam": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "gear": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 53
+  },
+  "arcanist_s_tower_spell_laboratory": {
+	"id": "arcanist_s_tower_spell_laboratory",
+	"building": "Arcanist’s Tower",
+	"skill": "magic",
+	"kind": "module",
+	"part": "Spell Laboratory",
+	"role": "XP",
+	"effect": "+Magic XP on this fragment for spell-drill / training actions.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 50
+  },
+  "arcanist_s_tower_target_wards": {
+	"id": "arcanist_s_tower_target_wards",
+	"building": "Arcanist’s Tower",
+	"skill": "magic",
+	"kind": "module",
+	"part": "Target Wards",
+	"role": "Special",
+	"effect": "Slightly reduced incoming damage for villagers performing Magic training here.",
+	"struct": {
+	  "wall_section": 2
+	},
+	"hardware": {
+	  "nails": 16,
+	  "spikes": 4,
+	  "brackets": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 4,
+	"req_con_lv": 64
+  },
+  "archery_range_butts_row": {
+	"id": "archery_range_butts_row",
+	"building": "Archery Range",
+	"skill": "ranged",
+	"kind": "module",
+	"part": "Butts Row",
+	"role": "XP",
+	"effect": "Increased basic Ranged XP from target practice.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "spikes": 4,
+	  "straps": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 30
+  },
+  "archery_range_fletcher_s_bench": {
+	"id": "archery_range_fletcher_s_bench",
+	"building": "Archery Range",
+	"skill": "ranged",
+	"kind": "module",
+	"part": "Fletcher’s Bench",
+	"role": "Yield",
+	"effect": "Chance to generate extra arrows/bolts from drills.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "bolts": 2,
+	  "flat_plate": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 33
+  },
+  "archery_range_high_stand": {
+	"id": "archery_range_high_stand",
+	"building": "Archery Range",
+	"skill": "ranged",
+	"kind": "module",
+	"part": "High Stand",
+	"role": "Speed/XP",
+	"effect": "Slightly faster drills and a small Defence XP trickle (cover training).",
+	"struct": {
+	  "watchtower_stage": 1,
+	  "ladder": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "beam_shoe": 4,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 33
+  },
+  "archery_range_moving_target_rig": {
+	"id": "archery_range_moving_target_rig",
+	"building": "Archery Range",
+	"skill": "ranged",
+	"kind": "module",
+	"part": "Moving Target Rig",
+	"role": "Special",
+	"effect": "Advanced drills grant extra XP and a small persistent accuracy bonus.",
+	"struct": {
+	  "support_beam": 1,
+	  "winch_assembly": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "chains": 2,
+	  "gear": 2,
+	  "bolts": 2,
+	  "counterweight": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 45
+  },
+  "archery_range_wind_flags": {
+	"id": "archery_range_wind_flags",
+	"building": "Archery Range",
+	"skill": "ranged",
+	"kind": "module",
+	"part": "Wind Flags",
+	"role": "Special",
+	"effect": "Extra XP on long-range drills, representing wind-reading practice.",
+	"struct": {
+	  "frame": 1,
+	  "roof_truss": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "rivets": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 30
+  },
+  "barracks_armour_stand": {
+	"id": "barracks_armour_stand",
+	"building": "Barracks",
+	"skill": "defence",
+	"kind": "module",
+	"part": "Armour Stand",
+	"role": "Yield/Spl",
+	"effect": "Chance to produce scrap armour/tooling that can be recycled via Smithing.",
+	"struct": {
+	  "frame": 2,
+	  "support_beam": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "straps": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 45
+  },
+  "barracks_drill_track": {
+	"id": "barracks_drill_track",
+	"building": "Barracks",
+	"skill": "defence",
+	"kind": "module",
+	"part": "Drill Track",
+	"role": "Speed",
+	"effect": "Reduced Defence drill action time.",
+	"struct": {
+	  "floor_section": 2,
+	  "beam": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "spikes": 2,
+	  "beam_shoe": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 30
+  },
+  "barracks_guard_beds": {
+	"id": "barracks_guard_beds",
+	"building": "Barracks",
+	"skill": "defence",
+	"kind": "module",
+	"part": "Guard Beds",
+	"role": "XP",
+	"effect": "Small XP bonus for all combat skills trained on this tile (rested training).",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "bolts": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 30
+  },
+  "barracks_kit_lockers": {
+	"id": "barracks_kit_lockers",
+	"building": "Barracks",
+	"skill": "defence",
+	"kind": "module",
+	"part": "Kit Lockers",
+	"role": "Special",
+	"effect": "Reduced gear/armour degradation from Defence drills.",
+	"struct": {
+	  "frame": 2,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 33
+  },
+  "barracks_shield_rack": {
+	"id": "barracks_shield_rack",
+	"building": "Barracks",
+	"skill": "defence",
+	"kind": "module",
+	"part": "Shield Rack",
+	"role": "XP/Spl",
+	"effect": "Increased Defence XP; Attack drills here gain a small extra Defence XP.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 33
+  },
+  "carpentry_hall_blueprint_desk": {
+	"id": "carpentry_hall_blueprint_desk",
+	"building": "Carpentry Hall",
+	"skill": "carpentry",
+	"kind": "module",
+	"part": "Blueprint Desk",
+	"role": "XP/Spl",
+	"effect": "Extra Carpentry XP; unlocks better BOM/preview UI for constructions attached to this tile.",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 23
+  },
+  "carpentry_hall_clamp_wall": {
+	"id": "carpentry_hall_clamp_wall",
+	"building": "Carpentry Hall",
+	"skill": "carpentry",
+	"kind": "module",
+	"part": "Clamp Wall",
+	"role": "Yield",
+	"effect": "Chance to duplicate Frames/Panels crafted here.",
+	"struct": {
+	  "wall_section": 2
+	},
+	"hardware": {
+	  "nails": 20,
+	  "brackets": 4,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 23
+  },
+  "carpentry_hall_hoist_rail": {
+	"id": "carpentry_hall_hoist_rail",
+	"building": "Carpentry Hall",
+	"skill": "carpentry",
+	"kind": "module",
+	"part": "Hoist Rail",
+	"role": "Speed/Spl",
+	"effect": "Faster large (3–6 plank) crafts; those modules count as 1 tier lighter for level checks.",
+	"struct": {
+	  "support_beam": 1,
+	  "pulley_block": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "chains": 2,
+	  "beam_shoe": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 35
+  },
+  "carpentry_hall_pattern_archive": {
+	"id": "carpentry_hall_pattern_archive",
+	"building": "Carpentry Hall",
+	"skill": "carpentry",
+	"kind": "module",
+	"part": "Pattern Archive",
+	"role": "Yield/Spl",
+	"effect": "Rare chance to reduce plank cost by 1 on big structural modules.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 35
+  },
+  "carpentry_hall_planer_bench": {
+	"id": "carpentry_hall_planer_bench",
+	"building": "Carpentry Hall",
+	"skill": "carpentry",
+	"kind": "module",
+	"part": "Planer Bench",
+	"role": "Speed",
+	"effect": "Reduced action time on small (1–2 plank) carpentry crafts on this tile.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 20
+  },
+  "farmstead_beehives": {
+	"id": "farmstead_beehives",
+	"building": "Farmstead",
+	"skill": "farming",
+	"kind": "module",
+	"part": "Beehives",
+	"role": "Special/Yield",
+	"effect": "Adds a small GP aura to nearby plots and unlocks honey/bee-product hooks for Farming outputs.",
+	"struct": {
+	  "frame": 2,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "hinges": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 25
+  },
+  "farmstead_compost_bin": {
+	"id": "farmstead_compost_bin",
+	"building": "Farmstead",
+	"skill": "farming",
+	"kind": "module",
+	"part": "Compost Bin",
+	"role": "Special",
+	"effect": "Enables higher-grade fertilisers and improves seed-refund chance from harvests on this tile.",
+	"struct": {
+	  "frame": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 13
+  },
+  "farmstead_irrigation_channel": {
+	"id": "farmstead_irrigation_channel",
+	"building": "Farmstead",
+	"skill": "farming",
+	"kind": "module",
+	"part": "Irrigation Channel",
+	"role": "Yield/Special",
+	"effect": "Extends Wet duration and gives a small GP bonus while plots here are Wet.",
+	"struct": {
+	  "floor_section": 1,
+	  "support_beam": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "flat_plate": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 10
+  },
+  "farmstead_orchard_bench": {
+	"id": "farmstead_orchard_bench",
+	"building": "Farmstead",
+	"skill": "farming",
+	"kind": "module",
+	"part": "Orchard Bench",
+	"role": "Special/XP",
+	"effect": "Unlocks vine/tree-type plots on this fragment and gives a tiny Farming XP bonus on those actions.",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 8,
+	"req_con_lv": 28
+  },
+  "farmstead_scarecrow": {
+	"id": "farmstead_scarecrow",
+	"building": "Farmstead",
+	"skill": "farming",
+	"kind": "module",
+	"part": "Scarecrow",
+	"role": "Special",
+	"effect": "Reduces disease/pest chance on crop plots attached to this fragment.",
+	"struct": {
+	  "support_beam": 1,
+	  "palisade_segment_mod": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "spikes": 2,
+	  "straps": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 13
+  },
+  "forager_s_hut_drying_rack": {
+	"id": "forager_s_hut_drying_rack",
+	"building": "Forager’s Hut",
+	"skill": "herbalism",
+	"kind": "module",
+	"part": "Drying Rack",
+	"role": "Yield/Special",
+	"effect": "Small chance harvested herbs on this tile upgrade to a higher-quality output or grant +1 extra herb on success.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 10
+  },
+  "forager_s_hut_field_cart": {
+	"id": "forager_s_hut_field_cart",
+	"building": "Forager’s Hut",
+	"skill": "herbalism",
+	"kind": "module",
+	"part": "Field Cart",
+	"role": "Special/QoL",
+	"effect": "Herbs harvested on this fragment auto-deposit into storage up to +1 extra stack and have a tiny chance to refund the consumed node charge.",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1,
+	  "palisade_segment_mod": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "bolts": 2,
+	  "straps": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 5,
+	"req_con_lv": 15
+  },
+  "forager_s_hut_herbarium": {
+	"id": "forager_s_hut_herbarium",
+	"building": "Forager’s Hut",
+	"skill": "herbalism",
+	"kind": "module",
+	"part": "Herbarium",
+	"role": "Yield",
+	"effect": "Increased chance for +1 duplicate on T6+ herb patches harvested on this tile.",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "hinges": 2,
+	  "lockwork": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 25
+  },
+  "forager_s_hut_pollen_net": {
+	"id": "forager_s_hut_pollen_net",
+	"building": "Forager’s Hut",
+	"skill": "herbalism",
+	"kind": "module",
+	"part": "Pollen Net",
+	"role": "Special",
+	"effect": "Slightly increased chance to roll Herbalism special drops (pouches/spores/etc.) when harvesting on this fragment.",
+	"struct": {
+	  "support_beam": 1,
+	  "roof_truss": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "chains": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 13
+  },
+  "forager_s_hut_stillroom_bench": {
+	"id": "forager_s_hut_stillroom_bench",
+	"building": "Forager’s Hut",
+	"skill": "herbalism",
+	"kind": "module",
+	"part": "Stillroom Bench",
+	"role": "Speed/XP",
+	"effect": "−small% Herbalism action time and +small% Herbalism XP on this tile (within global clamp).",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 8,
+	"req_con_lv": 28
+  },
+  "gemcutter_s_studio_calibration_loupe": {
+	"id": "gemcutter_s_studio_calibration_loupe",
+	"building": "Gemcutter’s Studio",
+	"skill": "gemcrafting",
+	"kind": "module",
+	"part": "Calibration Loupe",
+	"role": "Special",
+	"effect": "Slightly higher chance to produce “perfect” +quality gems used for high-end enchants.",
+	"struct": {
+	  "window_frame_mod": 1,
+	  "support_beam": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "flat_plate": 2,
+	  "lockwork": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 6,
+	"req_con_lv": 56
+  },
+  "gemcutter_s_studio_cutting_wheel": {
+	"id": "gemcutter_s_studio_cutting_wheel",
+	"building": "Gemcutter’s Studio",
+	"skill": "gemcrafting",
+	"kind": "module",
+	"part": "Cutting Wheel",
+	"role": "Speed",
+	"effect": "−Gemcrafting action time on this tile.",
+	"struct": {
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "gear": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 40
+  },
+  "gemcutter_s_studio_dust_separator": {
+	"id": "gemcutter_s_studio_dust_separator",
+	"building": "Gemcutter’s Studio",
+	"skill": "gemcrafting",
+	"kind": "module",
+	"part": "Dust Separator",
+	"role": "Yield/Special",
+	"effect": "Extra gem dust/shard outputs when cutting gems on this fragment.",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "chains": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 3,
+	"req_con_lv": 53
+  },
+  "gemcutter_s_studio_faceting_table": {
+	"id": "gemcutter_s_studio_faceting_table",
+	"building": "Gemcutter’s Studio",
+	"skill": "gemcrafting",
+	"kind": "module",
+	"part": "Faceting Table",
+	"role": "Yield",
+	"effect": "Small chance to gain +1 extra cut gem on success.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 43
+  },
+  "gemcutter_s_studio_secure_vault": {
+	"id": "gemcutter_s_studio_secure_vault",
+	"building": "Gemcutter’s Studio",
+	"skill": "gemcrafting",
+	"kind": "module",
+	"part": "Secure Vault",
+	"role": "Special/XP",
+	"effect": "Small extra XP on high-tier crafts and tiny chance to prevent material loss on failed attempts.",
+	"struct": {
+	  "wall_section": 1,
+	  "door_frame_mod": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 5,
+	"req_con_lv": 65
+  },
+  "grand_smithy_double_forge_hearth": {
+	"id": "grand_smithy_double_forge_hearth",
+	"building": "Grand Smithy",
+	"skill": "smithing",
+	"kind": "module",
+	"part": "Double Forge Hearth",
+	"role": "Speed",
+	"effect": "Reduced Smithing action time on this tile.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 2,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "flat_plate": 4,
+	  "rivets": 4
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 33
+  },
+  "grand_smithy_hardware_bench": {
+	"id": "grand_smithy_hardware_bench",
+	"building": "Grand Smithy",
+	"skill": "smithing",
+	"kind": "module",
+	"part": "Hardware Bench",
+	"role": "Special",
+	"effect": "Construction hardware crafted here has a chance to produce an extra output stack.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "flat_plate": 2,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 45
+  },
+  "grand_smithy_precision_anvil": {
+	"id": "grand_smithy_precision_anvil",
+	"building": "Grand Smithy",
+	"skill": "smithing",
+	"kind": "module",
+	"part": "Precision Anvil",
+	"role": "Yield",
+	"effect": "Small chance to save 1 bar on multi-bar recipes.",
+	"struct": {
+	  "beam": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "rivets": 4,
+	  "bolts": 4
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 45
+  },
+  "grand_smithy_quenching_trough": {
+	"id": "grand_smithy_quenching_trough",
+	"building": "Grand Smithy",
+	"skill": "smithing",
+	"kind": "module",
+	"part": "Quenching Trough",
+	"role": "Special/XP",
+	"effect": "Gear finished here grants extra Smithing XP and small chance at better quality.",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "rivets": 2,
+	  "chains": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 33
+  },
+  "grand_smithy_tool_rack": {
+	"id": "grand_smithy_tool_rack",
+	"building": "Grand Smithy",
+	"skill": "smithing",
+	"kind": "module",
+	"part": "Tool Rack",
+	"role": "XP",
+	"effect": "Increased Smithing XP for all crafts done here.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 4,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 30
+  },
+  "hearth_kitchen_cold_pantry": {
+	"id": "hearth_kitchen_cold_pantry",
+	"building": "Hearth Kitchen",
+	"skill": "cooking",
+	"kind": "module",
+	"part": "Cold Pantry",
+	"role": "Special",
+	"effect": "Feasts and preserved foods prepared here have extended duration / extra uses before depletion.",
+	"struct": {
+	  "frame": 1,
+	  "wall_section": 1,
+	  "door_frame_mod": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 6,
+	"req_con_lv": 46
+  },
+  "hearth_kitchen_oven": {
+	"id": "hearth_kitchen_oven",
+	"building": "Hearth Kitchen",
+	"skill": "cooking",
+	"kind": "module",
+	"part": "Oven",
+	"role": "Speed/Special",
+	"effect": "−action time and −burn chance for Cooking actions on this tile.",
+	"struct": {
+	  "floor_section": 1,
+	  "wall_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 20
+  },
+  "hearth_kitchen_prep_bench": {
+	"id": "hearth_kitchen_prep_bench",
+	"building": "Hearth Kitchen",
+	"skill": "cooking",
+	"kind": "module",
+	"part": "Prep Bench",
+	"role": "XP/Yield",
+	"effect": "+Cooking XP and small chance to save 1 secondary ingredient on success.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 20
+  },
+  "hearth_kitchen_smokehouse": {
+	"id": "hearth_kitchen_smokehouse",
+	"building": "Hearth Kitchen",
+	"skill": "cooking",
+	"kind": "module",
+	"part": "Smokehouse",
+	"role": "Yield/Special",
+	"effect": "Fish/meat cooked here have a chance to produce smoked/preserved variants with bonus XP.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 2,
+	  "roof_truss": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "hinges": 2,
+	  "flat_plate": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 23
+  },
+  "hearth_kitchen_spice_shelf": {
+	"id": "hearth_kitchen_spice_shelf",
+	"building": "Hearth Kitchen",
+	"skill": "cooking",
+	"kind": "module",
+	"part": "Spice Shelf",
+	"role": "Special",
+	"effect": "Dishes cooked here that grant buffs get slightly stronger buff values (within clamp).",
+	"struct": {
+	  "wall_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 4,
+	"req_con_lv": 34
+  },
+  "logging_yard_log_rack": {
+	"id": "logging_yard_log_rack",
+	"building": "Logging Yard",
+	"skill": "woodcutting",
+	"kind": "module",
+	"part": "Log Rack",
+	"role": "Yield",
+	"effect": "Increased logs per successful chop (less waste).",
+	"struct": {
+	  "palisade_segment_mod": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "spikes": 4,
+	  "straps": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 1
+  },
+  "logging_yard_resin_still": {
+	"id": "logging_yard_resin_still",
+	"building": "Logging Yard",
+	"skill": "woodcutting",
+	"kind": "module",
+	"part": "Resin Still",
+	"role": "Yield/Spl",
+	"effect": "Chance for chops here to generate extra resin/amber-like by-products.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 16
+  },
+  "logging_yard_rookery": {
+	"id": "logging_yard_rookery",
+	"building": "Logging Yard",
+	"skill": "woodcutting",
+	"kind": "module",
+	"part": "Rookery",
+	"role": "Special/XP",
+	"effect": "Increased nest drop rate and a small Woodcutting XP bonus.",
+	"struct": {
+	  "frame": 2,
+	  "roof_truss": 1,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "hinges": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 4
+  },
+  "logging_yard_sawhorse": {
+	"id": "logging_yard_sawhorse",
+	"building": "Logging Yard",
+	"skill": "woodcutting",
+	"kind": "module",
+	"part": "Sawhorse",
+	"role": "Speed",
+	"effect": "Reduced Woodcutting action time for nodes tied to this tile.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 1
+  },
+  "logging_yard_timber_crane": {
+	"id": "logging_yard_timber_crane",
+	"building": "Logging Yard",
+	"skill": "woodcutting",
+	"kind": "module",
+	"part": "Timber Crane",
+	"role": "Speed/Spl",
+	"effect": "Extra time reduction when chopping top-tier trees (Yew/Elder) on this tile.",
+	"struct": {
+	  "support_beam": 1,
+	  "beam": 1,
+	  "windlass_drum": 1,
+	  "pulley_block": 1
+	},
+	"hardware": {
+	  "nails": 24,
+	  "chains": 4,
+	  "gear": 2,
+	  "counterweight": 2,
+	  "beam_shoe": 4
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 16
+  },
+  "loom_house_cutting_table": {
+	"id": "loom_house_cutting_table",
+	"building": "Loom House",
+	"skill": "tailoring",
+	"kind": "module",
+	"part": "Cutting Table",
+	"role": "Yield",
+	"effect": "Small chance to produce extra cloth pieces from raw fabric.",
+	"struct": {
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "flat_plate": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 23
+  },
+  "loom_house_dye_vat": {
+	"id": "loom_house_dye_vat",
+	"building": "Loom House",
+	"skill": "tailoring",
+	"kind": "module",
+	"part": "Dye Vat",
+	"role": "Yield/Spl",
+	"effect": "Chance for cloth produced here to become dyed or high-quality variants.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 35
+  },
+  "loom_house_pattern_shelf": {
+	"id": "loom_house_pattern_shelf",
+	"building": "Loom House",
+	"skill": "tailoring",
+	"kind": "module",
+	"part": "Pattern Shelf",
+	"role": "Special",
+	"effect": "Chance to save 1 cloth/leather on high-tier Tailoring recipes.",
+	"struct": {
+	  "wall_section": 1,
+	  "frame": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "brackets": 2,
+	  "lockwork": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 23
+  },
+  "loom_house_pressing_table": {
+	"id": "loom_house_pressing_table",
+	"building": "Loom House",
+	"skill": "tailoring",
+	"kind": "module",
+	"part": "Pressing Table",
+	"role": "XP",
+	"effect": "Increased Tailoring XP when finishing garments and bolts.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 20
+  },
+  "loom_house_spindle_rack": {
+	"id": "loom_house_spindle_rack",
+	"building": "Loom House",
+	"skill": "tailoring",
+	"kind": "module",
+	"part": "Spindle Rack",
+	"role": "Speed",
+	"effect": "Reduced Tailoring action time on this tile.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 20
+  },
+  "net_wharf_crane_boom": {
+	"id": "net_wharf_crane_boom",
+	"building": "Net Wharf",
+	"skill": "fishing",
+	"kind": "module",
+	"part": "Crane Boom",
+	"role": "Speed/Spl",
+	"effect": "Reduced action time for Net & Harpoon nodes; supports heavy hauls on this tile.",
+	"struct": {
+	  "beam": 1,
+	  "support_beam": 1,
+	  "bridge_span": 1,
+	  "pulley_block": 1,
+	  "windlass_drum": 1
+	},
+	"hardware": {
+	  "nails": 24,
+	  "chains": 4,
+	  "gear": 2,
+	  "counterweight": 2,
+	  "beam_shoe": 4
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 25
+  },
+  "net_wharf_net_loft": {
+	"id": "net_wharf_net_loft",
+	"building": "Net Wharf",
+	"skill": "fishing",
+	"kind": "module",
+	"part": "Net Loft",
+	"role": "Yield",
+	"effect": "Increased catch amount/rolls for Net nodes linked to this tile.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "spikes": 2,
+	  "straps": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 13
+  },
+  "net_wharf_smoke_shed": {
+	"id": "net_wharf_smoke_shed",
+	"building": "Net Wharf",
+	"skill": "fishing",
+	"kind": "module",
+	"part": "Smoke Shed",
+	"role": "Yield/Spl",
+	"effect": "Chance for fish caught here to be auto-converted into preserved/smoked variants.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 2,
+	  "roof_kit_trussed": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "hinges": 2,
+	  "flat_plate": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 25
+  },
+  "net_wharf_sorting_table": {
+	"id": "net_wharf_sorting_table",
+	"building": "Net Wharf",
+	"skill": "fishing",
+	"kind": "module",
+	"part": "Sorting Table",
+	"role": "Special",
+	"effect": "Small chance to turn “junk” Fishing results into basic useful materials (bones, scrap).",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "bolts": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 10
+  },
+  "net_wharf_tackle_bench": {
+	"id": "net_wharf_tackle_bench",
+	"building": "Net Wharf",
+	"skill": "fishing",
+	"kind": "module",
+	"part": "Tackle Bench",
+	"role": "XP",
+	"effect": "Increased Fishing XP on this tile.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "bolts": 2,
+	  "flat_plate": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 10
+  },
+  "prospector_s_shaft_core_brace": {
+	"id": "prospector_s_shaft_core_brace",
+	"building": "Prospector’s Shaft",
+	"skill": "mining",
+	"kind": "module",
+	"part": "Core Brace",
+	"role": "Special",
+	"effect": "Slightly higher chance that ore nodes respawn as higher-tier variants on this tile.",
+	"struct": {
+	  "support_beam": 1,
+	  "wall_section": 2
+	},
+	"hardware": {
+	  "nails": 20,
+	  "reinforcement_rod": 4,
+	  "beam_shoe": 4
+	},
+	"min_building_tier": 3,
+	"delta_lv": 8,
+	"req_con_lv": 38
+  },
+  "prospector_s_shaft_extra_shaft_supports": {
+	"id": "prospector_s_shaft_extra_shaft_supports",
+	"building": "Prospector’s Shaft",
+	"skill": "mining",
+	"kind": "module",
+	"part": "Extra Shaft Supports",
+	"role": "Speed",
+	"effect": "Reduced Mining action time on this tile.",
+	"struct": {
+	  "frame": 2,
+	  "support_beam": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 4,
+	  "reinforcement_rod": 2,
+	  "beam_shoe": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 13
+  },
+  "prospector_s_shaft_gem_sieve": {
+	"id": "prospector_s_shaft_gem_sieve",
+	"building": "Prospector’s Shaft",
+	"skill": "mining",
+	"kind": "module",
+	"part": "Gem Sieve",
+	"role": "Yield/Spl",
+	"effect": "Small chance for ore actions to also produce a low-tier gem or gem dust.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "chains": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 25
+  },
+  "prospector_s_shaft_ore_chute": {
+	"id": "prospector_s_shaft_ore_chute",
+	"building": "Prospector’s Shaft",
+	"skill": "mining",
+	"kind": "module",
+	"part": "Ore Chute",
+	"role": "Yield",
+	"effect": "Small chance to gain +1 extra ore/stone per successful Mining action on this tile.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "brackets": 4,
+	  "beam_shoe": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 10
+  },
+  "prospector_s_shaft_surveyor_s_tent": {
+	"id": "prospector_s_shaft_surveyor_s_tent",
+	"building": "Prospector’s Shaft",
+	"skill": "mining",
+	"kind": "module",
+	"part": "Surveyor’s Tent",
+	"role": "XP",
+	"effect": "Increased Mining XP from all nodes on this fragment.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "roof_truss": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 10
+  },
+  "runeforge_catalytic_array": {
+	"id": "runeforge_catalytic_array",
+	"building": "Runeforge",
+	"skill": "runecrafting",
+	"kind": "module",
+	"part": "Catalytic Array",
+	"role": "Special",
+	"effect": "Every N catalytic crafts refunds one catalyst.",
+	"struct": {
+	  "support_beam": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "chains": 2,
+	  "gear": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 55
+  },
+  "runeforge_focus_pedestal": {
+	"id": "runeforge_focus_pedestal",
+	"building": "Runeforge",
+	"skill": "runecrafting",
+	"kind": "module",
+	"part": "Focus Pedestal",
+	"role": "Speed",
+	"effect": "Reduced Runecrafting action time here, especially for advanced runes.",
+	"struct": {
+	  "floor_section": 1,
+	  "roof_truss": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "rivets": 2,
+	  "reinforcement_rod": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 43
+  },
+  "runeforge_rune_kiln": {
+	"id": "runeforge_rune_kiln",
+	"building": "Runeforge",
+	"skill": "runecrafting",
+	"kind": "module",
+	"part": "Rune Kiln",
+	"role": "Yield/Spl",
+	"effect": "Chance for advanced crafts to produce higher-tier or “charged” runes.",
+	"struct": {
+	  "wall_section": 2,
+	  "roof_kit_trussed": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "flat_plate": 2,
+	  "rivets": 4
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 55
+  },
+  "runeforge_runic_archive": {
+	"id": "runeforge_runic_archive",
+	"building": "Runeforge",
+	"skill": "runecrafting",
+	"kind": "module",
+	"part": "Runic Archive",
+	"role": "XP",
+	"effect": "Increased Runecrafting XP on this tile.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 40
+  },
+  "runeforge_stone_hoppers": {
+	"id": "runeforge_stone_hoppers",
+	"building": "Runeforge",
+	"skill": "runecrafting",
+	"kind": "module",
+	"part": "Stone Hoppers",
+	"role": "Yield",
+	"effect": "Slightly increased rune output per essence/stone craft.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 40
+  },
+  "scrying_chamber_anchor_sigil": {
+	"id": "scrying_chamber_anchor_sigil",
+	"building": "Scrying Chamber",
+	"skill": "scrying",
+	"kind": "module",
+	"part": "Anchor Sigil",
+	"role": "Special",
+	"effect": "Small discount on Fragment anchoring cost for fragments summoned from this tile.",
+	"struct": {
+	  "floor_section": 1,
+	  "palisade_segment_mod": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "rivets": 2,
+	  "reinforcement_rod": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 5,
+	"req_con_lv": 55
+  },
+  "scrying_chamber_channel_stones": {
+	"id": "scrying_chamber_channel_stones",
+	"building": "Scrying Chamber",
+	"skill": "scrying",
+	"kind": "module",
+	"part": "Channel Stones",
+	"role": "Special",
+	"effect": "Slightly increased chance that fragments summoned via this tile roll extra modifiers or higher-grade nodes.",
+	"struct": {
+	  "support_beam": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "chains": 2,
+	  "reinforcement_rod": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 6,
+	"req_con_lv": 46
+  },
+  "scrying_chamber_focus_pool": {
+	"id": "scrying_chamber_focus_pool",
+	"building": "Scrying Chamber",
+	"skill": "scrying",
+	"kind": "module",
+	"part": "Focus Pool",
+	"role": "XP",
+	"effect": "+Scrying XP for Observe/Calibrate-style actions originating from this tile.",
+	"struct": {
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "flat_plate": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 30
+  },
+  "scrying_chamber_mirror_rack": {
+	"id": "scrying_chamber_mirror_rack",
+	"building": "Scrying Chamber",
+	"skill": "scrying",
+	"kind": "module",
+	"part": "Mirror Rack",
+	"role": "Speed",
+	"effect": "−Scrying action time on this fragment (clamp-aware).",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 33
+  },
+  "scrying_chamber_omen_ledger": {
+	"id": "scrying_chamber_omen_ledger",
+	"building": "Scrying Chamber",
+	"skill": "scrying",
+	"kind": "module",
+	"part": "Omen Ledger",
+	"role": "Special/XP",
+	"effect": "Small chance each Scrying action here grants a free bonus “peek” / extra progress tick and a bit of extra XP.",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 3,
+	"req_con_lv": 43
+  },
+  "spirit_lodge_binding_circle": {
+	"id": "spirit_lodge_binding_circle",
+	"building": "Spirit Lodge",
+	"skill": "spiritbinding",
+	"kind": "module",
+	"part": "Binding Circle",
+	"role": "XP",
+	"effect": "+Spiritbinding XP for rituals performed on this tile.",
+	"struct": {
+	  "floor_section": 1,
+	  "palisade_segment_mod": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "reinforcement_rod": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 40
+  },
+  "spirit_lodge_incense_rack": {
+	"id": "spirit_lodge_incense_rack",
+	"building": "Spirit Lodge",
+	"skill": "spiritbinding",
+	"kind": "module",
+	"part": "Incense Rack",
+	"role": "Speed",
+	"effect": "−Spiritbinding ritual time on this fragment.",
+	"struct": {
+	  "frame": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "chains": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 43
+  },
+  "spirit_lodge_spirit_kennels": {
+	"id": "spirit_lodge_spirit_kennels",
+	"building": "Spirit Lodge",
+	"skill": "spiritbinding",
+	"kind": "module",
+	"part": "Spirit Kennels",
+	"role": "Special",
+	"effect": "Grants each worker on this tile a tiny extra capacity / effectiveness when handling bound spirits/familiars.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "bolts": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 5,
+	"req_con_lv": 65
+  },
+  "spirit_lodge_totem_posts": {
+	"id": "spirit_lodge_totem_posts",
+	"building": "Spirit Lodge",
+	"skill": "spiritbinding",
+	"kind": "module",
+	"part": "Totem Posts",
+	"role": "Special",
+	"effect": "Bound spirits linked via this tile gain a small HP/defence bonus.",
+	"struct": {
+	  "support_beam": 2
+	},
+	"hardware": {
+	  "nails": 12,
+	  "spikes": 4,
+	  "brackets": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 3,
+	"req_con_lv": 53
+  },
+  "spirit_lodge_veil_curtains": {
+	"id": "spirit_lodge_veil_curtains",
+	"building": "Spirit Lodge",
+	"skill": "spiritbinding",
+	"kind": "module",
+	"part": "Veil Curtains",
+	"role": "Special",
+	"effect": "Reduces mishap chance on risky Spiritbinding actions here.",
+	"struct": {
+	  "wall_section": 1,
+	  "window_frame_mod": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "hinges": 2,
+	  "lockwork": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 6,
+	"req_con_lv": 56
+  },
+  "star_observatory_archive_shelves": {
+	"id": "star_observatory_archive_shelves",
+	"building": "Star Observatory",
+	"skill": "divination",
+	"kind": "module",
+	"part": "Archive Shelves",
+	"role": "Special/XP",
+	"effect": "Completing a Chart here grants a small extra XP bonus and a tiny chance of bonus Stardust.",
+	"struct": {
+	  "wall_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "brackets": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 4,
+	"req_con_lv": 54
+  },
+  "star_observatory_focus_lens": {
+	"id": "star_observatory_focus_lens",
+	"building": "Star Observatory",
+	"skill": "divination",
+	"kind": "module",
+	"part": "Focus Lens",
+	"role": "Special",
+	"effect": "Slightly higher chance for Fortune Nodes on Charts linked to this fragment to roll higher outcomes.",
+	"struct": {
+	  "support_beam": 1,
+	  "window_frame_mod": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "flat_plate": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 43
+  },
+  "star_observatory_horizon_balcony": {
+	"id": "star_observatory_horizon_balcony",
+	"building": "Star Observatory",
+	"skill": "divination",
+	"kind": "module",
+	"part": "Horizon Balcony",
+	"role": "Special",
+	"effect": "Divination actions here have a small chance to also grant a permanent micro-buff to a random skill associated with this tile (within clamp).",
+	"struct": {
+	  "floor_section": 1,
+	  "stairs_kit": 1,
+	  "palisade_segment_mod": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "beam_shoe": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 8,
+	"req_con_lv": 68
+  },
+  "star_observatory_orrery_engine": {
+	"id": "star_observatory_orrery_engine",
+	"building": "Star Observatory",
+	"skill": "divination",
+	"kind": "module",
+	"part": "Orrery Engine",
+	"role": "Speed",
+	"effect": "−Observe/Calibrate action time on this tile (respects global Tempo clamp).",
+	"struct": {
+	  "support_beam": 1,
+	  "floor_section": 1,
+	  "roof_truss": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "gear": 2,
+	  "reinforcement_rod": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 6,
+	"req_con_lv": 56
+  },
+  "star_observatory_star_chart_desk": {
+	"id": "star_observatory_star_chart_desk",
+	"building": "Star Observatory",
+	"skill": "divination",
+	"kind": "module",
+	"part": "Star Chart Desk",
+	"role": "XP",
+	"effect": "+Divination XP for Observe/Calibrate/Refine actions performed on Charts anchored to this tile.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 40
+  },
+  "starforge_anchor_vault": {
+	"id": "starforge_anchor_vault",
+	"building": "Starforge",
+	"skill": "astromancy",
+	"kind": "module",
+	"part": "Anchor Vault",
+	"role": "Special",
+	"effect": "Reduced chance to lose shards/fragments on risky Astromancy operations here and a tiny cost discount on top-tier infusions.",
+	"struct": {
+	  "floor_section": 1,
+	  "door_frame_mod": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "lockwork": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 5,
+	"req_con_lv": 85
+  },
+  "starforge_celestial_archive": {
+	"id": "starforge_celestial_archive",
+	"building": "Starforge",
+	"skill": "astromancy",
+	"kind": "module",
+	"part": "Celestial Archive",
+	"role": "XP",
+	"effect": "Extra Astromancy XP on this fragment, especially for high-tier Shard recipes.",
+	"struct": {
+	  "wall_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "brackets": 2,
+	  "lockwork": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 63
+  },
+  "starforge_conduit_array": {
+	"id": "starforge_conduit_array",
+	"building": "Starforge",
+	"skill": "astromancy",
+	"kind": "module",
+	"part": "Conduit Array",
+	"role": "Speed",
+	"effect": "−Astromancy craft time (respects global clamps).",
+	"struct": {
+	  "support_beam": 1,
+	  "roof_truss": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "reinforcement_rod": 2,
+	  "chains": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 4,
+	"req_con_lv": 74
+  },
+  "starforge_resonance_lattice": {
+	"id": "starforge_resonance_lattice",
+	"building": "Starforge",
+	"skill": "astromancy",
+	"kind": "module",
+	"part": "Resonance Lattice",
+	"role": "Special",
+	"effect": "Slightly higher chance to create potent/dual-infused shards from crafts on this tile.",
+	"struct": {
+	  "reinforced_frame": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "reinforcement_rod": 2,
+	  "flat_plate": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 6,
+	"req_con_lv": 76
+  },
+  "starforge_shard_loom": {
+	"id": "starforge_shard_loom",
+	"building": "Starforge",
+	"skill": "astromancy",
+	"kind": "module",
+	"part": "Shard Loom",
+	"role": "Yield",
+	"effect": "Slightly increased shard output / success on Astromancy crafts on this tile.",
+	"struct": {
+	  "support_beam": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "gear": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 60
+  },
+  "summoner_s_circle_containment_sigils": {
+	"id": "summoner_s_circle_containment_sigils",
+	"building": "Summoner’s Circle",
+	"skill": "summoning",
+	"kind": "module",
+	"part": "Containment Sigils",
+	"role": "Special",
+	"effect": "Reduced mishap / backlash chance for high-tier Summoning attempts here.",
+	"struct": {
+	  "reinforced_frame": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "chains": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 4,
+	"req_con_lv": 74
+  },
+  "summoner_s_circle_familiar_pens": {
+	"id": "summoner_s_circle_familiar_pens",
+	"building": "Summoner’s Circle",
+	"skill": "summoning",
+	"kind": "module",
+	"part": "Familiar Pens",
+	"role": "Special",
+	"effect": "Familiars anchored to this tile gain a small HP/damage bonus.",
+	"struct": {
+	  "frame": 2,
+	  "palisade_segment_mod": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "bolts": 2,
+	  "straps": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 6,
+	"req_con_lv": 76
+  },
+  "summoner_s_circle_focus_obelisk": {
+	"id": "summoner_s_circle_focus_obelisk",
+	"building": "Summoner’s Circle",
+	"skill": "summoning",
+	"kind": "module",
+	"part": "Focus Obelisk",
+	"role": "Speed",
+	"effect": "−Summoning ritual time on this fragment (within clamp).",
+	"struct": {
+	  "support_beam": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "reinforcement_rod": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 63
+  },
+  "summoner_s_circle_offering_altar": {
+	"id": "summoner_s_circle_offering_altar",
+	"building": "Summoner’s Circle",
+	"skill": "summoning",
+	"kind": "module",
+	"part": "Offering Altar",
+	"role": "Special/Yield",
+	"effect": "Tiny chance to refund a Summoning reagent or generate an extra by-product on success.",
+	"struct": {
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "lockwork": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 5,
+	"req_con_lv": 85
+  },
+  "summoner_s_circle_ritual_glyphs": {
+	"id": "summoner_s_circle_ritual_glyphs",
+	"building": "Summoner’s Circle",
+	"skill": "summoning",
+	"kind": "module",
+	"part": "Ritual Glyphs",
+	"role": "XP",
+	"effect": "+Summoning XP for rituals performed at this circle.",
+	"struct": {
+	  "floor_section": 1,
+	  "palisade_segment_mod": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "reinforcement_rod": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 60
+  },
+  "thaumic_crucible_containment_ring": {
+	"id": "thaumic_crucible_containment_ring",
+	"building": "Thaumic Crucible",
+	"skill": "thaumaturgy",
+	"kind": "module",
+	"part": "Containment Ring",
+	"role": "Special",
+	"effect": "Reduced chance of catastrophic failure / backlash on high-tier thaumaturgy actions.",
+	"struct": {
+	  "reinforced_frame": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "rivets": 4,
+	  "reinforcement_rod": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 8,
+	"req_con_lv": 78
+  },
+  "thaumic_crucible_focus_coils": {
+	"id": "thaumic_crucible_focus_coils",
+	"building": "Thaumic Crucible",
+	"skill": "thaumaturgy",
+	"kind": "module",
+	"part": "Focus Coils",
+	"role": "Yield/Spl",
+	"effect": "Slightly higher chance to produce “potent” high-tier thaumic outputs.",
+	"struct": {
+	  "beam": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "gear": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 8,
+	"req_con_lv": 78
+  },
+  "thaumic_crucible_glass_retort_bank": {
+	"id": "thaumic_crucible_glass_retort_bank",
+	"building": "Thaumic Crucible",
+	"skill": "thaumaturgy",
+	"kind": "module",
+	"part": "Glass Retort Bank",
+	"role": "Yield",
+	"effect": "Small chance that one input reagent is not consumed.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 65
+  },
+  "thaumic_crucible_glyph_ledger": {
+	"id": "thaumic_crucible_glyph_ledger",
+	"building": "Thaumic Crucible",
+	"skill": "thaumaturgy",
+	"kind": "module",
+	"part": "Glyph Ledger",
+	"role": "XP",
+	"effect": "Increased Thaumaturgy XP for all actions here.",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 50
+  },
+  "thaumic_crucible_vent_array": {
+	"id": "thaumic_crucible_vent_array",
+	"building": "Thaumic Crucible",
+	"skill": "thaumaturgy",
+	"kind": "module",
+	"part": "Vent Array",
+	"role": "Speed",
+	"effect": "Reduced Thaumaturgy action time on this tile.",
+	"struct": {
+	  "wall_section": 2,
+	  "roof_truss": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "chains": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 53
+  },
+  "training_arena_footwork_rails": {
+	"id": "training_arena_footwork_rails",
+	"building": "Training Arena",
+	"skill": "attack",
+	"kind": "module",
+	"part": "Footwork Rails",
+	"role": "Speed",
+	"effect": "Reduced Attack drill action time on this tile.",
+	"struct": {
+	  "floor_section": 2,
+	  "beam": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "bolts": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 20
+  },
+  "training_arena_sparring_circle": {
+	"id": "training_arena_sparring_circle",
+	"building": "Training Arena",
+	"skill": "attack",
+	"kind": "module",
+	"part": "Sparring Circle",
+	"role": "Special/XP",
+	"effect": "When multiple villagers drill here, they gain extra Attack + Defence XP.",
+	"struct": {
+	  "floor_section": 2,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "spikes": 2,
+	  "beam_shoe": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 35
+  },
+  "training_arena_striking_dummies": {
+	"id": "training_arena_striking_dummies",
+	"building": "Training Arena",
+	"skill": "attack",
+	"kind": "module",
+	"part": "Striking Dummies",
+	"role": "XP",
+	"effect": "Increased Attack XP from drills on this tile.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "spikes": 4,
+	  "straps": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 20
+  },
+  "training_arena_weapon_rack": {
+	"id": "training_arena_weapon_rack",
+	"building": "Training Arena",
+	"skill": "attack",
+	"kind": "module",
+	"part": "Weapon Rack",
+	"role": "Yield",
+	"effect": "Small chance to gain metal/wood scrap that can be smelted or reused.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 23
+  },
+  "training_arena_weighted_targets": {
+	"id": "training_arena_weighted_targets",
+	"building": "Training Arena",
+	"skill": "attack",
+	"kind": "module",
+	"part": "Weighted Targets",
+	"role": "Special",
+	"effect": "Chance to gain “Technique Insight” consumables from drills.",
+	"struct": {
+	  "frame": 2,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "counterweight": 2,
+	  "chains": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 35
+  },
+  "village_inn_counter": {
+	"id": "village_inn_counter",
+	"building": "Village Inn",
+	"skill": "entertaining",
+	"kind": "module",
+	"part": "Counter",
+	"role": "Special",
+	"effect": "+stackable lot size for Merchant mode sells performed at this tile.",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 20
+  },
+  "village_inn_guest_rooms": {
+	"id": "village_inn_guest_rooms",
+	"building": "Village Inn",
+	"skill": "entertaining",
+	"kind": "module",
+	"part": "Guest Rooms",
+	"role": "Special",
+	"effect": "Global Morale decays slightly slower while at least one worker is actively Hosting on this tile.",
+	"struct": {
+	  "frame": 2,
+	  "wall_section": 2
+	},
+	"hardware": {
+	  "nails": 20,
+	  "hinges": 2,
+	  "lockwork": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 6,
+	"req_con_lv": 46
+  },
+  "village_inn_ledger_desk": {
+	"id": "village_inn_ledger_desk",
+	"building": "Village Inn",
+	"skill": "entertaining",
+	"kind": "module",
+	"part": "Ledger Desk",
+	"role": "Special/XP",
+	"effect": "Merchant mode sells from this tile grant +% coins and a tiny Entertaining XP bonus.",
+	"struct": {
+	  "frame": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 5,
+	"req_con_lv": 25
+  },
+  "village_inn_stage": {
+	"id": "village_inn_stage",
+	"building": "Village Inn",
+	"skill": "entertaining",
+	"kind": "module",
+	"part": "Stage",
+	"role": "Yield/XP",
+	"effect": "Host actions on this fragment gain slightly more Morale and XP (festival-vibes tile).",
+	"struct": {
+	  "floor_section": 2,
+	  "support_beam": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 4,
+	"req_con_lv": 34
+  },
+  "village_inn_warm_hearth": {
+	"id": "village_inn_warm_hearth",
+	"building": "Village Inn",
+	"skill": "entertaining",
+	"kind": "module",
+	"part": "Warm Hearth",
+	"role": "Special",
+	"effect": "Host actions here grant extra Morale after calculation.",
+	"struct": {
+	  "floor_section": 1,
+	  "wall_section": 1
+	},
+	"hardware": {
+	  "nails": 16,
+	  "flat_plate": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 23
+  },
+  "wayshrine_bell_tower": {
+	"id": "wayshrine_bell_tower",
+	"building": "Wayshrine",
+	"skill": "prayer",
+	"kind": "module",
+	"part": "Bell Tower",
+	"role": "Special/XP",
+	"effect": "When ≥2 villagers are training combat skills on this tile, everyone gains a trickle of Prayer XP.",
+	"struct": {
+	  "frame": 2,
+	  "roof_truss": 1,
+	  "stairs_kit": 1
+	},
+	"hardware": {
+	  "nails": 20,
+	  "brackets": 2,
+	  "beam_shoe": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 3,
+	"delta_lv": 5,
+	"req_con_lv": 75
+  },
+  "wayshrine_central_altar": {
+	"id": "wayshrine_central_altar",
+	"building": "Wayshrine",
+	"skill": "prayer",
+	"kind": "module",
+	"part": "Central Altar",
+	"role": "XP",
+	"effect": "+Prayer XP gain for any Prayer actions performed on this tile.",
+	"struct": {
+	  "floor_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "flat_plate": 2,
+	  "rivets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 50
+  },
+  "wayshrine_offering_brazier": {
+	"id": "wayshrine_offering_brazier",
+	"building": "Wayshrine",
+	"skill": "prayer",
+	"kind": "module",
+	"part": "Offering Brazier",
+	"role": "Special",
+	"effect": "Modestly reduces Prayer drain rate / extends Prayer buff duration while a worker is on this tile.",
+	"struct": {
+	  "floor_section": 1,
+	  "support_beam": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "chains": 2,
+	  "brackets": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 3,
+	"req_con_lv": 53
+  },
+  "wayshrine_pilgrim_benches": {
+	"id": "wayshrine_pilgrim_benches",
+	"building": "Wayshrine",
+	"skill": "prayer",
+	"kind": "module",
+	"part": "Pilgrim Benches",
+	"role": "Speed/XP",
+	"effect": "Slightly faster Prayer ticks / training loops here and a tiny Prayer XP bonus (clamp-aware).",
+	"struct": {
+	  "frame": 1,
+	  "floor_section": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "brackets": 2,
+	  "bolts": 2
+	},
+	"min_building_tier": 1,
+	"delta_lv": 0,
+	"req_con_lv": 50
+  },
+  "wayshrine_reliquary_niche": {
+	"id": "wayshrine_reliquary_niche",
+	"building": "Wayshrine",
+	"skill": "prayer",
+	"kind": "module",
+	"part": "Reliquary Niche",
+	"role": "Special",
+	"effect": "Small chance for combat on this fragment to reroll low-value loot into devotional/Prayer-tagged drops.",
+	"struct": {
+	  "wall_section": 1,
+	  "panel_sheathing": 1
+	},
+	"hardware": {
+	  "nails": 12,
+	  "lockwork": 2,
+	  "hinges": 2
+	},
+	"min_building_tier": 2,
+	"delta_lv": 5,
+	"req_con_lv": 65
+  }
+}

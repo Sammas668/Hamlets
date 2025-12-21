@@ -1,0 +1,56 @@
+[gd_scene load_steps=2 format=3 uid="uid://clb2flps4pgqb"]
+
+[ext_resource type="Script" uid="uid://dx326gmopsmmy" path="res://scripts/load_panel.gd" id="1_0bvey"]
+
+[node name="LoadPanel" type="Window"]
+oversampling_override = 1.0
+script = ExtResource("1_0bvey")
+
+[node name="Margin" type="MarginContainer" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBox" type="VBoxContainer" parent="Margin"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Margin/VBox/Header"]
+layout_mode = 2
+text = "Load Game"
+
+[node name="RefreshBtn" type="Button" parent="Margin/VBox/Header"]
+layout_mode = 2
+text = "Refresh"
+
+[node name="List" type="ItemList" parent="Margin/VBox"]
+layout_mode = 2
+same_column_width = true
+
+[node name="SelectedInfo" type="Label" parent="Margin/VBox"]
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Margin/VBox"]
+visible = false
+layout_mode = 2
+
+[node name="LoadBtn" type="Button" parent="Margin/VBox/Buttons"]
+layout_mode = 2
+text = "Load"
+
+[node name="DeleteBtn" type="Button" parent="Margin/VBox/Buttons"]
+layout_mode = 2
+text = "Delete"
+
+[node name="Spacer" type="Control" parent="Margin/VBox/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseBtn" type="Button" parent="Margin/VBox/Buttons"]
+layout_mode = 2
+text = "Close"
