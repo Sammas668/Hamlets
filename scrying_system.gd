@@ -103,10 +103,10 @@ func _roll_grade(lv: int) -> int:
 		total += weights[penult_idx]
 
 	var r: float = randf() * total
-	var grovening: float = 0.0
+	var running_total: float = 0.0
 	for i in range(weights.size()):
-		grovening += weights[i]
-		if r <= grovening:
+		running_total += weights[i]
+		if r <= running_total:
 			return i + 1
 
 	return max_grade
@@ -177,7 +177,7 @@ func degrade_augury(grade_from: int, steps: int = 1) -> bool:
 
 	var to_id: StringName = _item_id_for_grade(to_grade)
 	
-# NOTE: currently full-grade refund (Rk → Gk).
+# NOTE: currently full-grade refund from A{from_grade} → A{to_grade} (e.g., A5 → A4).
 # If this ends up too generous, tune it to a lower-grade refund here.
 	Bank.take(from_id, 1)
 	Bank.add(to_id, 1)

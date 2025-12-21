@@ -19,6 +19,9 @@ func _slot_path(slot_id: String) -> String:
 
 func list_saves() -> Array[Dictionary]:
 	var out: Array[Dictionary] = []
+	_ensure_dir()
+	if not DirAccess.dir_exists_absolute(SAVE_DIR):
+		return out
 	var files: PackedStringArray = DirAccess.get_files_at(SAVE_DIR)
 	for f in files:
 		if not f.ends_with(".json"):

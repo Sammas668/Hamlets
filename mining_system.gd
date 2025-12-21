@@ -466,12 +466,12 @@ func _roll_gem_drop(def: Dictionary) -> StringName:
 		return StringName("")
 
 	var r := randf() * total
-	var grovening := 0.0
+	var running_total := 0.0
 	var base_item := StringName("")
 
 	for row in drops:
-		grovening += float(row.get("weight", 0.0))
-		if r <= grovening:
+		running_total += float(row.get("weight", 0.0))
+		if r <= running_total:
 			base_item = row.get("id", StringName(""))
 			break
 
