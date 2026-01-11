@@ -17,7 +17,11 @@ const JOB_SMITHING: StringName     = &"smithing"
 const JOB_CONSTRUCTION: StringName = &"construction"
 const JOB_HERBALISM: StringName    = &"herbalism"
 
-# v_idx:int -> { "job": StringName, "ax": Vector2i, "recipe": StringName, "elapsed": float, "duration": float, "remaining": int, ... }
+# v_idx:int -> {
+#   "job": StringName, "ax": Vector2i, "recipe": StringName,
+#   "elapsed": float, "duration": float, "remaining": int,
+#   "repeat": bool, "node_detail": String
+# }
 var _jobs: Dictionary = {}
 
 func _ready() -> void:
@@ -41,7 +45,7 @@ func assign_job_with_recipe(
 	if not _is_valid_index(v_idx):
 		return
 
-	remaining = max(1, remaining)
+	remaining = maxi(1, remaining)
 	var duration: float = _job_duration(job, recipe_id)
 
 	# per-job node_detail (woodcutting uses this; harmless for others)
@@ -88,18 +92,18 @@ func _assign_job_with_custom_duration(
 	if not _is_valid_index(v_idx):
 		return
 
-	remaining = max(1, remaining)
-
-	if duration <= 0.0:
-		duration = _job_duration(job, recipe_id)
+	var rem: int = maxi(1, remaining)
+	var dur: float = duration
+	if dur <= 0.0:
+		dur = _job_duration(job, recipe_id)
 
 	_jobs[v_idx] = {
 		"job": job,
 		"ax": ax,
 		"recipe": recipe_id,
 		"elapsed": 0.0,
-		"duration": duration,
-		"remaining": remaining,
+		"duration": dur,
+		"remaining": rem,
 		"repeat": repeat,
 		"node_detail": node_detail,
 	}
@@ -109,7 +113,7 @@ func _assign_job_with_custom_duration(
 		world.call("assign_villager_to_tile", v_idx, ax)
 
 	job_changed.emit(v_idx, job)
-	job_progress.emit(v_idx, job, 0.0, duration)
+	job_progress.emit(v_idx, job, 0.0, dur)
 
 # -------------------------------------------------------------------
 # Keyword inference
@@ -175,13 +179,33 @@ func _infer_woodcut_target_id_from_text(text: String) -> StringName:
 			return StringName(WOODCUTTING_KEYWORD_TO_TARGET_ID[kw_v])
 	return StringName("")
 
-# --- Herbalism autoload lookup (no global identifier needed) ---
+func _infer_fishing_node_id_from_text(text: String) -> StringName:
+	var lower: String = text.to_lower()
+
+	# Best: match FishingSystem node display_name → node_id
+	if typeof(FishingSystem) != TYPE_NIL and FishingSystem.has_method("get_node_def"):
+		var nodes_v: Variant = FishingSystem.get("FISH_NODES")
+		if nodes_v is Dictionary:
+			var nodes: Dictionary = nodes_v
+			for nid_v: Variant in nodes.keys():
+				var def_v: Variant = nodes[nid_v]
+				if not (def_v is Dictionary):
+					continue
+				var def: Dictionary = def_v
+				var dn: String = String(def.get("display_name", "")).to_lower()
+				if dn != "" and lower.find(dn) != -1:
+					return StringName(nid_v)
+
+	return StringName("")
+
+# -------------------------------------------------------------------
+# Herbalism autoload lookup
+# -------------------------------------------------------------------
+
 func _get_herbalism() -> Node:
-	# Most likely (your case)
-	var n: Node = get_node_or_null("/root/herbalism_system")
+	var n: Node = get_node_or_null("/root/HerbalismSystem")
 	if n != null:
 		return n
-	# Common alternates if you rename later
 	n = get_node_or_null("/root/herbalism_system")
 	if n != null:
 		return n
@@ -191,7 +215,6 @@ func _get_herbalism() -> Node:
 	return null
 
 # Convert "Frost Kava Patch" -> "frost_kava_patch"
-# (No ord(), no Variant inference)
 func _to_snake_id(s: String) -> String:
 	var out: String = ""
 	var prev_us: bool = false
@@ -231,7 +254,7 @@ func _infer_herbal_patch_id_from_text(text: String) -> StringName:
 
 	var lower: String = text.to_lower()
 
-	# 1) Best: use HerbalismSystem's keyword map if it exists
+	# 1) Use HerbalismSystem keyword map if it exists
 	var map_v: Variant = hs.get("HERBALISM_KEYWORD_TO_PATCH_ID")
 	if map_v is Dictionary:
 		var map: Dictionary = map_v
@@ -275,6 +298,11 @@ func assign_job(v_idx: int, job: StringName) -> void:
 func stop_job(v_idx: int) -> void:
 	if _jobs.has(v_idx):
 		_jobs.erase(v_idx)
+
+	var world: Node = get_tree().get_first_node_in_group("World")
+	if world != null and world.has_method("clear_villager_from_tile"):
+		world.call("clear_villager_from_tile", v_idx)
+
 	job_changed.emit(v_idx, JOB_NONE)
 
 func get_job(v_idx: int) -> StringName:
@@ -301,7 +329,7 @@ func job_label(job_id: StringName) -> String:
 		_:                return "None"
 
 # -------------------------------------------------------------------
-# Tile helpers
+# Tile helpers (modifiers can be Dictionaries OR Strings)
 # -------------------------------------------------------------------
 
 func _tile_modifiers(world: Node, ax: Vector2i) -> Array:
@@ -311,12 +339,65 @@ func _tile_modifiers(world: Node, ax: Vector2i) -> Array:
 			return mods_v
 	return []
 
+func _mod_get_kind_skill_detail(m: Variant) -> Dictionary:
+	# Supports:
+	#  - Dictionary: { "kind": "Resource Spawn", "skill": "mining", "name": "Copper Vein", ... }
+	#  - String:     "Resource Spawn [mining]: Copper Vein"
+	if m is Dictionary:
+		var d: Dictionary = m
+		var kind: String = String(d.get("kind", "")).strip_edges()
+		var skill: String = String(d.get("skill", "")).strip_edges().to_lower()
+		var detail: String = String(d.get("name", d.get("detail", ""))).strip_edges()
+
+		var header: String = kind
+		if skill != "":
+			header += " [" + skill + "]"
+
+		var out_text: String = header
+		if detail != "":
+			out_text += ": " + detail
+
+		return {"kind": kind, "skill": skill, "detail": detail, "text": out_text}
+
+	# String parsing
+	var s: String = String(m)
+	var header_s: String = s
+	var detail_s: String = ""
+
+	var parts: PackedStringArray = s.split(": ", false, 2)
+	if parts.size() > 0:
+		header_s = String(parts[0])
+	if parts.size() > 1:
+		detail_s = String(parts[1])
+
+	var kind_base: String = header_s
+	var skill_id: String = ""
+
+	var open_idx: int = header_s.find("[")
+	if open_idx != -1:
+		var close_idx: int = header_s.find("]", open_idx + 1)
+		if close_idx != -1:
+			kind_base = header_s.substr(0, open_idx).strip_edges()
+			skill_id = header_s.substr(open_idx + 1, close_idx - open_idx - 1).strip_edges().to_lower()
+
+	return {"kind": kind_base, "skill": skill_id, "detail": detail_s, "text": s}
+
 func _tile_has_resource_for_skill(mods: Array, skill_id: String) -> bool:
-	var needle: String = "[" + skill_id.to_lower() + "]"
-	for m: Variant in mods:
-		var s: String = String(m).to_lower()
-		if s.begins_with("resource spawn") and s.find(needle) != -1:
+	var s: String = skill_id.to_lower()
+
+	for m_v: Variant in mods:
+		var info: Dictionary = _mod_get_kind_skill_detail(m_v)
+		if String(info.get("kind", "")) != "Resource Spawn":
+			continue
+		if String(info.get("skill", "")).to_lower() != s:
+			continue
+
+		# Must have some sort of detail/name to be actionable
+		var detail: String = String(info.get("detail", "")).strip_edges()
+		var text: String = String(info.get("text", "")).strip_edges()
+		if detail != "" or text != "":
 			return true
+
 	return false
 
 # -------------------------------------------------------------------
@@ -404,9 +485,9 @@ func get_recipes_for_job(v_idx: int, job: StringName, ax: Vector2i) -> Array:
 
 		var astro_lv: int = 1
 		if v_idx >= 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_skill_level"):
-			astro_lv = max(1, int(Villagers.get_skill_level(v_idx, "astromancy")))
+			astro_lv = maxi(1, int(Villagers.get_skill_level(v_idx, "astromancy")))
 		elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
-			astro_lv = max(1, int(Skills.get_skill_level("astromancy")))
+			astro_lv = maxi(1, int(Skills.get_skill_level("astromancy")))
 
 		var max_rank: int = 10
 		if typeof(AstromancySystem) != TYPE_NIL and AstromancySystem.has_method("get_max_rank_for_level"):
@@ -668,33 +749,39 @@ func _complete_job(v_idx: int) -> void:
 	if job == JOB_SCRYING:
 		if typeof(ScryingSystem) != TYPE_NIL and ScryingSystem.has_method("do_scry"):
 			var r: Variant = ScryingSystem.do_scry()
-			if r is Dictionary: result = r
+			if r is Dictionary:
+				result = r
 
 	elif job == JOB_ASTROMANCY:
 		if typeof(AstromancySystem) != TYPE_NIL and AstromancySystem.has_method("do_astromancy_work"):
 			var r2: Variant = AstromancySystem.do_astromancy_work(recipe, ax)
-			if r2 is Dictionary: result = r2
+			if r2 is Dictionary:
+				result = r2
 
 	elif job == JOB_SMITHING:
 		if typeof(SmithingSystem) != TYPE_NIL and SmithingSystem.has_method("do_smithing_work"):
 			var r3: Variant = SmithingSystem.do_smithing_work(recipe)
-			if r3 is Dictionary: result = r3
+			if r3 is Dictionary:
+				result = r3
 
 	elif job == JOB_CONSTRUCTION:
 		if typeof(ConstructionSystem) != TYPE_NIL and ConstructionSystem.has_method("do_construction_work"):
 			var r4: Variant = ConstructionSystem.do_construction_work(recipe)
-			if r4 is Dictionary: result = r4
+			if r4 is Dictionary:
+				result = r4
 
 	elif job == JOB_MINING:
 		if typeof(MiningSystem) != TYPE_NIL and MiningSystem.has_method("do_mine"):
 			var r5: Variant = MiningSystem.do_mine(recipe, ax)
-			if r5 is Dictionary: result = r5
+			if r5 is Dictionary:
+				result = r5
 
 	elif job == JOB_WOODCUTTING:
 		if typeof(WoodcuttingSystem) != TYPE_NIL and WoodcuttingSystem.has_method("do_chop"):
 			var node_detail: String = String(state.get("node_detail", ""))
 			var r6: Variant = WoodcuttingSystem.do_chop(v_idx, recipe, ax, node_detail)
-			if r6 is Dictionary: result = r6
+			if r6 is Dictionary:
+				result = r6
 
 	elif job == JOB_FISHING:
 		if typeof(FishingSystem) != TYPE_NIL and FishingSystem.has_method("do_fish"):
@@ -705,7 +792,8 @@ func _complete_job(v_idx: int) -> void:
 				fish_lv = int(Skills.get_skill_level("fishing"))
 
 			var r7: Variant = FishingSystem.do_fish(recipe, fish_lv)
-			if r7 is Dictionary: result = r7
+			if r7 is Dictionary:
+				result = r7
 
 	elif job == JOB_HERBALISM:
 		var hs2: Node = _get_herbalism()
@@ -716,7 +804,8 @@ func _complete_job(v_idx: int) -> void:
 			var patch_id: StringName = StringName(patch_str)
 
 			var r8: Variant = hs2.call("do_forage", patch_id, ax, quick)
-			if r8 is Dictionary: result = r8
+			if r8 is Dictionary:
+				result = r8
 
 	var xp: int = int(result.get("xp", 0))
 	var loot_desc: String = String(result.get("loot_desc", ""))
@@ -727,13 +816,13 @@ func _complete_job(v_idx: int) -> void:
 	# XP attribution
 	if xp > 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("add_skill_xp"):
 		var skill_id: String = ""
-		if job == JOB_SCRYING:      skill_id = "scrying"
-		elif job == JOB_ASTROMANCY: skill_id = "astromancy"
-		elif job == JOB_MINING:     skill_id = "mining"
-		elif job == JOB_WOODCUTTING: skill_id = "woodcutting"
-		elif job == JOB_FISHING:    skill_id = "fishing"
-		elif job == JOB_HERBALISM:  skill_id = "herbalism"
-		elif job == JOB_SMITHING:   skill_id = "smithing"
+		if job == JOB_SCRYING:        skill_id = "scrying"
+		elif job == JOB_ASTROMANCY:   skill_id = "astromancy"
+		elif job == JOB_MINING:       skill_id = "mining"
+		elif job == JOB_WOODCUTTING:  skill_id = "woodcutting"
+		elif job == JOB_FISHING:      skill_id = "fishing"
+		elif job == JOB_HERBALISM:    skill_id = "herbalism"
+		elif job == JOB_SMITHING:     skill_id = "smithing"
 		elif job == JOB_CONSTRUCTION: skill_id = "construction"
 
 		if skill_id != "":
@@ -802,11 +891,12 @@ func _complete_job(v_idx: int) -> void:
 
 	# Clear current job state
 	_jobs.erase(v_idx)
-	var world3: Node = get_tree().get_first_node_in_group("World")
-	if world3 != null and world3.has_method("clear_villager_from_tile"):
-		world3.call("clear_villager_from_tile", v_idx)
 
+	# Only clear villager->tile assignment if we are actually stopping
 	if not will_continue:
+		var world3: Node = get_tree().get_first_node_in_group("World")
+		if world3 != null and world3.has_method("clear_villager_from_tile"):
+			world3.call("clear_villager_from_tile", v_idx)
 		job_changed.emit(v_idx, JOB_NONE)
 
 # -------------------------------------------------------------------
@@ -894,15 +984,17 @@ func _build_mining_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) -> Ar
 	elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
 		mining_lv = int(Skills.get_skill_level("mining"))
 
-	for m: Variant in mods:
-		var text: String = String(m)
-		var lower: String = text.to_lower()
-		if not lower.begins_with("resource spawn"):
+	for m_v: Variant in mods:
+		var info: Dictionary = _mod_get_kind_skill_detail(m_v)
+		if String(info.get("kind", "")) != "Resource Spawn":
 			continue
-		if lower.find("[mining]") == -1:
+		if String(info.get("skill", "")).to_lower() != "mining":
 			continue
 
-		var node_id: StringName = _infer_mining_node_id_from_text(text)
+		var detail: String = String(info.get("detail", ""))
+		var probe: String = detail if detail != "" else String(info.get("text", ""))
+
+		var node_id: StringName = _infer_mining_node_id_from_text(probe)
 		if node_id == StringName(""):
 			continue
 
@@ -933,11 +1025,7 @@ func _build_mining_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) -> Ar
 			if pv is Array:
 				drop_preview = pv
 
-		var deposit_name: String = text
-		var colon_idx: int = text.find(":")
-		if colon_idx >= 0 and colon_idx + 1 < text.length():
-			deposit_name = text.substr(colon_idx + 1).strip_edges()
-
+		var deposit_name: String = detail if detail != "" else probe
 		recipes.append({
 			"id": node_id,
 			"label": "Mine %s" % deposit_name,
@@ -974,7 +1062,6 @@ func _build_woodcutting_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) 
 					continue
 				var n: Dictionary = n_v
 
-				# Support either "target_id" or "node_id"
 				var target_id: StringName = StringName(n.get("target_id", n.get("node_id", StringName(""))))
 				if target_id == StringName(""):
 					continue
@@ -995,12 +1082,10 @@ func _build_woodcutting_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) 
 
 				var xp: int = int(def.get("xp", 1))
 
-				# Detail/name from node (preferred), else fallback
 				var detail: String = String(n.get("detail", n.get("name", ""))).strip_edges()
 				if detail == "":
 					detail = String(target_id)
 
-				# Find primary log item for icon/name (same as your old logic)
 				var icon_tex: Texture2D = null
 				var log_item: StringName = StringName("")
 				var log_name: String = ""
@@ -1018,7 +1103,6 @@ func _build_woodcutting_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) 
 						if Items.has_method("is_valid") and Items.has_method("display_name") and Items.is_valid(log_item):
 							log_name = Items.display_name(log_item)
 
-				# Node detail used by your WC drop preview
 				var node_detail: String = detail
 
 				var drop_preview: Array = []
@@ -1050,26 +1134,27 @@ func _build_woodcutting_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) 
 					"node_detail": node_detail,
 				})
 
-			# If ResourceNodes found something, return it (don’t fall back to modifiers)
 			if recipes.size() > 0:
 				return recipes
 
 	# ------------------------------------------------------------
-	# 2) Fallback: old modifier-string parsing (your existing approach)
+	# 2) Fallback: parse modifiers (supports dict OR string)
 	# ------------------------------------------------------------
 	var mods: Array = _tile_modifiers(world, ax)
 	if mods.is_empty():
 		return recipes
 
-	for m: Variant in mods:
-		var text: String = String(m)
-		var lower: String = text.to_lower()
-		if lower.find("resource spawn") == -1:
+	for m_v: Variant in mods:
+		var info: Dictionary = _mod_get_kind_skill_detail(m_v)
+		if String(info.get("kind", "")) != "Resource Spawn":
 			continue
-		if lower.find("[woodcutting]") == -1:
+		if String(info.get("skill", "")).to_lower() != "woodcutting":
 			continue
 
-		var target_id2: StringName = _infer_woodcut_target_id_from_text(text)
+		var detail2: String = String(info.get("detail", ""))
+		var probe2: String = detail2 if detail2 != "" else String(info.get("text", ""))
+
+		var target_id2: StringName = _infer_woodcut_target_id_from_text(probe2)
 		if target_id2 == StringName(""):
 			continue
 
@@ -1106,11 +1191,7 @@ func _build_woodcutting_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) 
 				if Items.has_method("is_valid") and Items.has_method("display_name") and Items.is_valid(log_item2):
 					log_name2 = Items.display_name(log_item2)
 
-		var deposit_name: String = text
-		var colon_idx: int = text.find(":")
-		if colon_idx >= 0 and colon_idx + 1 < text.length():
-			deposit_name = text.substr(colon_idx + 1).strip_edges()
-
+		var deposit_name: String = detail2 if detail2 != "" else probe2
 		var node_detail2: String = deposit_name
 
 		var drop_preview2: Array = []
@@ -1144,18 +1225,130 @@ func _build_woodcutting_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) 
 
 	return recipes
 
-func _build_fishing_recipes_for_tile(v_idx: int, ax: Vector2i, _world: Node) -> Array:
+func _build_fishing_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) -> Array:
 	var recipes: Array = []
 
-	if typeof(ResourceNodes) == TYPE_NIL or not ResourceNodes.has_method("get_nodes"):
+	# ------------------------------------------------------------
+	# 1) Preferred: ResourceNodes-backed fishing nodes
+	# ------------------------------------------------------------
+	if typeof(ResourceNodes) != TYPE_NIL and ResourceNodes.has_method("get_nodes"):
+		var fish_nodes_v: Variant = ResourceNodes.get_nodes(ax, "fishing")
+		if fish_nodes_v is Array:
+			var fish_nodes: Array = fish_nodes_v
+			if fish_nodes.size() > 0:
+				return _build_fishing_recipes_from_nodes(v_idx, fish_nodes)
+
+	# ------------------------------------------------------------
+	# 2) Fallback: parse modifiers to find fishing nodes
+	# ------------------------------------------------------------
+	var mods: Array = _tile_modifiers(world, ax)
+	if mods.is_empty():
 		return recipes
 
-	var fish_nodes_v: Variant = ResourceNodes.get_nodes(ax, "fishing")
-	if not (fish_nodes_v is Array):
-		return recipes
-	var fish_nodes: Array = fish_nodes_v
-	if fish_nodes.is_empty():
-		return recipes
+	var fish_lv: int = 1
+	if v_idx >= 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_skill_level"):
+		fish_lv = int(Villagers.get_skill_level(v_idx, "fishing"))
+	elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
+		fish_lv = int(Skills.get_skill_level("fishing"))
+
+	for m_v: Variant in mods:
+		var info: Dictionary = _mod_get_kind_skill_detail(m_v)
+		if String(info.get("kind", "")) != "Resource Spawn":
+			continue
+		if String(info.get("skill", "")).to_lower() != "fishing":
+			continue
+
+		var detail: String = String(info.get("detail", "")).strip_edges()
+		var probe: String = detail if detail != "" else String(info.get("text", ""))
+
+		var node_id: StringName = _infer_fishing_node_id_from_text(probe)
+		if node_id == StringName(""):
+			continue
+
+		if typeof(FishingSystem) == TYPE_NIL or not FishingSystem.has_method("get_node_def"):
+			continue
+
+		var def_v: Variant = FishingSystem.get_node_def(node_id)
+		if not (def_v is Dictionary):
+			continue
+		var def: Dictionary = def_v
+		if def.is_empty():
+			continue
+
+		var req: int = int(def.get("req_level", 1))
+		if fish_lv < req:
+			continue
+
+		var display_name: String = String(def.get("display_name", "Fishing Spot"))
+		var max_grade: int = int(def.get("max_grade", 1))
+
+		var grade: int = int(ceil(fish_lv / 10.0))
+		grade = clampi(grade, 1, max_grade)
+
+		var xp: int = 0
+		var xpg_v: Variant = FishingSystem.get("XP_BY_GRADE")
+		if xpg_v is Dictionary:
+			xp = int((xpg_v as Dictionary).get(grade, 0))
+
+		var icon_tex: Texture2D = null
+		var fish_item: StringName = StringName("")
+		var fish_name: String = ""
+
+		var species_by_grade: Dictionary = {}
+		var sbg_v: Variant = def.get("species_by_grade", {})
+		if sbg_v is Dictionary:
+			species_by_grade = sbg_v
+
+		if typeof(Items) != TYPE_NIL:
+			var g: int = grade
+			while g > 0 and not species_by_grade.has(g):
+				g -= 1
+			if g > 0:
+				var entries_v: Variant = species_by_grade.get(g, [])
+				if entries_v is Array:
+					var entries: Array = entries_v
+					if entries.size() > 0 and entries[0] is Dictionary:
+						fish_item = StringName((entries[0] as Dictionary).get("fish", StringName("")))
+
+			if fish_item != StringName(""):
+				if Items.has_method("get_icon"):
+					icon_tex = Items.get_icon(fish_item)
+				if Items.has_method("is_valid") and Items.has_method("display_name") and Items.is_valid(fish_item):
+					fish_name = Items.display_name(fish_item)
+
+		var detail_label: String = detail if detail != "" else display_name
+		var label: String = "Fish %s" % detail_label
+		if fish_name != "":
+			label = "Fish %s (%s)" % [detail_label, fish_name]
+
+		var desc: String = "Fish at %s." % detail_label
+		if fish_name != "":
+			desc = "Fish at %s for %s." % [detail_label, fish_name]
+
+		var drop_preview: Array = []
+		if typeof(FishingSystem) != TYPE_NIL and FishingSystem.has_method("get_drop_preview_for_node"):
+			var pv: Variant = FishingSystem.get_drop_preview_for_node(node_id, fish_lv)
+			if pv is Array:
+				drop_preview = pv
+
+		recipes.append({
+			"id": node_id,
+			"label": label,
+			"icon": icon_tex,
+			"level_req": req,
+			"xp": xp,
+			"inputs": [],
+			"output": {},
+			"desc": desc,
+			"primary_item": fish_item,
+			"primary_item_name": fish_name,
+			"drop_preview": drop_preview,
+		})
+
+	return recipes
+
+func _build_fishing_recipes_from_nodes(v_idx: int, fish_nodes: Array) -> Array:
+	var recipes: Array = []
 
 	var fish_lv: int = 1
 	if v_idx >= 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_skill_level"):
@@ -1197,10 +1390,9 @@ func _build_fishing_recipes_for_tile(v_idx: int, ax: Vector2i, _world: Node) -> 
 		grade = clampi(grade, 1, max_grade)
 
 		var xp: int = 0
-		if typeof(FishingSystem) != TYPE_NIL:
-			var xpg: Variant = FishingSystem.get("XP_BY_GRADE")
-			if xpg is Dictionary:
-				xp = int((xpg as Dictionary).get(grade, 0))
+		var xpg_v: Variant = FishingSystem.get("XP_BY_GRADE")
+		if xpg_v is Dictionary:
+			xp = int((xpg_v as Dictionary).get(grade, 0))
 
 		var icon_tex: Texture2D = null
 		var fish_item: StringName = StringName("")
@@ -1288,18 +1480,16 @@ func _build_herbalism_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) ->
 
 	if patch_ids.is_empty():
 		var mods: Array = _tile_modifiers(world, ax)
-		for m: Variant in mods:
-			var text: String = String(m)
-			var lower: String = text.to_lower()
-			if lower.find("resource spawn") == -1:
+		for m_v: Variant in mods:
+			var info: Dictionary = _mod_get_kind_skill_detail(m_v)
+			if String(info.get("kind", "")) != "Resource Spawn":
 				continue
-			if lower.find("[herbalism]") == -1:
+			if String(info.get("skill", "")).to_lower() != "herbalism":
 				continue
 
-			var detail: String = text
-			var colon_idx: int = text.find(":")
-			if colon_idx >= 0 and colon_idx + 1 < text.length():
-				detail = text.substr(colon_idx + 1).strip_edges()
+			var detail: String = String(info.get("detail", "")).strip_edges()
+			if detail == "":
+				detail = String(info.get("text", ""))
 
 			var pid2: StringName = _infer_herbal_patch_id_from_text(detail)
 			if pid2 != StringName("") and not patch_ids.has(pid2):
@@ -1309,7 +1499,6 @@ func _build_herbalism_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) ->
 		if patch_id == StringName(""):
 			continue
 
-		# unlocked check (optional)
 		if hs.has_method("is_patch_unlocked"):
 			var ok_v: Variant = hs.call("is_patch_unlocked", patch_id, herb_lv)
 			if not bool(ok_v):
@@ -1317,6 +1506,7 @@ func _build_herbalism_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) ->
 
 		if not hs.has_method("get_patch_def"):
 			continue
+
 		var def_v: Variant = hs.call("get_patch_def", patch_id)
 		if not (def_v is Dictionary):
 			continue
@@ -1331,7 +1521,6 @@ func _build_herbalism_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) ->
 		var xp_base: int = int(def.get("xp", 1))
 		var label_base: String = String(def.get("label", "Herb Patch"))
 
-		# status (optional)
 		var is_available: bool = true
 		var charges: int = 0
 		if hs.has_method("get_patch_status"):
@@ -1349,7 +1538,6 @@ func _build_herbalism_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) ->
 		if drops_any is Array:
 			var drops: Array = drops_any
 			if drops.size() > 0 and drops[0] is Dictionary:
-				# your herbal drops rows appear to be { id: item_id, qty: ... }
 				primary_item = StringName((drops[0] as Dictionary).get("id", StringName("")))
 
 		if typeof(Items) != TYPE_NIL and primary_item != StringName(""):
@@ -1358,16 +1546,17 @@ func _build_herbalism_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) ->
 			if Items.has_method("is_valid") and Items.has_method("display_name") and Items.is_valid(primary_item):
 				primary_name = Items.display_name(primary_item)
 
-		# preview helper (optional)
 		var preview_careful: Array = []
 		var preview_quick: Array = []
 		if hs.has_method("get_drop_preview_for_patch"):
 			var p1: Variant = hs.call("get_drop_preview_for_patch", patch_id, false)
-			if p1 is Array: preview_careful = p1
+			if p1 is Array:
+				preview_careful = p1
 			var p2: Variant = hs.call("get_drop_preview_for_patch", patch_id, true)
-			if p2 is Array: preview_quick = p2
+			if p2 is Array:
+				preview_quick = p2
 
-		# Careful (2 actions)
+		# Careful
 		var careful_id: StringName = StringName(String(patch_id) + "_careful")
 		var careful_desc: String = "Careful pick: steady yield (2 actions)."
 		if primary_name != "":
@@ -1390,7 +1579,7 @@ func _build_herbalism_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) ->
 			"charges": charges,
 		})
 
-		# Quick (1 action, consumes 1 charge)
+		# Quick
 		var quick_id: StringName = StringName(String(patch_id) + "_quick")
 		var quick_desc: String = "Quick pick: 5× yield (1 action), consumes 1 charge."
 		if primary_name != "":
@@ -1446,7 +1635,7 @@ func _on_tick(delta_s: float, _tick_index: int) -> void:
 
 		var elapsed: float = float(st.get("elapsed", 0.0))
 
-		# ✅ Emit progress at the START of the tick (pre-advance)
+		# Emit progress at the START of the tick (pre-advance)
 		job_progress.emit(v_idx, job, elapsed, duration)
 
 		# Advance time
@@ -1454,8 +1643,7 @@ func _on_tick(delta_s: float, _tick_index: int) -> void:
 		st["elapsed"] = elapsed
 		_jobs[v_idx] = st
 
-		# (Optional) If you want the UI to update twice per tick, keep this.
-		# If not, you can remove it and the bar will move 1 step per tick but without a snap.
+		# Emit post-advance (optional smoother UI)
 		job_progress.emit(v_idx, job, min(elapsed, duration), duration)
 
 		if elapsed >= duration:
