@@ -1,0 +1,52 @@
+[gd_scene load_steps=2 format=3 uid="uid://drr474uy35gyy"]
+
+[ext_resource type="Script" uid="uid://dm3rh5sl6ii5n" path="res://right_dock.gd" id="1_ri617"]
+
+[node name="RightDock" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ri617")
+
+[node name="RootHBox" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="SlidePanel" type="PanelContainer" parent="RootHBox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="RootHBox/SlidePanel"]
+layout_mode = 2
+
+[node name="Views" type="TabContainer" parent="RootHBox/SlidePanel/MarginContainer"]
+layout_mode = 2
+current_tab = 0
+
+[node name="ViewVillagersList" type="Control" parent="RootHBox/SlidePanel/MarginContainer/Views"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="ViewVillagerDetail" type="Control" parent="RootHBox/SlidePanel/MarginContainer/Views"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="ViewBank" type="Control" parent="RootHBox/SlidePanel/MarginContainer/Views"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 2
+
+[node name="IndexBar" type="VBoxContainer" parent="RootHBox"]
+layout_mode = 2
+
+[node name="TabVillagers" type="Button" parent="RootHBox/IndexBar"]
+layout_mode = 2
+text = "Villagers"
+
+[node name="TabBank" type="Button" parent="RootHBox/IndexBar"]
+layout_mode = 2
+text = "Bank"

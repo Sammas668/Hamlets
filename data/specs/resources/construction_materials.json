@@ -1,0 +1,792 @@
+{
+  "cut_log_pine": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed pine logs used as tier 1 construction timber.",
+	"hardware": {},
+	"id": "cut_log_pine",
+	"kind": "material",
+	"mat_tier": 1,
+	"min_building_tier": 1,
+	"part": "Pine Timber",
+	"req_con_lv": 1,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_pine": 1
+	}
+  },
+  "cut_log_birch": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed birch logs used as tier 2 construction timber.",
+	"hardware": {},
+	"id": "cut_log_birch",
+	"kind": "material",
+	"mat_tier": 2,
+	"min_building_tier": 1,
+	"part": "Birch Timber",
+	"req_con_lv": 10,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_birch": 1
+	}
+  },
+  "cut_log_oak": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed oak logs used as tier 3 construction timber.",
+	"hardware": {},
+	"id": "cut_log_oak",
+	"kind": "material",
+	"mat_tier": 3,
+	"min_building_tier": 1,
+	"part": "Oak Timber",
+	"req_con_lv": 20,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_oak": 1
+	}
+  },
+  "cut_log_willow": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed willow logs used as tier 4 construction timber.",
+	"hardware": {},
+	"id": "cut_log_willow",
+	"kind": "material",
+	"mat_tier": 4,
+	"min_building_tier": 1,
+	"part": "Willow Timber",
+	"req_con_lv": 30,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_willow": 1
+	}
+  },
+  "cut_log_maple": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed maple logs used as tier 5 construction timber.",
+	"hardware": {},
+	"id": "cut_log_maple",
+	"kind": "material",
+	"mat_tier": 5,
+	"min_building_tier": 1,
+	"part": "Maple Timber",
+	"req_con_lv": 40,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_maple": 1
+	}
+  },
+  "cut_log_yew": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed yew logs used as tier 6 construction timber.",
+	"hardware": {},
+	"id": "cut_log_yew",
+	"kind": "material",
+	"mat_tier": 6,
+	"min_building_tier": 1,
+	"part": "Yew Timber",
+	"req_con_lv": 50,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_yew": 1
+	}
+  },
+  "cut_log_ironwood": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed ironwood logs used as tier 7 construction timber.",
+	"hardware": {},
+	"id": "cut_log_ironwood",
+	"kind": "material",
+	"mat_tier": 7,
+	"min_building_tier": 1,
+	"part": "Ironwood Timber",
+	"req_con_lv": 60,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_ironwood": 1
+	}
+  },
+  "cut_log_redwood": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed redwood logs used as tier 8 construction timber.",
+	"hardware": {},
+	"id": "cut_log_redwood",
+	"kind": "material",
+	"mat_tier": 8,
+	"min_building_tier": 1,
+	"part": "Redwood Timber",
+	"req_con_lv": 75,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_redwood": 1
+	}
+  },
+  "cut_log_sakura": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed sakura logs used as tier 9 construction timber.",
+	"hardware": {},
+	"id": "cut_log_sakura",
+	"kind": "material",
+	"mat_tier": 9,
+	"min_building_tier": 1,
+	"part": "Sakura Timber",
+	"req_con_lv": 90,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_sakura": 1
+	}
+  },
+  "cut_log_elder": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Processed elder logs used as tier 10 construction timber.",
+	"hardware": {},
+	"id": "cut_log_elder",
+	"kind": "material",
+	"mat_tier": 10,
+	"min_building_tier": 1,
+	"part": "Elder Timber",
+	"req_con_lv": 95,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "log_elder": 1
+	}
+  },
+
+  "cut_stone_limestone": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Cut limestone blocks used as tier 1 structural stone.",
+	"hardware": {},
+	"id": "cut_stone_limestone",
+	"kind": "material",
+	"mat_tier": 1,
+	"min_building_tier": 1,
+	"part": "Limestone Blocks",
+	"req_con_lv": 1,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "stone_limestone": 2
+	}
+  },
+  "cut_stone_sandstone": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Cut sandstone blocks used as tier 3 structural stone.",
+	"hardware": {},
+	"id": "cut_stone_sandstone",
+	"kind": "material",
+	"mat_tier": 3,
+	"min_building_tier": 1,
+	"part": "Sandstone Blocks",
+	"req_con_lv": 18,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "stone_sandstone": 2
+	}
+  },
+  "cut_stone_basalt": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Cut basalt blocks used as tier 5 structural stone.",
+	"hardware": {},
+	"id": "cut_stone_basalt",
+	"kind": "material",
+	"mat_tier": 5,
+	"min_building_tier": 1,
+	"part": "Basalt Blocks",
+	"req_con_lv": 35,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "stone_basalt": 2
+	}
+  },
+  "cut_stone_granite": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Cut granite blocks used as tier 7 structural stone.",
+	"hardware": {},
+	"id": "cut_stone_granite",
+	"kind": "material",
+	"mat_tier": 7,
+	"min_building_tier": 1,
+	"part": "Granite Blocks",
+	"req_con_lv": 55,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "stone_granite": 2
+	}
+  },
+  "cut_stone_marble": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Cut marble blocks used as tier 9 structural stone.",
+	"hardware": {},
+	"id": "cut_stone_marble",
+	"kind": "material",
+	"mat_tier": 9,
+	"min_building_tier": 1,
+	"part": "Marble Blocks",
+	"req_con_lv": 75,
+	"role": "Material",
+	"skill": "construction",
+	"struct": {
+	  "stone_marble": 2
+	}
+  },
+
+  "frame_t1": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 1 timber.",
+	"hardware": {},
+	"id": "frame_t1",
+	"kind": "material",
+	"mat_tier": 1,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T1)",
+	"pattern": "frame",
+	"req_con_lv": 1,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "frame_t2": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 2 timber.",
+	"hardware": {},
+	"id": "frame_t2",
+	"kind": "material",
+	"mat_tier": 2,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T2)",
+	"pattern": "frame",
+	"req_con_lv": 10,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "frame_t3": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 3 timber.",
+	"hardware": {},
+	"id": "frame_t3",
+	"kind": "material",
+	"mat_tier": 3,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T3)",
+	"pattern": "frame",
+	"req_con_lv": 20,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "frame_t4": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 4 timber.",
+	"hardware": {},
+	"id": "frame_t4",
+	"kind": "material",
+	"mat_tier": 4,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T4)",
+	"pattern": "frame",
+	"req_con_lv": 30,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "frame_t5": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 5 timber.",
+	"hardware": {},
+	"id": "frame_t5",
+	"kind": "material",
+	"mat_tier": 5,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T5)",
+	"pattern": "frame",
+	"req_con_lv": 40,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "frame_t6": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 6 timber.",
+	"hardware": {},
+	"id": "frame_t6",
+	"kind": "material",
+	"mat_tier": 6,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T6)",
+	"pattern": "frame",
+	"req_con_lv": 50,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "frame_t7": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 7 timber.",
+	"hardware": {},
+	"id": "frame_t7",
+	"kind": "material",
+	"mat_tier": 7,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T7)",
+	"pattern": "frame",
+	"req_con_lv": 60,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "frame_t8": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 8 timber.",
+	"hardware": {},
+	"id": "frame_t8",
+	"kind": "material",
+	"mat_tier": 8,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T8)",
+	"pattern": "frame",
+	"req_con_lv": 75,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "frame_t9": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 9 timber.",
+	"hardware": {},
+	"id": "frame_t9",
+	"kind": "material",
+	"mat_tier": 9,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T9)",
+	"pattern": "frame",
+	"req_con_lv": 90,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "frame_t10": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Timber frame made from tier 10 timber.",
+	"hardware": {},
+	"id": "frame_t10",
+	"kind": "material",
+	"mat_tier": 10,
+	"min_building_tier": 1,
+	"part": "Timber Frame (T10)",
+	"pattern": "frame",
+	"req_con_lv": 95,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+
+  "floor_section": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 0 timber unit(s) and 2 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "floor_section",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Stone Floor Section",
+	"pattern": true,
+	"req_con_lv": 1,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 2,
+	  "timber_units": 0
+	}
+  },
+  "palisade_segment_mod": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 2 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "palisade_segment_mod",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Palisade Segment",
+	"pattern": true,
+	"req_con_lv": 1,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "panel_sheathing": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 1 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "panel_sheathing",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Panel Sheathing",
+	"pattern": true,
+	"req_con_lv": 1,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 1
+	}
+  },
+  "roof_kit_trussed": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 3 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "roof_kit_trussed",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Trussed Roof Kit",
+	"pattern": true,
+	"req_con_lv": 1,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 3
+	}
+  },
+  "support_beam": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 2 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "support_beam",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Support Beam",
+	"pattern": true,
+	"req_con_lv": 1,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "wall_section": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 2 timber unit(s) and 1 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "wall_section",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Wall Section",
+	"pattern": true,
+	"req_con_lv": 1,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 1,
+	  "timber_units": 2
+	}
+  },
+  "window_frame_mod": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 1 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "window_frame_mod",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Window Frame",
+	"pattern": true,
+	"req_con_lv": 1,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 1
+	}
+  },
+  "door_frame_mod": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 1 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "door_frame_mod",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Door Frame",
+	"pattern": true,
+	"req_con_lv": 1,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 1
+	}
+  },
+  "roof_truss": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 2 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "roof_truss",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Roof Truss",
+	"pattern": true,
+	"req_con_lv": 4,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "stairs_kit": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 1 timber unit(s) and 1 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "stairs_kit",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Stairs Kit",
+	"pattern": true,
+	"req_con_lv": 15,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 1,
+	  "timber_units": 1
+	}
+  },
+  "beam": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 1 timber unit(s) and 1 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "beam",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Cross Beam",
+	"pattern": true,
+	"req_con_lv": 16,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 1,
+	  "timber_units": 1
+	}
+  },
+  "pulley_block": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 1 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "pulley_block",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Pulley Block",
+	"pattern": true,
+	"req_con_lv": 16,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 1
+	}
+  },
+  "windlass_drum": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 2 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "windlass_drum",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Windlass Drum",
+	"pattern": true,
+	"req_con_lv": 16,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "bridge_span": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 3 timber unit(s) and 2 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "bridge_span",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Bridge Span",
+	"pattern": true,
+	"req_con_lv": 25,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 2,
+	  "timber_units": 3
+	}
+  },
+  "ladder": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 1 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "ladder",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Ladder",
+	"pattern": true,
+	"req_con_lv": 33,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 1
+	}
+  },
+  "watchtower_stage": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 3 timber unit(s) and 1 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "watchtower_stage",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Watchtower Stage",
+	"pattern": true,
+	"req_con_lv": 33,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 1,
+	  "timber_units": 3
+	}
+  },
+  "winch_assembly": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 1 timber unit(s) and 1 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "winch_assembly",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Winch Assembly",
+	"pattern": true,
+	"req_con_lv": 45,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 1,
+	  "timber_units": 1
+	}
+  },
+  "gate_leaf": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 2 timber unit(s) and 0 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "gate_leaf",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Gate Leaf",
+	"pattern": true,
+	"req_con_lv": 50,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 0,
+	  "timber_units": 2
+	}
+  },
+  "reinforced_frame": {
+	"building": "Construction Materials",
+	"delta_lv": 0,
+	"effect": "Pattern: 2 timber unit(s) and 1 stone unit(s) for this structural part.",
+	"hardware": {},
+	"id": "reinforced_frame",
+	"kind": "material",
+	"min_building_tier": 1,
+	"part": "Reinforced Frame",
+	"pattern": true,
+	"req_con_lv": 50,
+	"role": "Struct",
+	"skill": "construction",
+	"struct": {
+	  "stone_units": 1,
+	  "timber_units": 2
+	}
+  }
+}

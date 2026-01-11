@@ -1,0 +1,102 @@
+[gd_scene load_steps=5 format=3 uid="uid://drr474uy35gyy"]
+
+[ext_resource type="Script" uid="uid://dm3rh5sl6ii5n" path="res://scripts/right_dock.gd" id="1_ri617"]
+[ext_resource type="Script" uid="uid://ds6e5mg5mv3y7" path="res://scenes/villagers_list_view.gd" id="2_12s44"]
+[ext_resource type="PackedScene" uid="uid://darfr7m3hlmyd" path="res://ui/VillagerDetailView.tscn" id="3_swgr0"]
+[ext_resource type="PackedScene" uid="uid://d3y4xsh5cnnkq" path="res://scenes/BankView.tscn" id="4_o126j"]
+
+[node name="RightDock" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ri617")
+
+[node name="RootHBox" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 11
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -270.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="SlidePanel" type="PanelContainer" parent="RootHBox"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="RootHBox/SlidePanel"]
+layout_mode = 2
+
+[node name="Views" type="TabContainer" parent="RootHBox/SlidePanel/MarginContainer"]
+layout_mode = 2
+current_tab = 1
+
+[node name="Villagers List" type="Control" parent="RootHBox/SlidePanel/MarginContainer/Views"]
+visible = false
+layout_mode = 2
+script = ExtResource("2_12s44")
+list_path = NodePath("ItemList")
+place_btn_path = NodePath("HBoxContainer/Button")
+details_btn_path = NodePath("HBoxContainer/Button2")
+metadata/_tab_index = 0
+
+[node name="Label" type="Label" parent="RootHBox/SlidePanel/MarginContainer/Views/Villagers List"]
+layout_mode = 0
+offset_left = 4.0
+offset_top = 5.0
+offset_right = 70.0
+offset_bottom = 28.0
+text = "Villagers"
+
+[node name="ItemList" type="ItemList" parent="RootHBox/SlidePanel/MarginContainer/Views/Villagers List"]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 35.0
+offset_right = 188.0
+offset_bottom = 1345.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="RootHBox/SlidePanel/MarginContainer/Views/Villagers List"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -115.0
+offset_top = -40.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="Button" type="Button" parent="RootHBox/SlidePanel/MarginContainer/Views/Villagers List/HBoxContainer"]
+layout_mode = 2
+text = "Place"
+
+[node name="Button2" type="Button" parent="RootHBox/SlidePanel/MarginContainer/Views/Villagers List/HBoxContainer"]
+layout_mode = 2
+text = "Details"
+
+[node name="VillagerDetailView" parent="RootHBox/SlidePanel/MarginContainer/Views/Villagers List/HBoxContainer/Button2" instance=ExtResource("3_swgr0")]
+layout_mode = 1
+offset_left = -1137.0
+offset_top = -698.0
+offset_right = -1137.0
+offset_bottom = -729.0
+
+[node name="BankView" parent="RootHBox/SlidePanel/MarginContainer/Views" instance=ExtResource("4_o126j")]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="IndexBar" type="VBoxContainer" parent="RootHBox"]
+layout_mode = 2
+
+[node name="TabVillagers" type="Button" parent="RootHBox/IndexBar"]
+layout_mode = 2
+text = "Villagers"
+
+[node name="TabBank" type="Button" parent="RootHBox/IndexBar"]
+layout_mode = 2
+text = "Bank"

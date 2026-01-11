@@ -1,0 +1,1583 @@
+{
+  "grand_smithy_base": {
+	"kind": "base",
+	"attr": "str",
+	"building": "Grand Smithy",
+	"skill": "smithing",
+	"label": "Grand Smithy",
+	"tiers": {
+	  "1": {
+		"label": "Grand Smithy (Smithing)",
+		"desc": "Tier I: 1 module slot.",
+		"level_req": 10,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 10 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_trussed", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 2 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 140 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 8 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Grand Smithy (Smithing)",
+		"desc": "Tier II: 2 slots.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 10 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_trussed", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 140 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 8 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 7 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Grand Smithy (Smithing)",
+		"desc": "Tier III: 3 slots.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 10 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_trussed", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 140 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 8 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 8 }
+		  ]
+		}
+	  }
+	}
+  },
+  "training_arena_base": {
+	"kind": "base",
+	"attr": "str",
+	"building": "Training Arena",
+	"skill": "melee",
+	"label": "Training Arena",
+	"tiers": {
+	  "1": {
+		"label": "Training Arena (Melee)",
+		"desc": "Tier I: 1 module slot.",
+		"level_req": 10,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 10 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_basic", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "palisade_segment", "qty": 6 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 120 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Training Arena (Melee)",
+		"desc": "Tier II: 2 slots.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 10 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_basic", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "palisade_segment", "qty": 8 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 120 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Training Arena (Melee)",
+		"desc": "Tier III: 3 slots.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 10 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_basic", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "palisade_segment", "qty": 10 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 120 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  }
+	}
+  },
+  "barracks_base": {
+	"kind": "base",
+	"attr": "str",
+	"building": "Barracks",
+	"skill": "defence",
+	"label": "Barracks",
+	"tiers": {
+	  "1": {
+		"label": "Barracks (Defence)",
+		"desc": "Tier I: 1 module slot.",
+		"level_req": 10,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 8 },
+			{ "item": "roof_kit_basic", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 2 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Barracks (Defence)",
+		"desc": "Tier II: 2 slots.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 8 },
+			{ "item": "roof_kit_basic", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Barracks (Defence)",
+		"desc": "Tier III: 3 slots.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 8 },
+			{ "item": "roof_kit_basic", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  }
+	}
+  },
+  "archery_range_base": {
+	"kind": "base",
+	"attr": "dex",
+	"building": "Archery Range",
+	"skill": "ranged",
+	"label": "Archery Range",
+	"tiers": {
+	  "1": {
+		"label": "Archery Range (Ranged)",
+		"desc": "Tier I: 1 module slot.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 2 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_basic", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "palisade_segment", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 100 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 2 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Archery Range (Ranged)",
+		"desc": "Tier II: 2 module slots.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 2 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_basic", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "palisade_segment", "qty": 6 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 100 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 3 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Archery Range (Ranged)",
+		"desc": "Tier III: 3 module slots.",
+		"level_req": 40,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 2 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_basic", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "palisade_segment", "qty": 8 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 100 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  }
+	}
+  },
+  "net_wharf_base": {
+	"kind": "base",
+	"attr": "dex",
+	"building": "Net Wharf",
+	"skill": "fishing",
+	"label": "Net Wharf",
+	"tiers": {
+	  "1": {
+		"label": "Net Wharf (Fishing)",
+		"desc": "Tier I: 1 module slot.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 2 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 120 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 3 },
+			{ "item": "chains", "qty": 2 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Net Wharf (Fishing)",
+		"desc": "Tier II: 2 module slots.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 2 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 120 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 4 },
+			{ "item": "chains", "qty": 3 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Net Wharf (Fishing)",
+		"desc": "Tier III: 3 module slots.",
+		"level_req": 40,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 2 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 120 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 5 },
+			{ "item": "chains", "qty": 4 }
+		  ]
+		}
+	  }
+	}
+  },
+  "logging_yard_base": {
+	"kind": "base",
+	"attr": "dex",
+	"building": "Logging Yard",
+	"skill": "woodcutting",
+	"label": "Logging Yard",
+	"tiers": {
+	  "1": {
+		"label": "Logging Yard (Woodcutting)",
+		"desc": "Tier I: 1 module slot.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 110 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 3 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Logging Yard (Woodcutting)",
+		"desc": "Tier II: 2 module slots.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 110 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Logging Yard (Woodcutting)",
+		"desc": "Tier III: 3 module slots.",
+		"level_req": 40,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 110 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  }
+	}
+  },
+  "carpentry_hall_base": {
+	"kind": "base",
+	"attr": "dex",
+	"building": "Carpentry Hall",
+	"skill": "fletching",
+	"label": "Carpentry Hall",
+	"tiers": {
+	  "1": {
+		"label": "Carpentry Hall (Fletching)",
+		"desc": "Tier I: 1 module slot.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 2 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Carpentry Hall (Fletching)",
+		"desc": "Tier II: 2 module slots.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Carpentry Hall (Fletching)",
+		"desc": "Tier III: 3 module slots.",
+		"level_req": 40,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  }
+	}
+  },
+  "hearth_kitchen_base": {
+	"kind": "base",
+	"attr": "con",
+	"building": "Hearth Kitchen",
+	"skill": "cooking",
+	"label": "Hearth Kitchen",
+	"tiers": {
+	  "1": {
+		"label": "Hearth Kitchen (Cooking)",
+		"desc": "Tier I shell: 1 module slot; unlocks Cooking building on this tile.",
+		"level_req": 10,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 2 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 110 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "flat_plate", "qty": 2 },
+			{ "item": "rivets", "qty": 3 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Hearth Kitchen (Cooking)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 110 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "flat_plate", "qty": 2 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Hearth Kitchen (Cooking)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 110 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "flat_plate", "qty": 2 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  }
+	}
+  },
+  "foragers_hut_base": {
+	"kind": "base",
+	"attr": "con",
+	"building": "Forager’s Hut",
+	"skill": "herbalism",
+	"label": "Forager’s Hut",
+	"tiers": {
+	  "1": {
+		"label": "Forager’s Hut (Herbalism)",
+		"desc": "Tier I shell: 1 module slot; unlocks Herbalism building on this tile.",
+		"level_req": 10,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 4 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 100 },
+			{ "item": "hinges", "qty": 2 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 2 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Forager’s Hut (Herbalism)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 4 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 2 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 100 },
+			{ "item": "hinges", "qty": 2 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 3 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Forager’s Hut (Herbalism)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 4 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 100 },
+			{ "item": "hinges", "qty": 2 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  }
+	}
+  },
+  "alembic_workshop_base": {
+	"kind": "base",
+	"attr": "con",
+	"building": "Alembic Workshop",
+	"skill": "transmutation",
+	"label": "Alembic Workshop",
+	"tiers": {
+	  "1": {
+		"label": "Alembic Workshop (Transmutation)",
+		"desc": "Tier I shell: 1 module slot; unlocks Transmutation building on this tile.",
+		"level_req": 40,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_trussed", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "rivets", "qty": 4 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "chains", "qty": 2 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Alembic Workshop (Transmutation)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_trussed", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 },
+			{ "item": "stairs_kit", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "rivets", "qty": 4 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "chains", "qty": 2 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Alembic Workshop (Transmutation)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 60,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_trussed", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 },
+			{ "item": "stairs_kit", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "rivets", "qty": 4 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "chains", "qty": 2 }
+		  ]
+		}
+	  }
+	}
+  },
+  "prospectors_shaft_base": {
+	"kind": "base",
+	"attr": "con",
+	"building": "Prospector’s Shaft",
+	"skill": "mining",
+	"label": "Prospector’s Shaft",
+	"tiers": {
+	  "1": {
+		"label": "Prospector’s Shaft (Mining)",
+		"desc": "Tier I shell: 1 module slot; unlocks Mining building on this tile.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 4 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_trussed", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "ladder", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 110 },
+			{ "item": "hinges", "qty": 2 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 3 },
+			{ "item": "spikes", "qty": 2 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Prospector’s Shaft (Mining)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 4 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_trussed", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "ladder", "qty": 2 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 110 },
+			{ "item": "hinges", "qty": 2 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 4 },
+			{ "item": "spikes", "qty": 3 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Prospector’s Shaft (Mining)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 40,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 4 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_kit_trussed", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "ladder", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 110 },
+			{ "item": "hinges", "qty": 2 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "rivets", "qty": 5 },
+			{ "item": "spikes", "qty": 4 }
+		  ]
+		}
+	  }
+	}
+  },
+  "farmstead_base": {
+	"kind": "base",
+	"attr": "con",
+	"building": "Farmstead",
+	"skill": "farming",
+	"label": "Farmstead",
+	"tiers": {
+	  "1": {
+		"label": "Farmstead (Farming)",
+		"desc": "Tier I shell: 1 module slot; unlocks Farming building on this tile.",
+		"level_req": 20,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 2 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 120 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "flat_plate", "qty": 2 },
+			{ "item": "rivets", "qty": 3 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Farmstead (Farming)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 30,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 120 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "flat_plate", "qty": 2 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Farmstead (Farming)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 40,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 120 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 4 },
+			{ "item": "flat_plate", "qty": 2 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  }
+	}
+  },
+  "village_inn_base": {
+	"kind": "base",
+	"attr": "cha",
+	"building": "Village Inn",
+	"skill": "charisma",
+	"label": "Village Inn",
+	"tiers": {
+	  "1": {
+		"label": "Village Inn (Charisma)",
+		"desc": "Tier I shell: 1 module slot; unlocks Charisma building on this tile.",
+		"level_req": 5,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 10 },
+			{ "item": "floor_section", "qty": 8 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 140 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Village Inn (Charisma)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 25,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 10 },
+			{ "item": "floor_section", "qty": 8 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 5 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 140 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Village Inn (Charisma)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 8 },
+			{ "item": "wall_section", "qty": 10 },
+			{ "item": "floor_section", "qty": 8 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 6 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 140 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 7 }
+		  ]
+		}
+	  }
+	}
+  },
+  "spirit_lodge_base": {
+	"kind": "base",
+	"attr": "cha",
+	"building": "Spirit Lodge",
+	"skill": "diplomacy",
+	"label": "Spirit Lodge",
+	"tiers": {
+	  "1": {
+		"label": "Spirit Lodge (Diplomacy)",
+		"desc": "Tier I shell: 1 module slot; unlocks Diplomacy building on this tile.",
+		"level_req": 40,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 2 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Spirit Lodge (Diplomacy)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Spirit Lodge (Diplomacy)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 60,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  }
+	}
+  },
+  "summoners_circle_base": {
+	"kind": "base",
+	"attr": "cha",
+	"building": "Summoner’s Circle",
+	"skill": "leadership",
+	"label": "Summoner’s Circle",
+	"tiers": {
+	  "1": {
+		"label": "Summoner’s Circle (Leadership)",
+		"desc": "Tier I shell: 1 module slot; unlocks Leadership building on this tile.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 8 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "stairs_kit", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 6 },
+			{ "item": "lockwork", "qty": 2 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Summoner’s Circle (Leadership)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 60,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 8 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "stairs_kit", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 7 },
+			{ "item": "lockwork", "qty": 2 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Summoner’s Circle (Leadership)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 70,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 8 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "stairs_kit", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 8 },
+			{ "item": "lockwork", "qty": 2 }
+		  ]
+		}
+	  }
+	}
+  },
+  "arcanists_tower_base": {
+	"kind": "base",
+	"attr": "int",
+	"building": "Arcanist’s Tower",
+	"skill": "magic",
+	"label": "Arcanist’s Tower",
+	"tiers": {
+	  "1": {
+		"label": "Arcanist’s Tower (Magic)",
+		"desc": "Unlocks Magic building on this fragment. R1/2/3 spells can be researched here.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 10 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "lockwork", "qty": 2 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Arcanist’s Tower (Magic)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 60,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 10 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "lockwork", "qty": 2 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Arcanist’s Tower (Magic)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 70,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 10 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 5 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "lockwork", "qty": 2 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  }
+	}
+  },
+  "star_observatory_base": {
+	"kind": "base",
+	"attr": "int",
+	"building": "Star Observatory",
+	"skill": "astromancy",
+	"label": "Star Observatory",
+	"tiers": {
+	  "1": {
+		"label": "Star Observatory (Astromancy)",
+		"desc": "Unlocks Astromancy building on this fragment. R1/2/3 auguries can be bound here.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "lockwork", "qty": 2 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Star Observatory (Astromancy)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 60,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 5 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "lockwork", "qty": 2 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Star Observatory (Astromancy)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 70,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 6 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "lockwork", "qty": 2 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  }
+	}
+  },
+  "gemcutters_studio_base": {
+	"kind": "base",
+	"attr": "int",
+	"building": "Gemcutter’s Studio",
+	"skill": "enchanting",
+	"label": "Gemcutter’s Studio",
+	"tiers": {
+	  "1": {
+		"label": "Gemcutter’s Studio (Enchanting)",
+		"desc": "Unlocks Enchanting building on this fragment. R1/2/3 enchantments can be prepared here.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "lockwork", "qty": 2 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Gemcutter’s Studio (Enchanting)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 60,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "lockwork", "qty": 2 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Gemcutter’s Studio (Enchanting)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 70,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 5 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "lockwork", "qty": 2 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  }
+	}
+  },
+  "starforge_base": {
+	"kind": "base",
+	"attr": "wis",
+	"building": "Starforge",
+	"skill": "faithcraft",
+	"label": "Starforge",
+	"tiers": {
+	  "1": {
+		"label": "Starforge (Faithcraft)",
+		"desc": "Unlocks Faithcraft building on this fragment. R1/2/3 rituals can be forged here.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "reinforcement_rod", "qty": 4 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Starforge (Faithcraft)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 60,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "reinforcement_rod", "qty": 5 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Starforge (Faithcraft)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 70,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 8 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "stairs_kit", "qty": 1 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 5 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 150 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "bolts", "qty": 4 },
+			{ "item": "reinforcement_rod", "qty": 6 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  }
+	}
+  },
+  "wayshrine_base": {
+	"kind": "base",
+	"attr": "wis",
+	"building": "Wayshrine",
+	"skill": "prayer",
+	"label": "Wayshrine",
+	"tiers": {
+	  "1": {
+		"label": "Wayshrine (Prayer)",
+		"desc": "Unlocks Prayer building on this fragment. R1/2/3 prayers can be bound here.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 4 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "gate_leaf", "qty": 1 },
+			{ "item": "stairs_kit", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 140 },
+			{ "item": "reinforcement_rod", "qty": 4 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "lockwork", "qty": 2 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Wayshrine (Prayer)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 60,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 4 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "gate_leaf", "qty": 1 },
+			{ "item": "stairs_kit", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 140 },
+			{ "item": "reinforcement_rod", "qty": 5 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "lockwork", "qty": 2 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Wayshrine (Prayer)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 70,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame_reinforced", "qty": 2 },
+			{ "item": "frame", "qty": 4 },
+			{ "item": "wall_section", "qty": 4 },
+			{ "item": "floor_section", "qty": 4 },
+			{ "item": "roof_truss", "qty": 2 },
+			{ "item": "gate_leaf", "qty": 1 },
+			{ "item": "stairs_kit", "qty": 1 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 140 },
+			{ "item": "reinforcement_rod", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "lockwork", "qty": 2 }
+		  ]
+		}
+	  }
+	}
+  },
+  "loom_house_base": {
+	"kind": "base",
+	"attr": "wis",
+	"building": "Loom House",
+	"skill": "weaving",
+	"label": "Loom House",
+	"tiers": {
+	  "1": {
+		"label": "Loom House (Weaving)",
+		"desc": "Unlocks Weaving building on this fragment. R1/2/3 patterns can be woven here.",
+		"level_req": 40,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 3 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 4 }
+		  ]
+		}
+	  },
+	  "2": {
+		"label": "Loom House (Weaving)",
+		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"level_req": 50,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 4 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 5 }
+		  ]
+		}
+	  },
+	  "3": {
+		"label": "Loom House (Weaving)",
+		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"level_req": 60,
+		"inputs": {
+		  "struct": [
+			{ "item": "frame", "qty": 6 },
+			{ "item": "wall_section", "qty": 6 },
+			{ "item": "floor_section", "qty": 6 },
+			{ "item": "roof_kit_thatch", "qty": 2 },
+			{ "item": "door_frame_mod", "qty": 1 },
+			{ "item": "window_frame_mod", "qty": 5 }
+		  ],
+		  "hardware": [
+			{ "item": "nails", "qty": 130 },
+			{ "item": "hinges", "qty": 4 },
+			{ "item": "brackets", "qty": 6 },
+			{ "item": "flat_plate", "qty": 4 },
+			{ "item": "rivets", "qty": 6 }
+		  ]
+		}
+	  }
+	}
+  }
+}

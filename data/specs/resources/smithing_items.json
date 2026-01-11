@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "icon_root": "res://assets/items/Smithing",
+
+  "metals": {
+	"bronze":     { "label": "Bronze",     "tier": 1 },
+	"iron":       { "label": "Iron",       "tier": 2 },
+	"steel":      { "label": "Steel",      "tier": 3 },
+	"mithrite":   { "label": "Mithrite",   "tier": 4 },
+	"adamantite": { "label": "Adamantite", "tier": 5 },
+	"orichalcum": { "label": "Orichalcum", "tier": 6 },
+	"aether":     { "label": "Aether",     "tier": 7 },
+	"silver":     { "label": "Silver",     "tier": 8 },
+	"gold":       { "label": "Gold",       "tier": 9 }
+  },
+
+  "families": {
+	"pickaxe": { "label": "Pickaxe", "group": "tool", "use_skill": "mining" },
+	"axe":     { "label": "Axe",     "group": "tool", "use_skill": "woodcutting" },
+	"sickle":  { "label": "Sickle",  "group": "tool", "use_skill": "herbalism" },
+	"hoe":     { "label": "Hoe",     "group": "tool", "use_skill": "farming" },
+	"knife":   { "label": "Knife",   "group": "tool", "use_skill": "smithing" },
+	"hammer":  { "label": "Hammer",  "group": "tool", "use_skill": "smithing" },
+	"chisel":  { "label": "Chisel",  "group": "tool", "use_skill": "smithing" },
+
+	"fishing_net":     { "label": "Fishing Net",     "group": "fishing", "use_skill": "fishing" },
+	"fishing_rod":     { "label": "Fishing Rod",     "group": "fishing", "use_skill": "fishing" },
+	"fishing_harpoon": { "label": "Fishing Harpoon", "group": "fishing", "use_skill": "fishing" },
+
+	"nails":            { "label": "Nails",            "group": "hardware", "use_skill": "construction" },
+	"rivets":           { "label": "Rivets",           "group": "hardware", "use_skill": "construction" },
+	"bolts":            { "label": "Bolts",            "group": "hardware", "use_skill": "construction" },
+	"spikes":           { "label": "Spikes",           "group": "hardware", "use_skill": "construction" },
+	"straps":           { "label": "Straps",           "group": "hardware", "use_skill": "construction" },
+	"hinges":           { "label": "Hinges",           "group": "hardware", "use_skill": "construction" },
+	"brackets":         { "label": "Brackets",         "group": "hardware", "use_skill": "construction" },
+	"chains":           { "label": "Chains",           "group": "hardware", "use_skill": "construction" },
+	"reinforcement_rod":{ "label": "Reinforcement Rod","group": "hardware", "use_skill": "construction" },
+	"flat_plate":       { "label": "Flat Plate",       "group": "hardware", "use_skill": "construction" },
+	"beam_shoe":        { "label": "Beam Shoe",        "group": "hardware", "use_skill": "construction" },
+	"gear":             { "label": "Gear",             "group": "hardware", "use_skill": "construction" },
+	"counterweight":    { "label": "Counterweight",    "group": "hardware", "use_skill": "construction" },
+	"lockwork":         { "label": "Lockwork",         "group": "hardware", "use_skill": "construction" },
+
+	"dagger":           { "label": "Dagger",           "group": "weapon", "use_skill": "combat" },
+	"mace":             { "label": "Mace",             "group": "weapon", "use_skill": "combat" },
+	"shortsword":       { "label": "Shortsword",       "group": "weapon", "use_skill": "combat" },
+	"scimitar":         { "label": "Scimitar",         "group": "weapon", "use_skill": "combat" },
+	"longsword":        { "label": "Longsword",        "group": "weapon", "use_skill": "combat" },
+	"warhammer":        { "label": "Warhammer",        "group": "weapon", "use_skill": "combat" },
+	"battleaxe":        { "label": "Battleaxe",        "group": "weapon", "use_skill": "combat" },
+	"two_handed_sword": { "label": "Two-handed Sword", "group": "weapon", "use_skill": "combat" },
+	"spear":            { "label": "Spear",            "group": "weapon", "use_skill": "combat" },
+	"hasta":            { "label": "Hasta",            "group": "weapon", "use_skill": "combat" },
+
+	"med_helm":      { "label": "Medium Helm",   "group": "armour", "use_skill": "combat" },
+	"full_helm":     { "label": "Full Helm",     "group": "armour", "use_skill": "combat" },
+	"chainbody":     { "label": "Chainbody",     "group": "armour", "use_skill": "combat" },
+	"square_shield": { "label": "Square Shield", "group": "armour", "use_skill": "combat" },
+	"kiteshield":    { "label": "Kiteshield",    "group": "armour", "use_skill": "combat" },
+	"platelegs":     { "label": "Platelegs",     "group": "armour", "use_skill": "combat" },
+	"gauntlets":     { "label": "Gauntlets",     "group": "armour", "use_skill": "combat" },
+	"platebody":     { "label": "Platebody",     "group": "armour", "use_skill": "combat" }
+  }
+}

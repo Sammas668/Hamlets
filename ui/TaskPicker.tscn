@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1ifnytc2dyin"]
+
+[ext_resource type="Script" uid="uid://bhbe52r1lejdm" path="res://scripts/task_picker.gd" id="1_yfkys"]
+
+[node name="TaskPicker" type="PopupMenu"]
+oversampling_override = 1.0
+visible = true
+script = ExtResource("1_yfkys")

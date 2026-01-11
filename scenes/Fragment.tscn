@@ -1,0 +1,51 @@
+[gd_scene load_steps=2 format=3 uid="uid://dad170xajlsgg"]
+
+[ext_resource type="Script" uid="uid://b52a87akkh13h" path="res://scripts/fragment.gd" id="1_xysme"]
+
+[node name="Fragment" type="Node2D"]
+script = ExtResource("1_xysme")
+
+[node name="Hex" type="Polygon2D" parent="."]
+polygon = PackedVector2Array(-704, 12)
+uv = PackedVector2Array(-704, 12)
+
+[node name="Label" type="Label" parent="."]
+visible = false
+offset_right = 40.0
+offset_bottom = 23.0
+theme_override_font_sizes/font_size = 14
+text = "Hamlet"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Outline" type="Line2D" parent="."]
+visible = false
+z_index = 2
+width = 5.0
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Area2D"]
+
+[node name="BiomeIcon" type="Sprite2D" parent="."]
+position = Vector2(0, -34)
+
+[node name="ModIcons" type="Node2D" parent="."]
+position = Vector2(0, 26)
+
+[node name="ModIcon1" type="Sprite2D" parent="ModIcons"]
+position = Vector2(-32, 0)
+
+[node name="ModIcon2" type="Sprite2D" parent="ModIcons"]
+
+[node name="ModIcon3" type="Sprite2D" parent="ModIcons"]
+position = Vector2(32, 0)
+
+[node name="ModIcon4" type="Sprite2D" parent="ModIcons"]
+position = Vector2(-32, 32)
+
+[node name="ModIcon5" type="Sprite2D" parent="ModIcons"]
+position = Vector2(32, 32)
+
+[node name="ModIcon6" type="Sprite2D" parent="ModIcons"]
+position = Vector2(0, -64)

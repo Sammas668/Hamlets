@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://3ftsolf2wij3"]
+
+[ext_resource type="Script" uid="uid://ciejtwwdd0kp8" path="res://scripts/autoload/game_loop.gd" id="1_ewmyv"]
+
+[node name="GameLoop" type="Node"]
+script = ExtResource("1_ewmyv")
+
+[node name="TickTimer" type="Timer" parent="."]
+process_mode = 3
+wait_time = 2.4
+autostart = true
+
+[connection signal="timeout" from="TickTimer" to="." method="on_timeout"]

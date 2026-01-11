@@ -1,0 +1,44 @@
+[gd_scene load_steps=2 format=3 uid="uid://cxn5uhuflnqn0"]
+
+[ext_resource type="Script" uid="uid://bwubufvxdbs4d" path="res://ui/tooltip_panel.gd" id="1_i1ufr"]
+
+[node name="TooltipPanel" type="Panel"]
+custom_minimum_size = Vector2(180, 120)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i1ufr")
+
+[node name="Content" type="VBoxContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Title" type="Label" parent="Content"]
+layout_mode = 2
+
+[node name="Body" type="RichTextLabel" parent="Content"]
+layout_mode = 2
+bbcode_enabled = true
+fit_content = true
+autowrap_mode = 2
+
+[node name="KV" type="GridContainer" parent="Content"]
+layout_mode = 2
+columns = 2
+
+[node name="SubTip" type="Panel" parent="."]
+visible = false
+layout_mode = 0
+offset_top = 35.0
+offset_right = 40.0
+offset_bottom = 35.0
+
+[node name="SubBody" type="RichTextLabel" parent="SubTip"]
+custom_minimum_size = Vector2(120, 60)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+bbcode_enabled = true

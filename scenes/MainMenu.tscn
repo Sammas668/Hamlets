@@ -1,0 +1,254 @@
+[gd_scene load_steps=5 format=3 uid="uid://gj1rw32ees3s"]
+
+[ext_resource type="Script" uid="uid://ce5twu5eikpxo" path="res://scripts/MainMenu.gd" id="1_2wh52"]
+[ext_resource type="Texture2D" uid="uid://7q3eruuv82em" path="res://art/assets/Hamlets.png" id="1_yqorp"]
+[ext_resource type="Script" uid="uid://dx326gmopsmmy" path="res://scripts/loadpanel.gd" id="2_0ykhv"]
+[ext_resource type="Script" uid="uid://cvxw5mk26n8od" path="res://scenes/ESC menu/settings_panel.gd" id="4_ow34m"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_2wh52")
+
+[node name="Background" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_yqorp")
+
+[node name="Dim" type="ColorRect" parent="."]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
+
+[node name="MenuPanel" type="PanelContainer" parent="."]
+z_index = 2
+custom_minimum_size = Vector2(420, 0)
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.624
+anchor_right = 0.5
+anchor_bottom = 0.624
+offset_left = -210.0
+offset_top = -132.06
+offset_right = 210.0
+offset_bottom = 130.94
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="MenuPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="Title" type="Label" parent="MenuPanel/VBox"]
+layout_mode = 2
+text = "Fractured World"
+horizontal_alignment = 1
+
+[node name="NewButton" type="Button" parent="MenuPanel/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "New Gane"
+
+[node name="ContinueButton" type="Button" parent="MenuPanel/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Continue"
+
+[node name="LoadButton" type="Button" parent="MenuPanel/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Load"
+
+[node name="SettingsButton" type="Button" parent="MenuPanel/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Settings"
+
+[node name="QuitButton" type="Button" parent="MenuPanel/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Quit"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="Overlay" type="Control" parent="."]
+z_index = 10
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ModalDim" type="ColorRect" parent="Overlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.019607844)
+
+[node name="LoadPanel" type="PanelContainer" parent="Overlay"]
+custom_minimum_size = Vector2(720, 640)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -360.0
+offset_top = -260.0
+offset_right = 360.0
+offset_bottom = 260.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_0ykhv")
+
+[node name="Margin" type="MarginContainer" parent="Overlay/LoadPanel"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Overlay/LoadPanel/Margin"]
+layout_mode = 2
+
+[node name="Header" type="HBoxContainer" parent="Overlay/LoadPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Overlay/LoadPanel/Margin/VBox/Header"]
+layout_mode = 2
+text = "Load game"
+
+[node name="SlotsGrid" type="GridContainer" parent="Overlay/LoadPanel/Margin/VBox/Header"]
+layout_mode = 2
+columns = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Overlay/LoadPanel/Margin/VBox/Header"]
+layout_mode = 2
+
+[node name="DeleteBtn" type="Button" parent="Overlay/LoadPanel/Margin/VBox/Header/Buttons"]
+layout_mode = 2
+text = "Delete"
+
+[node name="Spacer" type="Control" parent="Overlay/LoadPanel/Margin/VBox/Header/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseBtn" type="Button" parent="Overlay/LoadPanel/Margin/VBox/Header/Buttons"]
+layout_mode = 2
+text = "Close"
+
+[node name="SettingsPanel" type="PanelContainer" parent="Overlay"]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -134.5
+offset_top = -114.5
+offset_right = 134.5
+offset_bottom = 114.5
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_ow34m")
+
+[node name="Margin" type="MarginContainer" parent="Overlay/SettingsPanel"]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="Overlay/SettingsPanel/Margin"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Overlay/SettingsPanel/Margin/VBox"]
+layout_mode = 2
+text = "Settings"
+
+[node name="ModeRow" type="HBoxContainer" parent="Overlay/SettingsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="ModeLabel" type="Label" parent="Overlay/SettingsPanel/Margin/VBox/ModeRow"]
+layout_mode = 2
+text = "Display Mode"
+
+[node name="ModeOption" type="OptionButton" parent="Overlay/SettingsPanel/Margin/VBox/ModeRow"]
+layout_mode = 2
+
+[node name="MonRow" type="HBoxContainer" parent="Overlay/SettingsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="MonLabel" type="Label" parent="Overlay/SettingsPanel/Margin/VBox/MonRow"]
+layout_mode = 2
+text = "Display Mode"
+
+[node name="MonOption" type="OptionButton" parent="Overlay/SettingsPanel/Margin/VBox/MonRow"]
+layout_mode = 2
+
+[node name="ResRow" type="HBoxContainer" parent="Overlay/SettingsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="ResLabel" type="Label" parent="Overlay/SettingsPanel/Margin/VBox/ResRow"]
+layout_mode = 2
+text = "Resolution"
+
+[node name="ResOption" type="OptionButton" parent="Overlay/SettingsPanel/Margin/VBox/ResRow"]
+layout_mode = 2
+
+[node name="VSyncRow" type="HBoxContainer" parent="Overlay/SettingsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="VSyncLabel" type="Label" parent="Overlay/SettingsPanel/Margin/VBox/VSyncRow"]
+layout_mode = 2
+text = "VSync"
+
+[node name="VSyncCheck" type="CheckBox" parent="Overlay/SettingsPanel/Margin/VBox/VSyncRow"]
+layout_mode = 2
+
+[node name="FpsRow" type="HBoxContainer" parent="Overlay/SettingsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="FpsLabel" type="Label" parent="Overlay/SettingsPanel/Margin/VBox/FpsRow"]
+layout_mode = 2
+text = "FPS Cap (0 = uncapped)"
+
+[node name="FpsSpin" type="SpinBox" parent="Overlay/SettingsPanel/Margin/VBox/FpsRow"]
+layout_mode = 2
+
+[node name="VolRow" type="HBoxContainer" parent="Overlay/SettingsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="VolLabel" type="Label" parent="Overlay/SettingsPanel/Margin/VBox/VolRow"]
+layout_mode = 2
+text = "Master Volume"
+
+[node name="VolSlider" type="HSlider" parent="Overlay/SettingsPanel/Margin/VBox/VolRow"]
+layout_mode = 2
+
+[node name="Buttons" type="HBoxContainer" parent="Overlay/SettingsPanel/Margin/VBox"]
+layout_mode = 2
+
+[node name="CloseBtn" type="Button" parent="Overlay/SettingsPanel/Margin/VBox/Buttons"]
+layout_direction = 3
+layout_mode = 2
+text = "Close"
+
+[node name="ApplyBtn" type="Button" parent="Overlay/SettingsPanel/Margin/VBox/Buttons"]
+layout_direction = 3
+layout_mode = 2
+text = "Apply"
