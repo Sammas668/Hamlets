@@ -1,362 +1,532 @@
-# res://autoloads/ResourceNodes.gd
-extends Node
-## Central registry for per-tile resource nodes (mining, woodcutting, fishing,
-## herbalism, farming, etc.), built from Fragment.modifiers.
-##
-## ✅ Supports BOTH modifier formats:
-##  1) Legacy String: "Resource Spawn [mining]: Exposed Stone Face"
-##  2) New Dictionary: { "name": String, "kind": String, "rarity": String, "skill": String? }
-##
-## Integration points:
-##  - World.gd should call `rebuild_nodes_for_tile(ax, modifiers, biome, tier)`
-##    after spawning a new Fragment *and* after restoring from save.
-##  - World.gd (or AstromancySystem) should call `clear_tile(ax)` when a tile
-##    is collapsed / destroyed.
-##
-## Consumers (MiningSystem, WoodcuttingSystem, etc.) can then use:
-##  - ResourceNodes.get_nodes(ax, "mining")
-##  - ResourceNodes.get_richness(ax, "fishing")
-##  - ResourceNodes.has_any(ax, "herbalism")
-## and so on.
+# res://scripts/world/selection_hud.gd
+extends Panel
 
-# -------------------------------------------------------------------
-# Item registry (same pattern as Mining/Woodcutting)
-# -------------------------------------------------------------------
-const ITEMS := preload("res://scripts/autoload/items.gd")  # 🔧 adjust path if needed
-
-# Map fishing "detail" strings to canonical node IDs ("N1", "R3", "H7", etc.)
-const FISHING_DETAIL_TO_NODE_ID := {
-	# Net nodes (N1–N10)
-	"Riverbank Shallows":      "N1",
-	"Rocky Estuary Nets":      "N2",
-	"Cenote Rim Nets":         "N3",
-	"Cascade Shelf Nets":      "N4",
-	"Floodplain Reed Nets":    "N5",
-	"Gorge Ledge Nets":        "N6",
-	"Hanging Oasis Nets":      "N7",
-	"Ice-Crack Nets":          "N8",
-	"Boiling Runoff Nets":     "N9",
-	"Starsea Surface Nets":    "N10",
-
-	# Rod nodes (R1–R10)
-	"Minnow Ford Pool":        "R1",
-	"Brackwater Channel":      "R2",
-	"Sinkhole Plunge Pool":    "R3",
-	"Echofall Basin":          "R4",
-	"Oxbow Bend Pool":         "R5",
-	"Mistfall Tailwater":      "R6",
-	"Mirror Spring Pool":      "R7",
-	"Black Tarn Hole":         "R8",
-	"Geyser Cone Pool":        "R9",
-	"Comet-Eddy Pool":         "R10",
-
-	# Harpoon nodes (H1–H10)
-	"Deep Crossing Run":       "H1",
-	"Tidecut Passage":         "H2",
-	"Blue Well Drop":          "H3",
-	"Thunder Gorge Throat":    "H4",
-	"Leviathan Channel":       "H5",
-	"Chasm Surge Run":         "H6",
-	"Skywell Sink":            "H7",
-	"Glacier Rift Wake":       "H8",
-	"Steamvent Pit":           "H9",
-	"Abyssal Star Trench":     "H10",
-}
+signal building_equip_requested(ax: Vector2i, building_id: String)
 
 @export var debug_logging: bool = false
 
-# ax: Vector2i -> Array[Dictionary]
-# Each node dictionary has (at minimum):
-# {
-#   "skill": String,        # "mining", "woodcutting", "fishing", "herbalism", "farming"
-#   "detail": String,       # "Exposed Stone Face", "Pine Grove", "Minnow Ford Pool", etc.
-#   "biome": String,
-#   "tier": int,
-#   "depleted": bool,
-#   "source": Variant,      # original modifier (String OR Dictionary)
-#   "chance_factor": float,
-#   "yield_factor": float,
-#   (optional) "node_id": StringName,          # fishing canonical node id
-#   (optional) "product_label": String,
-#   (optional) "product_item_id": StringName,
-# }
-var _nodes_by_ax: Dictionary = {}
+# If your HUD is inside a Container, the Container will override anchors/position.
+# Turning this on makes the panel ignore parent layout and lets us dock it reliably.
+@export var force_top_level: bool = true
+
+# Fix for “info box stuck in top-left”: dock this panel to bottom-left of the viewport.
+@export var dock_to_bottom_left: bool = true
+@export var dock_padding: Vector2 = Vector2(16, 16)
+
+var _current_fragment: Node = null
+var _current_coord: Vector2i = Vector2i(0, 0)
+
+# UI refs (found by name; keep these node names in your scene)
+var _tile_tab: Control = null
+var _build_tab: Control = null
+
+var _biome_label: Label = null
+var _tier_label: Label = null
+var _mods_text: Control = null   # Label or RichTextLabel
+var _effects_text: Control = null
+
+var _current_building_label: Label = null
+var _base_slot: Button = null
+var _module_slots: Array[Button] = []
 
 
 func _ready() -> void:
+	visible = false
+
+	# Optional: make sure layout can’t be overridden by Containers
+	if force_top_level:
+		top_level = true
+		set_anchors_preset(Control.PRESET_TOP_LEFT, true)
+
+	# Dock (fixes “top-left” panel issues)
+	if dock_to_bottom_left:
+		call_deferred("_dock_bottom_left")
+		if get_viewport() and not get_viewport().size_changed.is_connected(_on_viewport_size_changed):
+			get_viewport().size_changed.connect(_on_viewport_size_changed)
+
+	# Find tabs / controls by name (keeps the script resilient)
+	_tile_tab = find_child("TileTab", true, false) as Control
+	_build_tab = find_child("BuildTab", true, false) as Control
+
+	_biome_label = find_child("BiomeLabel", true, false) as Label
+	_tier_label = find_child("TierLabel", true, false) as Label
+	_mods_text = find_child("ModifiersText", true, false) as Control
+	_effects_text = find_child("EffectsText", true, false) as Control
+
+	_current_building_label = find_child("CurrentBuildingLabel", true, false) as Label
+	_base_slot = find_child("BaseSlot", true, false) as Button
+
+	# Module slots: ModuleSlot1, ModuleSlot2, ModuleSlot3
+	_module_slots.clear()
+	for i in range(1, 4):
+		var btn := find_child("ModuleSlot%d" % i, true, false) as Button
+		if btn:
+			_module_slots.append(btn)
+
+	# Wire selection
+	if typeof(Selection) != TYPE_NIL and Selection.has_signal("fragment_selected"):
+		Selection.connect("fragment_selected", Callable(self, "_on_fragment_selected"))
+
 	if debug_logging:
-		print("[ResourceNodes] Ready (empty registry).")
+		print("[SelectionHUD] Ready. tile_tab=", _tile_tab, " build_tab=", _build_tab)
 
 
-# =====================================================================
-# Public API – called by World.gd / systems
-# =====================================================================
-
-func rebuild_nodes_for_tile(
-	ax: Vector2i,
-	modifiers: Array,
-	biome: String = "",
-	tier: int = 0
-) -> void:
-	var nodes: Array = []
-
-	for m: Variant in modifiers:
-		var info: Dictionary = _mod_to_info(m)
-		if info.is_empty():
-			continue
-
-		var kind: String  = String(info.get("kind", "")).strip_edges()
-		var skill: String = String(info.get("skill", "")).strip_edges().to_lower()
-		var detail: String = String(info.get("detail", "")).strip_edges()
-
-		# We only care about Resource Spawn entries with a skill attached.
-		if kind != "Resource Spawn" or skill == "":
-			continue
-
-		# --- Default behaviour for all resource nodes ---
-		var chance_factor: float = 1.0
-		var yield_factor: float  = 1.0
-
-		# --- Special cases by skill + detail name ---
-		if skill == "woodcutting":
-			if detail == "Thick Pine Grove":
-				chance_factor = 0.5
-				yield_factor  = 2.0
-
-		# --- Decide what this node yields (optional metadata only) ---
-		var product_label: String = ""
-		var product_item: StringName = StringName()
-
-		match skill:
-			"woodcutting":
-				# Pine nodes → Pine logs
-				if detail == "Pine Grove" or detail == "Thick Pine Grove":
-					product_label = "Pine logs"
-					product_item = ITEMS.LOG_PINE
-				else:
-					product_label = "Twigs"
-					product_item = ITEMS.TWIGS
-			_:
-				pass
-
-		var node: Dictionary = {
-			"skill": skill,
-			"detail": detail,
-			"biome": biome,
-			"tier": tier,
-			"depleted": false,
-
-			# Keep original modifier (string or dict) for debugging / UI
-			"source": m,
-
-			"chance_factor": chance_factor,
-			"yield_factor": yield_factor,
-		}
-
-		# Fishing: attach canonical node_id ("N1", "R3", "H7", etc.)
-		if skill == "fishing":
-			var key_detail: String = detail.strip_edges()
-			if FISHING_DETAIL_TO_NODE_ID.has(key_detail):
-				node["node_id"] = StringName(String(FISHING_DETAIL_TO_NODE_ID[key_detail]))
-
-		# Optional product metadata for UI / recipes
-		if product_label != "":
-			node["product_label"] = product_label
-		if String(product_item) != "":
-			node["product_item_id"] = product_item
-
-		nodes.append(node)
-
-	# Store or clear entry for this tile
-	if nodes.is_empty():
-		if _nodes_by_ax.has(ax):
-			_nodes_by_ax.erase(ax)
-			if debug_logging:
-				print("[ResourceNodes] No resource nodes at", ax, "– clearing entry.")
-	else:
-		_nodes_by_ax[ax] = nodes
-		if debug_logging:
-			print("[ResourceNodes] Rebuilt %d nodes @ %s (%s, tier %d)" % [nodes.size(), ax, biome, tier])
+func _on_viewport_size_changed() -> void:
+	if dock_to_bottom_left:
+		_dock_bottom_left()
 
 
-func clear_tile(ax: Vector2i) -> void:
-	if _nodes_by_ax.has(ax):
-		_nodes_by_ax.erase(ax)
-		if debug_logging:
-			print("[ResourceNodes] Cleared tile @", ax)
+func _dock_bottom_left() -> void:
+	if not is_inside_tree():
+		return
+
+	# Make sure we have a sensible size before docking
+	var min_size: Vector2 = get_combined_minimum_size()
+	if size.x < min_size.x or size.y < min_size.y:
+		size = min_size
+
+	var vp: Vector2 = get_viewport_rect().size
+	var x: float = dock_padding.x
+	var y: float = vp.y - size.y - dock_padding.y
+
+	# Clamp in case the viewport is tiny
+	if y < dock_padding.y:
+		y = dock_padding.y
+
+	position = Vector2(x, y)
 
 
-func clear_all() -> void:
-	_nodes_by_ax.clear()
-	if debug_logging:
-		print("[ResourceNodes] Cleared ALL nodes.")
+# Called by Selection autoload
+func _on_fragment_selected(fragment: Node, ax: Vector2i) -> void:
+	_current_fragment = fragment
+	_current_coord = ax
+	_apply_fragment()
 
 
-func get_nodes(ax: Vector2i, skill: String = "") -> Array:
-	if not _nodes_by_ax.has(ax):
+func _apply_fragment() -> void:
+	if _current_fragment == null or not is_instance_valid(_current_fragment):
+		visible = false
+		return
+
+	visible = true
+
+	_update_tile_tab()
+	_update_building_tab()
+
+	# Re-dock after content changes (size may change due to text)
+	if dock_to_bottom_left:
+		call_deferred("_dock_bottom_left")
+
+
+# ---------- Tile tab ----------
+func _update_tile_tab() -> void:
+	if _tile_tab == null:
+		return
+
+	# Read biome / tier safely
+	var biome_str: String = ""
+	var tier_val: int = 0
+
+	if _current_fragment != null and is_instance_valid(_current_fragment):
+		if "biome" in _current_fragment:
+			biome_str = String(_current_fragment.biome)
+		if "tier" in _current_fragment:
+			tier_val = int(_current_fragment.tier)
+
+	if _biome_label:
+		_biome_label.text = "Biome: %s" % (biome_str if biome_str != "" else "(unknown)")
+	if _tier_label:
+		_tier_label.text = "Tier: %d" % tier_val
+
+	# --- Modifiers (supports BOTH formats) ---
+	# 1) Legacy string: "Resource Spawn [mining]: Exposed Stone Face"
+	# 2) New dict: { "name": String, "kind": String, "rarity": String, "skill": String? }
+	var mods: Array = _get_modifiers_from_fragment(_current_fragment)
+	var mod_lines: Array[String] = []
+	for m: Variant in mods:
+		var line: String = _modifier_to_line(m)
+		if line != "":
+			mod_lines.append(line)
+	mod_lines.sort()
+
+	var mods_block: String = "None"
+	if not mod_lines.is_empty():
+		mods_block = "\n".join(mod_lines)
+
+	# Resource node summary (optional)
+	var node_summary: String = ""
+	if typeof(ResourceNodes) != TYPE_NIL and ResourceNodes.has_method("get_summary_for_tile"):
+		node_summary = String(ResourceNodes.get_summary_for_tile(_current_coord))
+	if node_summary == "":
+		node_summary = "No resource nodes"
+
+	var tile_text: String = "Resource nodes: %s\n\nModifiers:\n%s" % [node_summary, mods_block]
+	_set_text_control(_mods_text, tile_text)
+
+	# Local effects summary (if Fragment implements it)
+	var eff_text: String = "None"
+	if _current_fragment != null and is_instance_valid(_current_fragment) and _current_fragment.has_method("get_local_effects_summary"):
+		eff_text = String(_current_fragment.call("get_local_effects_summary"))
+	_set_text_control(_effects_text, eff_text)
+
+
+func _get_modifiers_from_fragment(frag: Node) -> Array:
+	if frag == null or not is_instance_valid(frag):
 		return []
-
-	var nodes: Array = _nodes_by_ax[ax] as Array
-	if skill == "":
-		return nodes.duplicate(true)
-
-	var filtered: Array = []
-	var s: String = skill.to_lower()
-	for n_v: Variant in nodes:
-		if not (n_v is Dictionary):
-			continue
-		var n: Dictionary = n_v
-		if String(n.get("skill", "")).to_lower() == s:
-			filtered.append(n)
-	return filtered
+	if not ("modifiers" in frag):
+		return []
+	var v: Variant = frag.get("modifiers")
+	if v is Array:
+		return v
+	return []
 
 
-func get_richness(ax: Vector2i, skill: String) -> int:
-	return get_nodes(ax, skill).size()
-
-
-func has_any(ax: Vector2i, skill: String) -> bool:
-	return get_richness(ax, skill) > 0
-
-
-func get_summary_for_tile(ax: Vector2i) -> String:
-	if not _nodes_by_ax.has(ax):
-		return "No resource nodes"
-
-	var nodes: Array = _nodes_by_ax[ax] as Array
-	if nodes.is_empty():
-		return "No resource nodes"
-
-	var counts: Dictionary = {}
-	for n_v: Variant in nodes:
-		if not (n_v is Dictionary):
-			continue
-		var n: Dictionary = n_v
-		var sk: String = String(n.get("skill", "")).strip_edges()
-		if sk == "":
-			continue
-		if not counts.has(sk):
-			counts[sk] = 0
-		counts[sk] = int(counts[sk]) + 1
-
-	var parts: Array[String] = []
-	for k_v: Variant in counts.keys():
-		var sk2: String = String(k_v)
-		var c: int = int(counts[k_v])
-		parts.append("%dx %s node%s" % [c, sk2, ("" if c == 1 else "s")])
-
-	return ", ".join(parts)
-
-
-# =====================================================================
-# Depletion hooks (for later use by gathering skills)
-# =====================================================================
-
-func deplete_one(ax: Vector2i, skill: String) -> bool:
-	if not _nodes_by_ax.has(ax):
-		return false
-
-	var nodes: Array = _nodes_by_ax[ax] as Array
-	var s: String = skill.to_lower()
-
-	for i: int in range(nodes.size()):
-		var n_v: Variant = nodes[i]
-		if not (n_v is Dictionary):
-			continue
-		var n: Dictionary = n_v
-		if String(n.get("skill", "")).to_lower() != s:
-			continue
-		if bool(n.get("depleted", false)):
-			continue
-
-		n["depleted"] = true
-		nodes[i] = n
-		_nodes_by_ax[ax] = nodes
-
-		if debug_logging:
-			print("[ResourceNodes] Depleted 1×", skill, "node @", ax)
-		return true
-
-	return false
-
-
-func get_active_richness(ax: Vector2i, skill: String) -> int:
-	var nodes: Array = get_nodes(ax, skill)
-	var count: int = 0
-	for n_v: Variant in nodes:
-		if not (n_v is Dictionary):
-			continue
-		var n: Dictionary = n_v
-		if not bool(n.get("depleted", false)):
-			count += 1
-	return count
-
-
-# =====================================================================
-# Internal helpers
-# =====================================================================
-
-## ✅ Unified parser for BOTH formats (String OR Dictionary)
-## Returns:
-## {
-##   "kind": "Resource Spawn",
-##   "skill": "mining",
-##   "detail": "Exposed Stone Face"
-## }
-func _mod_to_info(m: Variant) -> Dictionary:
-	# New format: Dictionary { kind, skill, name, ... }
+func _modifier_to_line(m: Variant) -> String:
+	# New format (Dictionary)
 	if m is Dictionary:
 		var d: Dictionary = m
 		var kind: String = String(d.get("kind", "")).strip_edges()
 		var skill: String = String(d.get("skill", "")).strip_edges().to_lower()
-		var detail: String = String(d.get("name", d.get("detail", ""))).strip_edges()
+		var name: String = String(d.get("name", d.get("detail", ""))).strip_edges()
+		var rarity: String = String(d.get("rarity", "")).strip_edges()
 
-		# fallback if someone stored preformatted "text"
-		if detail == "":
-			detail = String(d.get("text", "")).strip_edges()
+		# Fallback if someone stored a preformatted text field
+		if name == "":
+			name = String(d.get("text", "")).strip_edges()
 
 		if kind == "":
-			# If it's not even a modifier-shaped dict, ignore it.
-			return {}
+			return ""
 
-		return {
-			"kind": kind,
-			"skill": skill,
-			"detail": detail,
-		}
+		var out: String = ""
+		if rarity != "":
+			out += "%s " % rarity
+		out += kind
+		if skill != "":
+			out += " [%s]" % skill
+		if name != "":
+			out += ": %s" % name
+		return out
 
-	# Legacy format: String "Resource Spawn [mining]: Exposed Stone Face"
+	# Legacy format (String)
 	if typeof(m) == TYPE_STRING:
-		return _parse_modifier(String(m))
+		var s: String = String(m).strip_edges()
+		return s
 
-	return {}
+	return ""
 
 
-## Legacy parser for modifier strings produced by World.roll_biome_modifiers()
-func _parse_modifier(mod_str: String) -> Dictionary:
-	var header: String = mod_str
-	var detail: String = ""
+func _set_text_control(ctrl: Control, text: String) -> void:
+	if ctrl == null:
+		return
+	if ctrl is RichTextLabel:
+		var r: RichTextLabel = ctrl as RichTextLabel
+		r.clear()
+		r.append_text(text)
+	elif ctrl is Label:
+		var l: Label = ctrl as Label
+		l.text = text
+	elif ctrl.has_method("set_text"):
+		ctrl.call("set_text", text)
 
-	# Split "Header: Detail"
-	var parts := mod_str.split(": ", false, 2)
-	if parts.size() > 0:
-		header = String(parts[0])
-	if parts.size() > 1:
-		detail = String(parts[1])
 
-	var kind_base: String = header
-	var skill_id: String = ""
+# ---------- Buildings tab (display only, ready for drag-drop) ----------
+func _update_building_tab() -> void:
+	if _base_slot == null:
+		return
 
-	# Look for "[skill]" inside the header, e.g. "Resource Spawn [mining]"
-	var open_idx: int = header.find("[")
-	if open_idx != -1:
-		var close_idx: int = header.find("]", open_idx + 1)
-		if close_idx != -1:
-			kind_base = header.substr(0, open_idx).strip_edges()
-			skill_id = header.substr(open_idx + 1, close_idx - open_idx - 1).strip_edges().to_lower()
+	if _current_fragment == null or not is_instance_valid(_current_fragment):
+		# No tile selected – clear visuals
+		_base_slot.icon = null
+		_base_slot.text = ""
+		if _current_building_label:
+			_current_building_label.text = "Current: (no tile)"
+		_set_module_slots_visible(0)
+		_set_module_slot_labels([])
+		return
 
-	return {
-		"kind": kind_base,
-		"skill": skill_id,
-		"detail": detail.strip_edges(),
-	}
+	# Read base + modules from fragment meta
+	var base_id: String = ""
+	if _current_fragment.has_meta("building_id"):
+		base_id = String(_current_fragment.get_meta("building_id"))
+
+	var modules: Array = []
+	if _current_fragment.has_meta("building_modules"):
+		var m: Variant = _current_fragment.get_meta("building_modules")
+		if m is Array:
+			modules = m
+
+	# Show module slots only if there is a base
+	var max_slots: int = 0
+	if base_id != "":
+		max_slots = 3
+
+	_set_module_slots_visible(max_slots)
+
+	if _current_building_label:
+		_current_building_label.text = "Current base: %s" % (base_id if base_id != "" else "(none)")
+
+	# Keep slot texts empty so icons dominate
+	_base_slot.text = ""
+	_set_module_slot_labels(modules)
+
+
+func _set_module_slots_visible(count: int) -> void:
+	for i in range(_module_slots.size()):
+		var btn: Button = _module_slots[i]
+		if btn:
+			btn.visible = (i < count)
+
+
+func _set_module_slot_labels(modules: Array) -> void:
+	for i in range(_module_slots.size()):
+		var btn: Button = _module_slots[i]
+		if btn:
+			var label: String = ""
+			if i < modules.size() and modules[i] is String and modules[i] != "":
+				label = String(modules[i])
+			btn.text = ""  # icon-only look
+
+
+# ---------- Helpers for future drag/drop equip (manual calls) ----------
+func equip_base(building_id: String) -> void:
+	if _current_fragment == null or not is_instance_valid(_current_fragment):
+		return
+	_current_fragment.set_meta("building_id", building_id)
+	_current_fragment.set_meta("building_modules", [])
+	emit_signal("building_equip_requested", _current_coord, building_id)
+	_update_building_tab()
+
+
+func equip_module(slot_index: int, building_id: String) -> void:
+	if _current_fragment == null or not is_instance_valid(_current_fragment):
+		return
+
+	var modules: Array = []
+	if _current_fragment.has_meta("building_modules"):
+		var m: Variant = _current_fragment.get_meta("building_modules")
+		if m is Array:
+			modules = m.duplicate()
+
+	var max_index: int = _module_slots.size() - 1
+	if max_index < 0:
+		max_index = 0
+
+	var idx: int = clampi(slot_index, 0, max_index)
+
+	if modules.size() <= idx:
+		modules.resize(idx + 1)
+	modules[idx] = building_id
+
+	_current_fragment.set_meta("building_modules", modules)
+	emit_signal("building_equip_requested", _current_coord, building_id)
+	_update_building_tab()
+
+
+# ---------- Drag-and-drop from Bank into slots ----------
+func _get_drop_slot_info(at_position: Vector2, data: Variant) -> Dictionary:
+	var info: Dictionary = {}
+
+	# 1) Validate payload
+	if typeof(data) != TYPE_DICTIONARY:
+		return info
+
+	var d: Dictionary = data
+	if String(d.get("kind", "")) != "bank_item":
+		return info
+
+	var item_id: String = String(d.get("item_id", ""))
+	if item_id == "":
+		return info
+
+	var icon_tex: Texture2D = null
+	if d.has("icon") and d["icon"] is Texture2D:
+		icon_tex = d["icon"] as Texture2D
+
+	# 2) Convert local drop position (relative to this Panel) to global coords
+	var global_pos: Vector2 = global_position + at_position
+
+	# 3) Check base slot
+	if _base_slot and _base_slot.get_global_rect().has_point(global_pos):
+		info["slot_type"] = "base"
+		info["slot_index"] = 0
+		info["item_id"] = item_id
+		info["icon"] = icon_tex
+		return info
+
+	# 4) Check module slots
+	for i in range(_module_slots.size()):
+		var btn: Button = _module_slots[i]
+		if btn and btn.visible and btn.get_global_rect().has_point(global_pos):
+			info["slot_type"] = "module"
+			info["slot_index"] = i
+			info["item_id"] = item_id
+			info["icon"] = icon_tex
+			return info
+
+	return info
+
+
+func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
+	var info := _get_drop_slot_info(at_position, data)
+	if info.is_empty():
+		return false
+
+	var slot_type: String = String(info.get("slot_type", ""))
+	var item_id: String = String(info.get("item_id", ""))
+
+	# 1) Only allow valid building items for this slot
+	if not _is_valid_building_item_for_slot(item_id, slot_type):
+		return false
+
+	# 2) Don't allow modules unless there's already a base on this tile
+	if slot_type == "module":
+		var has_base := false
+		if _current_fragment and _current_fragment.has_meta("building_id"):
+			var base_id := String(_current_fragment.get_meta("building_id"))
+			has_base = base_id != ""
+		if not has_base:
+			return false
+
+	# 3) Check bank has at least one of the item
+	if typeof(Bank) == TYPE_NIL:
+		return false
+	if not Bank.has_method("has_at_least"):
+		return true
+
+	return Bank.has_at_least(item_id, 1)
+
+
+func _drop_data(at_position: Vector2, data: Variant) -> void:
+	var info := _get_drop_slot_info(at_position, data)
+	if info.is_empty():
+		return
+
+	var building_id: String = String(info["item_id"])
+	var icon_tex: Texture2D = null
+	if info.has("icon") and info["icon"] is Texture2D:
+		icon_tex = info["icon"] as Texture2D
+
+	# Pay cost: remove 1 from bank
+	if typeof(Bank) != TYPE_NIL and Bank.has_method("has_at_least") and Bank.has_method("add"):
+		if not Bank.has_at_least(building_id, 1):
+			return
+		Bank.add(building_id, -1)
+
+	var slot_type: String = String(info.get("slot_type", ""))
+	if slot_type == "base":
+		_equip_base_from_drop(building_id, icon_tex)
+	else:
+		_equip_module_from_drop(int(info.get("slot_index", 0)), building_id, icon_tex)
+
+
+func _equip_base_from_drop(building_id: String, icon_tex: Texture2D) -> void:
+	if _current_fragment == null or not is_instance_valid(_current_fragment):
+		return
+
+	var old_base: String = ""
+	if _current_fragment.has_meta("building_id"):
+		old_base = String(_current_fragment.get_meta("building_id"))
+
+	var old_modules: Array = []
+	if _current_fragment.has_meta("building_modules"):
+		var m: Variant = _current_fragment.get_meta("building_modules")
+		if m is Array:
+			old_modules = m
+
+	_current_fragment.set_meta("building_id", building_id)
+	_current_fragment.set_meta("building_modules", [])
+
+	# Update base slot icon
+	if _base_slot:
+		if icon_tex:
+			_base_slot.icon = icon_tex
+		_base_slot.text = ""
+
+	# Clear module slot icons (since modules were reset)
+	for btn in _module_slots:
+		if btn:
+			btn.icon = null
+			btn.text = ""
+
+	# Return old base + modules to bank
+	if typeof(Bank) != TYPE_NIL and Bank.has_method("add"):
+		if old_base != "":
+			Bank.add(old_base, 1)
+		for m_id in old_modules:
+			if m_id is String and String(m_id) != "":
+				Bank.add(String(m_id), 1)
+
+	emit_signal("building_equip_requested", _current_coord, building_id)
+	_update_building_tab()
+
+
+func _equip_module_from_drop(slot_index: int, building_id: String, icon_tex: Texture2D) -> void:
+	if _current_fragment == null or not is_instance_valid(_current_fragment):
+		return
+
+	var max_index: int = _module_slots.size() - 1
+	if max_index < 0:
+		return
+
+	var idx: int = clampi(slot_index, 0, max_index)
+
+	var modules: Array = []
+	if _current_fragment.has_meta("building_modules"):
+		var m: Variant = _current_fragment.get_meta("building_modules")
+		if m is Array:
+			modules = m.duplicate()
+
+	var old_id: String = ""
+	if idx < modules.size() and modules[idx] is String:
+		old_id = String(modules[idx])
+
+	if modules.size() <= idx:
+		modules.resize(idx + 1)
+	modules[idx] = building_id
+	_current_fragment.set_meta("building_modules", modules)
+
+	# Update icon for that module slot
+	if idx < _module_slots.size():
+		var btn: Button = _module_slots[idx]
+		if btn:
+			if icon_tex:
+				btn.icon = icon_tex
+			btn.text = ""
+			btn.visible = true
+
+	# Return replaced module to bank
+	if old_id != "" and typeof(Bank) != TYPE_NIL and Bank.has_method("add"):
+		Bank.add(old_id, 1)
+
+	emit_signal("building_equip_requested", _current_coord, building_id)
+	_update_building_tab()
+
+
+func _is_valid_building_item_for_slot(item_id: String, slot_type: String) -> bool:
+	if item_id == "":
+		return false
+
+	# Preferred: use ConstructionSystem blueprints if available.
+	# Expecting blueprints with a "kind" field: "base" or "module".
+	if typeof(ConstructionSystem) != TYPE_NIL and ConstructionSystem.has_method("get_blueprint"):
+		var bp = ConstructionSystem.get_blueprint(item_id)  # no ':=' → avoids type inference warnings
+
+		# If we actually got a Dictionary back, use its "kind" field
+		if bp is Dictionary:
+			var bp_dict: Dictionary = bp
+			var kind: String = String(bp_dict.get("kind", ""))  # "base" or "module"
+
+			if slot_type == "base":
+				return kind == "base"
+			elif slot_type == "module":
+				return kind == "module"
+			return false
+		# If bp is not a Dictionary or is null, fall through to naming fallback.
+
+	# Fallback: naming convention if ConstructionSystem is not usable
+	if slot_type == "base":
+		return item_id.ends_with("_base")
+	elif slot_type == "module":
+		return not item_id.ends_with("_base")
+
+	return false

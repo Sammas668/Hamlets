@@ -8,6 +8,7 @@ const TILE_SCENE: PackedScene = preload("res://scenes/Fragment.tscn")
 
 @onready var essence_label: Label = get_node_or_null("CanvasLayer/Panel/EssenceLabel") as Label
 @onready var summon_button: Button = get_node_or_null("CanvasLayer/Panel/SummonButton") as Button
+@onready var selection_hud: Control = get_node_or_null("CanvasLayer/SelectionHUD") as Control
 
 # Pause / overlays (all null-safe)
 @onready var pause_menu: Node             = get_node_or_null("CanvasLayer/Panel/EscMenu")
@@ -22,6 +23,8 @@ const DRAG_BUTTON := MOUSE_BUTTON_RIGHT
 const ZOOM_STEP  := 0.1
 const MIN_ZOOM   := 0.5
 const MAX_ZOOM   := 3.0
+
+const SELECTION_HUD_OFFSET: Vector2 = Vector2(24.0, -24.0)
 
 const TASK_PICKER_SCENE: PackedScene = preload("res://ui/TaskPicker.tscn")
 
@@ -793,6 +796,11 @@ func _ready() -> void:
 	var _cb := Callable(self, "_on_viewport_resized")
 	if not viewport.size_changed.is_connected(_cb):
 		viewport.size_changed.connect(_cb)
+
+	if typeof(Selection) != TYPE_NIL and Selection.has_signal("fragment_selected"):
+		var selection_cb := Callable(self, "_on_fragment_selected")
+		if not Selection.fragment_selected.is_connected(selection_cb):
+			Selection.fragment_selected.connect(selection_cb)
 
 	_connect_astromancy()
 
@@ -1652,6 +1660,35 @@ func _on_fragment_clicked(f) -> void:
 
 	_clear_empty_selection()
 
+func _on_fragment_selected(f: Node) -> void:
+	if f == null or not is_instance_valid(f):
+		return
+	if f is Node2D:
+		var frag := f as Node2D
+		_update_selection_hud_position(frag.global_position)
+
+func _update_selection_hud_position(world_pos: Vector2) -> void:
+	if selection_hud == null or not is_instance_valid(selection_hud):
+		return
+
+	var viewport_rect := get_viewport().get_visible_rect()
+	var screen_pos := _world_to_screen(world_pos)
+	var target := screen_pos + SELECTION_HUD_OFFSET
+	var hud_size := selection_hud.size
+	var min_pos := viewport_rect.position
+	var max_pos := viewport_rect.position + viewport_rect.size - hud_size
+	max_pos.x = max(min_pos.x, max_pos.x)
+	max_pos.y = max(min_pos.y, max_pos.y)
+
+	target.x = clampf(target.x, min_pos.x, max_pos.x)
+	target.y = clampf(target.y, min_pos.y, max_pos.y)
+	selection_hud.global_position = target
+
+func _world_to_screen(world_pos: Vector2) -> Vector2:
+	var canvas_xform := get_viewport().get_canvas_transform()
+	return canvas_xform * world_pos
+
+
 func _connect_astromancy() -> void:
 	# Optional: wire Astromancy → World expansion
 	if typeof(AstromancySystem) == TYPE_NIL:
@@ -1836,6 +1873,8 @@ func _input(event: InputEvent) -> void:
 						else:
 							WorldQuery.selected_axial = ax_pressed
 
+
+
 					get_viewport().set_input_as_handled()
 					return
 
@@ -1936,6 +1975,7 @@ func _show_empty_marker(ax: Vector2i) -> void:
 	var ok: bool = (not _has_fragment_at(ax)) and _is_adjacent_to_any(ax)
 	empty_marker.default_color = (Color(0.2, 1.0, 0.2, 0.9) if ok else Color(1.0, 0.2, 0.2, 0.9))
 	empty_marker.visible = true
+	_update_selection_hud_position(to_global(empty_marker.position))
 
 func _has_fragment_at(ax: Vector2i) -> bool:
 	# Authoritative: scan children and check their coord

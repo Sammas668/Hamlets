@@ -325,77 +325,61 @@ func _resolve_resource_spawn_icon(name: String, skill: String) -> String:
 			return ""
 
 func _update_modifier_icons() -> void:
-	if mod_icons_root == null:
+	# Clear existing
+	for c in mod_icons_root.get_children():
+		c.queue_free()
+
+	if modifiers.is_empty():
 		return
 
-	var sprites: Array[Sprite2D] = _get_mod_icon_sprites()
-
-	for s in sprites:
-		s.visible = false
-		s.texture = null
-
-	if modifiers.is_empty() or sprites.is_empty():
-		return
-
-	var icon_index: int = 0
-
-	for mod in modifiers:
-		if icon_index >= sprites.size():
-			break
-		if typeof(mod) != TYPE_DICTIONARY:
+	var x := 0.0
+	for m in modifiers:
+		if typeof(m) != TYPE_DICTIONARY:
 			continue
 
-		var d: Dictionary = mod
+		var md: Dictionary = m
+		var kind: String  = String(md.get("kind", "")).strip_edges()
+		var skill: String = String(md.get("skill", "")).strip_edges().to_lower()
+		var name: String  = String(md.get("name", md.get("detail", ""))).strip_edges()
 
-		var kind: String = String(d.get("kind", ""))
-		var name: String = String(d.get("name", ""))
-		var skill: String = String(d.get("skill", "")).to_lower()
-
-		var icon_path := ""
-
-		# Resource Spawn uses skill + name tables
+		var icon := "•"
 		if kind == "Resource Spawn":
-			if skill != "":
-				icon_path = _resolve_resource_spawn_icon(name, skill)
-			else:
-				# resource spawn without skill: show nothing or generic?
-				icon_path = ""
+			match skill:
+				"mining":       icon = "⛏"
+				"woodcutting":  icon = "🪓"
+				"fishing":      icon = "🎣"
+				"herbalism":    icon = "🌿"
+				"farming":      icon = "🌾"
+				_:              icon = "•"
+		elif kind == "Hazard":
+			icon = "⚠"
+		elif kind == "Boon":
+			icon = "✦"
 
-		# Other kinds use kind icon
-		if icon_path == "":
-			if MOD_KIND_ICON_PATHS.has(kind):
-				icon_path = String(MOD_KIND_ICON_PATHS[kind])
+		var l := Label.new()
+		l.text = icon
+		l.position = Vector2(x, 0)
+		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		mod_icons_root.add_child(l)
 
-		if icon_path == "":
+		x += 18.0
+
+func get_modifier_lines() -> Array[String]:
+	var out: Array[String] = []
+	for m in modifiers:
+		if typeof(m) != TYPE_DICTIONARY:
 			continue
+		var md: Dictionary = m
+		var kind: String  = String(md.get("kind", "")).strip_edges()
+		var skill: String = String(md.get("skill", "")).strip_edges()
+		var name: String  = String(md.get("name", md.get("detail", ""))).strip_edges()
 
-		var tex := load(icon_path)
-		if tex is Texture2D:
-			var spr := sprites[icon_index]
-			spr.texture = tex
-			spr.visible = true
-
-			var max_dim := float(max(tex.get_width(), tex.get_height()))
-			if max_dim > 0.0:
-				var target_px := HEX_SIZE * 0.5
-
-				# Per-skill sizing (only meaningful for Resource Spawn)
-				if kind == "Resource Spawn":
-					if skill == "fishing":
-						target_px = HEX_SIZE * 0.6
-					elif skill == "woodcutting":
-						target_px = HEX_SIZE * 0.55
-					elif skill == "herbalism":
-						target_px = HEX_SIZE * 0.65
-					elif skill == "mining":
-						target_px = HEX_SIZE * 0.55
-
-				var scale_factor := target_px / max_dim
-				spr.scale = Vector2(scale_factor, scale_factor)
-
-			icon_index += 1
+		if kind == "Resource Spawn" and skill != "":
+			out.append("%s [%s]" % [name, skill])
 		else:
-			push_warning("Failed to load modifier icon texture: %s" % icon_path)
+			out.append(name if name != "" else kind)
+	return out
+
 
 func set_local_modifiers(mods: Array) -> void:
 	var typed: Array[Dictionary] = []
