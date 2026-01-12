@@ -28,7 +28,7 @@ var region: String = ""
 
 const HEX_SIZE: float = 60.0
 const SQRT3: float = 1.7320508075688772
-const MOD_ICON_MAX_SIZE: float = 2.0
+const MOD_ICON_MAX_SIZE: float = 36.0
 
 # ---------------------------------------------------
 # Biome → icon texture path
@@ -93,6 +93,20 @@ const MOD_SKILL_ICON_PATHS := {
 	"fishing":     "res://assets/icons/modifiers/fishing_node.png",
 	"herbalism":   "res://assets/icons/modifiers/herbalism_node.png",
 	"farming":     "res://assets/icons/modifiers/farming_node.png",
+}
+# ---------------------------------------------------
+# Modifier icon scale overrides (per icon)
+# ---------------------------------------------------
+# Use these to tweak specific modifier icons when their art is naturally
+# larger/smaller than others. Values are multipliers on top of the base scale.
+const MOD_ICON_SCALE_OVERRIDES_BY_NAME := {
+	"Recruit Event": 0.2,
+	# "Copper Vein": 0.9,
+	# "Herb-Circle Plot": 1.1,
+}
+
+const MOD_ICON_SCALE_OVERRIDES_BY_PATH := {
+	# "res://assets/icons/modifiers/structure.png": 0.85,
 }
 
 # ---------------------------------------------------
@@ -357,6 +371,14 @@ func _resolve_resource_spawn_icon(name: String, skill: String) -> String:
 				return String(MOD_SKILL_ICON_PATHS[skill])
 			return ""
 
+func _get_modifier_icon_scale(name: String, icon_path: String) -> float:
+	if MOD_ICON_SCALE_OVERRIDES_BY_NAME.has(name):
+		return float(MOD_ICON_SCALE_OVERRIDES_BY_NAME[name])
+	if MOD_ICON_SCALE_OVERRIDES_BY_PATH.has(icon_path):
+		return float(MOD_ICON_SCALE_OVERRIDES_BY_PATH[icon_path])
+	return 1.0
+
+
 func _update_modifier_icons() -> void:
 	if mod_icons_root == null:
 		return
@@ -368,7 +390,7 @@ func _update_modifier_icons() -> void:
 	for slot in slots:
 		slot.texture = null
 		slot.visible = false
-
+		slot.scale = Vector2.ONE
 	if modifiers.is_empty():
 		return
 
@@ -397,6 +419,11 @@ func _update_modifier_icons() -> void:
 			continue
 
 		slots[icon_idx].texture = tex
+		var max_dim: float = float(max(tex.get_width(), tex.get_height()))
+		if max_dim > 0.0:
+			var scale_factor: float = MOD_ICON_MAX_SIZE / max_dim
+			var scale_override: float = _get_modifier_icon_scale(name, icon_path)
+			slots[icon_idx].scale = Vector2.ONE * scale_factor * scale_override
 		slots[icon_idx].visible = true
 		icon_idx += 1
 
