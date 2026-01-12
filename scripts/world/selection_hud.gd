@@ -6,15 +6,14 @@ signal building_equip_requested(ax: Vector2i, building_id: String)
 @export var debug_logging: bool = false
 
 # If your HUD is inside a Container, the Container will override anchors/position.
-# Turning this on makes the panel ignore parent layout and lets us dock it reliably.
 @export var force_top_level: bool = true
 
-# Fix for “info box stuck in top-left”: dock this panel to bottom-left of the viewport.
+# Dock this panel to bottom-left of the viewport.
 @export var dock_to_bottom_left: bool = true
 @export var dock_padding: Vector2 = Vector2(16, 16)
 
 var _current_fragment: Node = null
-var _current_coord: Vector2i = Vector2i(0, 0)
+var _current_coord: Vector2i = Vector2i.ZERO
 
 # UI refs (found by name; keep these node names in your scene)
 var _tile_tab: Control = null
@@ -29,9 +28,20 @@ var _current_building_label: Label = null
 var _base_slot: Button = null
 var _module_slots: Array[Button] = []
 
+# Autoload refs (safe)
+var _selection: Node = null
+var _bank: Node = null
+var _resource_nodes: Node = null
+var _construction: Node = null
+
 
 func _ready() -> void:
 	visible = false
+
+	_selection = get_node_or_null("/root/Selection")
+	_bank = get_node_or_null("/root/Bank")
+	_resource_nodes = get_node_or_null("/root/ResourceNodes")
+	_construction = get_node_or_null("/root/ConstructionSystem")
 
 	# Optional: make sure layout can’t be overridden by Containers
 	if force_top_level:
@@ -41,19 +51,34 @@ func _ready() -> void:
 	# Dock (fixes “top-left” panel issues)
 	if dock_to_bottom_left:
 		call_deferred("_dock_bottom_left")
-		if get_viewport() and not get_viewport().size_changed.is_connected(_on_viewport_size_changed):
-			get_viewport().size_changed.connect(_on_viewport_size_changed)
+		var vp := get_viewport()
+		if vp and not vp.size_changed.is_connected(_on_viewport_size_changed):
+			vp.size_changed.connect(_on_viewport_size_changed)
 
 	# Find tabs / controls by name (keeps the script resilient)
 	_tile_tab = find_child("TileTab", true, false) as Control
+	if _tile_tab == null:
+		_tile_tab = find_child("Info", true, false) as Control
+
 	_build_tab = find_child("BuildTab", true, false) as Control
+	if _build_tab == null:
+		_build_tab = find_child("Buildings", true, false) as Control
 
 	_biome_label = find_child("BiomeLabel", true, false) as Label
+	if _biome_label == null:
+		_biome_label = find_child("Biome", true, false) as Label
+
 	_tier_label = find_child("TierLabel", true, false) as Label
+	if _tier_label == null:
+		_tier_label = find_child("Coord", true, false) as Label
+
 	_mods_text = find_child("ModifiersText", true, false) as Control
 	_effects_text = find_child("EffectsText", true, false) as Control
 
 	_current_building_label = find_child("CurrentBuildingLabel", true, false) as Label
+	if _current_building_label == null:
+		_current_building_label = find_child("CurrentBuilding", true, false) as Label
+
 	_base_slot = find_child("BaseSlot", true, false) as Button
 
 	# Module slots: ModuleSlot1, ModuleSlot2, ModuleSlot3
@@ -64,8 +89,10 @@ func _ready() -> void:
 			_module_slots.append(btn)
 
 	# Wire selection
-	if typeof(Selection) != TYPE_NIL and Selection.has_signal("fragment_selected"):
-		Selection.connect("fragment_selected", Callable(self, "_on_fragment_selected"))
+	if _selection and _selection.has_signal("fragment_selected"):
+		_selection.connect("fragment_selected", Callable(self, "_on_fragment_selected"))
+	elif debug_logging:
+		print("[SelectionHUD] Selection autoload missing or has no fragment_selected signal.")
 
 	if debug_logging:
 		print("[SelectionHUD] Ready. tile_tab=", _tile_tab, " build_tab=", _build_tab)
@@ -97,10 +124,16 @@ func _dock_bottom_left() -> void:
 
 
 # Called by Selection autoload
-func _on_fragment_selected(fragment: Node, ax: Vector2i) -> void:
+func _on_fragment_selected(fragment: Node) -> void:
 	_current_fragment = fragment
-	_current_coord = ax
-	_apply_fragment()
+	_current_coord = Vector2i.ZERO
+
+	if _current_fragment != null and is_instance_valid(_current_fragment):
+		var coord_v: Variant = _current_fragment.get("coord")
+		if coord_v is Vector2i:
+			_current_coord = coord_v
+
+	_apply_fragment() # ✅ THIS WAS MISSING
 
 
 func _apply_fragment() -> void:
@@ -109,7 +142,6 @@ func _apply_fragment() -> void:
 		return
 
 	visible = true
-
 	_update_tile_tab()
 	_update_building_tab()
 
@@ -120,10 +152,6 @@ func _apply_fragment() -> void:
 
 # ---------- Tile tab ----------
 func _update_tile_tab() -> void:
-	if _tile_tab == null:
-		return
-
-	# Read biome / tier safely
 	var biome_str: String = ""
 	var tier_val: int = 0
 
@@ -135,12 +163,12 @@ func _update_tile_tab() -> void:
 
 	if _biome_label:
 		_biome_label.text = "Biome: %s" % (biome_str if biome_str != "" else "(unknown)")
-	if _tier_label:
-		_tier_label.text = "Tier: %d" % tier_val
 
-	# --- Modifiers (supports BOTH formats) ---
-	# 1) Legacy string: "Resource Spawn [mining]: Exposed Stone Face"
-	# 2) New dict: { "name": String, "kind": String, "rarity": String, "skill": String? }
+	if _tier_label:
+		var coord_text := "%d,%d" % [_current_coord.x, _current_coord.y]
+		_tier_label.text = "Tier: %d  (Coord: %s)" % [tier_val, coord_text]
+
+	# --- Modifiers ---
 	var mods: Array = _get_modifiers_from_fragment(_current_fragment)
 	var mod_lines: Array[String] = []
 	for m: Variant in mods:
@@ -155,8 +183,8 @@ func _update_tile_tab() -> void:
 
 	# Resource node summary (optional)
 	var node_summary: String = ""
-	if typeof(ResourceNodes) != TYPE_NIL and ResourceNodes.has_method("get_summary_for_tile"):
-		node_summary = String(ResourceNodes.get_summary_for_tile(_current_coord))
+	if _resource_nodes and _resource_nodes.has_method("get_summary_for_tile"):
+		node_summary = String(_resource_nodes.call("get_summary_for_tile", _current_coord))
 	if node_summary == "":
 		node_summary = "No resource nodes"
 
@@ -190,10 +218,8 @@ func _modifier_to_line(m: Variant) -> String:
 		var name: String = String(d.get("name", d.get("detail", ""))).strip_edges()
 		var rarity: String = String(d.get("rarity", "")).strip_edges()
 
-		# Fallback if someone stored a preformatted text field
 		if name == "":
 			name = String(d.get("text", "")).strip_edges()
-
 		if kind == "":
 			return ""
 
@@ -209,8 +235,7 @@ func _modifier_to_line(m: Variant) -> String:
 
 	# Legacy format (String)
 	if typeof(m) == TYPE_STRING:
-		var s: String = String(m).strip_edges()
-		return s
+		return String(m).strip_edges()
 
 	return ""
 
@@ -223,19 +248,17 @@ func _set_text_control(ctrl: Control, text: String) -> void:
 		r.clear()
 		r.append_text(text)
 	elif ctrl is Label:
-		var l: Label = ctrl as Label
-		l.text = text
+		(ctrl as Label).text = text
 	elif ctrl.has_method("set_text"):
 		ctrl.call("set_text", text)
 
 
-# ---------- Buildings tab (display only, ready for drag-drop) ----------
+# ---------- Buildings tab ----------
 func _update_building_tab() -> void:
 	if _base_slot == null:
 		return
 
 	if _current_fragment == null or not is_instance_valid(_current_fragment):
-		# No tile selected – clear visuals
 		_base_slot.icon = null
 		_base_slot.text = ""
 		if _current_building_label:
@@ -244,7 +267,6 @@ func _update_building_tab() -> void:
 		_set_module_slot_labels([])
 		return
 
-	# Read base + modules from fragment meta
 	var base_id: String = ""
 	if _current_fragment.has_meta("building_id"):
 		base_id = String(_current_fragment.get_meta("building_id"))
@@ -255,7 +277,6 @@ func _update_building_tab() -> void:
 		if m is Array:
 			modules = m
 
-	# Show module slots only if there is a base
 	var max_slots: int = 0
 	if base_id != "":
 		max_slots = 3
@@ -265,7 +286,6 @@ func _update_building_tab() -> void:
 	if _current_building_label:
 		_current_building_label.text = "Current base: %s" % (base_id if base_id != "" else "(none)")
 
-	# Keep slot texts empty so icons dominate
 	_base_slot.text = ""
 	_set_module_slot_labels(modules)
 
@@ -281,13 +301,10 @@ func _set_module_slot_labels(modules: Array) -> void:
 	for i in range(_module_slots.size()):
 		var btn: Button = _module_slots[i]
 		if btn:
-			var label: String = ""
-			if i < modules.size() and modules[i] is String and modules[i] != "":
-				label = String(modules[i])
 			btn.text = ""  # icon-only look
 
 
-# ---------- Helpers for future drag/drop equip (manual calls) ----------
+# ---------- Helpers for future equip ----------
 func equip_base(building_id: String) -> void:
 	if _current_fragment == null or not is_instance_valid(_current_fragment):
 		return
@@ -307,10 +324,7 @@ func equip_module(slot_index: int, building_id: String) -> void:
 		if m is Array:
 			modules = m.duplicate()
 
-	var max_index: int = _module_slots.size() - 1
-	if max_index < 0:
-		max_index = 0
-
+	var max_index: int = max(_module_slots.size() - 1, 0)
 	var idx: int = clampi(slot_index, 0, max_index)
 
 	if modules.size() <= idx:
@@ -326,7 +340,6 @@ func equip_module(slot_index: int, building_id: String) -> void:
 func _get_drop_slot_info(at_position: Vector2, data: Variant) -> Dictionary:
 	var info: Dictionary = {}
 
-	# 1) Validate payload
 	if typeof(data) != TYPE_DICTIONARY:
 		return info
 
@@ -342,10 +355,8 @@ func _get_drop_slot_info(at_position: Vector2, data: Variant) -> Dictionary:
 	if d.has("icon") and d["icon"] is Texture2D:
 		icon_tex = d["icon"] as Texture2D
 
-	# 2) Convert local drop position (relative to this Panel) to global coords
 	var global_pos: Vector2 = global_position + at_position
 
-	# 3) Check base slot
 	if _base_slot and _base_slot.get_global_rect().has_point(global_pos):
 		info["slot_type"] = "base"
 		info["slot_index"] = 0
@@ -353,7 +364,6 @@ func _get_drop_slot_info(at_position: Vector2, data: Variant) -> Dictionary:
 		info["icon"] = icon_tex
 		return info
 
-	# 4) Check module slots
 	for i in range(_module_slots.size()):
 		var btn: Button = _module_slots[i]
 		if btn and btn.visible and btn.get_global_rect().has_point(global_pos):
@@ -374,11 +384,9 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 	var slot_type: String = String(info.get("slot_type", ""))
 	var item_id: String = String(info.get("item_id", ""))
 
-	# 1) Only allow valid building items for this slot
 	if not _is_valid_building_item_for_slot(item_id, slot_type):
 		return false
 
-	# 2) Don't allow modules unless there's already a base on this tile
 	if slot_type == "module":
 		var has_base := false
 		if _current_fragment and _current_fragment.has_meta("building_id"):
@@ -387,13 +395,12 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 		if not has_base:
 			return false
 
-	# 3) Check bank has at least one of the item
-	if typeof(Bank) == TYPE_NIL:
+	if _bank == null:
 		return false
-	if not Bank.has_method("has_at_least"):
+	if not _bank.has_method("has_at_least"):
 		return true
 
-	return Bank.has_at_least(item_id, 1)
+	return bool(_bank.call("has_at_least", item_id, 1))
 
 
 func _drop_data(at_position: Vector2, data: Variant) -> void:
@@ -402,15 +409,13 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 		return
 
 	var building_id: String = String(info["item_id"])
-	var icon_tex: Texture2D = null
-	if info.has("icon") and info["icon"] is Texture2D:
-		icon_tex = info["icon"] as Texture2D
+	var icon_tex: Texture2D = info.get("icon", null)
 
 	# Pay cost: remove 1 from bank
-	if typeof(Bank) != TYPE_NIL and Bank.has_method("has_at_least") and Bank.has_method("add"):
-		if not Bank.has_at_least(building_id, 1):
+	if _bank and _bank.has_method("has_at_least") and _bank.has_method("add"):
+		if not bool(_bank.call("has_at_least", building_id, 1)):
 			return
-		Bank.add(building_id, -1)
+		_bank.call("add", building_id, -1)
 
 	var slot_type: String = String(info.get("slot_type", ""))
 	if slot_type == "base":
@@ -436,25 +441,22 @@ func _equip_base_from_drop(building_id: String, icon_tex: Texture2D) -> void:
 	_current_fragment.set_meta("building_id", building_id)
 	_current_fragment.set_meta("building_modules", [])
 
-	# Update base slot icon
 	if _base_slot:
-		if icon_tex:
-			_base_slot.icon = icon_tex
+		_base_slot.icon = icon_tex
 		_base_slot.text = ""
 
-	# Clear module slot icons (since modules were reset)
 	for btn in _module_slots:
 		if btn:
 			btn.icon = null
 			btn.text = ""
 
 	# Return old base + modules to bank
-	if typeof(Bank) != TYPE_NIL and Bank.has_method("add"):
+	if _bank and _bank.has_method("add"):
 		if old_base != "":
-			Bank.add(old_base, 1)
+			_bank.call("add", old_base, 1)
 		for m_id in old_modules:
 			if m_id is String and String(m_id) != "":
-				Bank.add(String(m_id), 1)
+				_bank.call("add", String(m_id), 1)
 
 	emit_signal("building_equip_requested", _current_coord, building_id)
 	_update_building_tab()
@@ -485,18 +487,15 @@ func _equip_module_from_drop(slot_index: int, building_id: String, icon_tex: Tex
 	modules[idx] = building_id
 	_current_fragment.set_meta("building_modules", modules)
 
-	# Update icon for that module slot
 	if idx < _module_slots.size():
 		var btn: Button = _module_slots[idx]
 		if btn:
-			if icon_tex:
-				btn.icon = icon_tex
+			btn.icon = icon_tex
 			btn.text = ""
 			btn.visible = true
 
-	# Return replaced module to bank
-	if old_id != "" and typeof(Bank) != TYPE_NIL and Bank.has_method("add"):
-		Bank.add(old_id, 1)
+	if old_id != "" and _bank and _bank.has_method("add"):
+		_bank.call("add", old_id, 1)
 
 	emit_signal("building_equip_requested", _current_coord, building_id)
 	_update_building_tab()
@@ -507,26 +506,20 @@ func _is_valid_building_item_for_slot(item_id: String, slot_type: String) -> boo
 		return false
 
 	# Preferred: use ConstructionSystem blueprints if available.
-	# Expecting blueprints with a "kind" field: "base" or "module".
-	if typeof(ConstructionSystem) != TYPE_NIL and ConstructionSystem.has_method("get_blueprint"):
-		var bp = ConstructionSystem.get_blueprint(item_id)  # no ':=' → avoids type inference warnings
-
-		# If we actually got a Dictionary back, use its "kind" field
+	if _construction and _construction.has_method("get_blueprint"):
+		var bp: Variant = _construction.call("get_blueprint", item_id)
 		if bp is Dictionary:
-			var bp_dict: Dictionary = bp
-			var kind: String = String(bp_dict.get("kind", ""))  # "base" or "module"
-
+			var kind: String = String((bp as Dictionary).get("kind", ""))
 			if slot_type == "base":
 				return kind == "base"
-			elif slot_type == "module":
+			if slot_type == "module":
 				return kind == "module"
 			return false
-		# If bp is not a Dictionary or is null, fall through to naming fallback.
 
-	# Fallback: naming convention if ConstructionSystem is not usable
+	# Fallback: naming convention
 	if slot_type == "base":
 		return item_id.ends_with("_base")
-	elif slot_type == "module":
+	if slot_type == "module":
 		return not item_id.ends_with("_base")
 
 	return false

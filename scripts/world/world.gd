@@ -924,23 +924,64 @@ func _pick_weighted(source: Array, count: int, rng_src: RandomNumberGenerator) -
 				break
 
 	return chosen
+func _modifier_to_dict(m: Variant) -> Dictionary:
+	if typeof(m) == TYPE_DICTIONARY:
+		return m
+	if typeof(m) != TYPE_STRING:
+		return {}
 
-func _format_modifier_row(row: Dictionary) -> String:
-	var kind: String = String(row.get("kind", ""))
-	var name: String = String(row.get("name", ""))
-	var skill_id: String = String(row.get("skill", "")).to_lower()
+	var mod_str: String = String(m)
+	var header: String = mod_str
+	var detail: String = ""
 
-	# Keep the existing "Resource Spawn [skill]: Name" pattern
-	if kind.begins_with("Resource") and skill_id != "":
-		return "%s [%s]: %s" % [kind, skill_id, name]
-	else:
-		return "%s: %s" % [kind, name]
+	# Split "Header: Detail"
+	var parts := mod_str.split(": ", false, 2)
+	if parts.size() > 0:
+		header = parts[0]
+	if parts.size() > 1:
+		detail = parts[1]
+
+	var kind_base := header
+	var skill_id := ""
+
+	# Look for "[skill]" inside the header, e.g. "Resource Spawn [mining]"
+	var open_idx := header.find("[")
+	if open_idx != -1:
+		var close_idx := header.find("]", open_idx + 1)
+		if close_idx != -1:
+			kind_base = header.substr(0, open_idx).strip_edges()
+			skill_id = header.substr(open_idx + 1, close_idx - open_idx - 1).strip_edges().to_lower()
+
+	return {
+		"kind": kind_base.strip_edges(),
+		"skill": skill_id,
+		"name": detail.strip_edges(),
+		"rarity": "",
+	}
+
+
+func _normalize_modifiers(mods: Array) -> Array[Dictionary]:
+	var out: Array[Dictionary] = []
+	for m in mods:
+		var md := _modifier_to_dict(m)
+		if not md.is_empty():
+			out.append(md)
+	return out
+
+
+func _is_recruit_modifier(m: Variant) -> bool:
+	if typeof(m) == TYPE_DICTIONARY:
+		var kind: String = String((m as Dictionary).get("kind", ""))
+		return kind.begins_with("Recruit")
+	if typeof(m) == TYPE_STRING:
+		return String(m).begins_with("Recruit Event")
+	return false
 
 func roll_biome_modifiers(
 	biome_name: String,
 	astromancy_level: int,
 	rng_src: RandomNumberGenerator
-) -> Array[String]:
+) -> Array[Dictionary]:
 	# BIOME_MODIFIERS.get(...) returns Variant, so we cast and type the var explicitly.
 	var pool: Array = BIOME_MODIFIERS.get(biome_name, []) as Array
 	if pool.is_empty():
@@ -957,7 +998,7 @@ func roll_biome_modifiers(
 		else:
 			other_rows.append(row)
 
-	var results: Array[String] = []
+	var results: Array[Dictionary] = []
 
 	# ------------------------------------------------
 	# 1) GUARANTEED RESOURCE NODE (if the biome has any)
@@ -965,12 +1006,12 @@ func roll_biome_modifiers(
 	if not resource_rows.is_empty():
 		var picked_res: Array = _pick_weighted(resource_rows, 1, rng_src)
 		for row in picked_res:
-			results.append(_format_modifier_row(row))
+			results.append(row.duplicate(true))
 	else:
 		# Biome has no Resource rows – pick any row as the first modifier.
 		var picked_any: Array = _pick_weighted(pool, 1, rng_src)
 		for row in picked_any:
-			results.append(_format_modifier_row(row))
+			results.append(row.duplicate(true))
 
 	# ------------------------------------------------
 	# 2) EXTRA MODIFIERS
@@ -1006,8 +1047,7 @@ func roll_biome_modifiers(
 	# Build a list of remaining rows so we don't duplicate what we already picked.
 	var remaining_rows: Array = []
 	for row in pool:
-		var formatted := _format_modifier_row(row)
-		if not results.has(formatted):
+		if not results.has(row):
 			remaining_rows.append(row)
 
 	if remaining_rows.is_empty():
@@ -1016,7 +1056,7 @@ func roll_biome_modifiers(
 	extra_to_pick = min(extra_to_pick, remaining_rows.size())
 	var picked_extra: Array = _pick_weighted(remaining_rows, extra_to_pick, rng_src)
 	for row in picked_extra:
-		results.append(_format_modifier_row(row))
+		results.append(row.duplicate(true))
 
 	return results
 
@@ -1433,7 +1473,7 @@ func _restore_from_dict(d: Dictionary) -> void:
 
 			var mods_v: Variant = td.get("modifiers", [])
 			if mods_v is Array:
-				meta["modifiers"] = mods_v
+				meta["modifiers"] = _normalize_modifiers(mods_v)
 
 			if meta.is_empty():
 				f.setup(ax, b)
@@ -1453,14 +1493,14 @@ func _restore_from_dict(d: Dictionary) -> void:
 		else:
 			var mods2_v: Variant = td.get("modifiers", [])
 			if mods2_v is Array and frag.has_method("set_local_modifiers"):
-				frag.call("set_local_modifiers", mods2_v)
+				frag.call("set_local_modifiers", _normalize_modifiers(mods2_v))
 			if frag.has_signal("clicked") and not frag.is_connected("clicked", Callable(self, "_on_fragment_clicked")):
 				frag.connect("clicked", Callable(self, "_on_fragment_clicked"))
 
 			if typeof(ResourceNodes) != TYPE_NIL and ResourceNodes.has_method("rebuild_nodes_for_tile"):
 				var mods_for_tile: Array = []
 				if mods2_v is Array:
-					mods_for_tile = mods2_v
+					mods_for_tile = _normalize_modifiers(mods2_v)
 				var tier_for_tile: int = _get_rank_for_biome(b)
 				ResourceNodes.rebuild_nodes_for_tile(ax, mods_for_tile, b, tier_for_tile)
 
@@ -1581,17 +1621,25 @@ func _spawn_fragment(biome_name: String, ax: Vector2i) -> Node2D:
 	if is_player_tile and not _early_recruit_guaranteed and _early_spawn_count == 5:
 		var has_recruit: bool = false
 		for m in mods:
-			if String(m).begins_with("Recruit Event"):
+			if _is_recruit_modifier(m):
 				has_recruit = true
 				break
 
 		if not has_recruit:
 			var recruit_name: String = _get_recruit_name_for_biome(biome_name)
 			if recruit_name != "":
-				mods.append("Recruit Event: %s" % recruit_name)
+				mods.append({
+					"kind": "Recruit Event",
+					"name": recruit_name,
+					"rarity": "Rare",
+				})
 			else:
 				# Fallback, in case the biome table is missing a recruit row
-				mods.append("Recruit Event: Local Wanderer")
+				mods.append({
+					"kind": "Recruit Event",
+					"name": "Local Wanderer",
+					"rarity": "Rare",
+				})
 	# ---------------------------------------------------
 
 
@@ -1666,6 +1714,10 @@ func _on_fragment_selected(f: Node) -> void:
 	if f is Node2D:
 		var frag := f as Node2D
 		_update_selection_hud_position(frag.global_position)
+		if selection_hud != null and selection_hud.has_method("get"):
+			var docked: bool = bool(selection_hud.get("dock_to_bottom_left"))
+			if docked:
+				return
 
 func _update_selection_hud_position(world_pos: Vector2) -> void:
 	if selection_hud == null or not is_instance_valid(selection_hud):

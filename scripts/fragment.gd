@@ -384,8 +384,9 @@ func get_modifier_lines() -> Array[String]:
 func set_local_modifiers(mods: Array) -> void:
 	var typed: Array[Dictionary] = []
 	for m in mods:
-		if typeof(m) == TYPE_DICTIONARY:
-			typed.append(m)
+		var md := _modifier_to_dict(m)
+		if not md.is_empty():
+			typed.append(md)
 	modifiers = typed
 	_update_modifier_icons()
 
@@ -414,8 +415,9 @@ func setup(a: Variant, b: Variant, meta: Dictionary = {}) -> void:
 			if arr is Array:
 				var typed: Array[Dictionary] = []
 				for v in (arr as Array):
-					if typeof(v) == TYPE_DICTIONARY:
-						typed.append(v)
+					var md := _modifier_to_dict(v)
+					if not md.is_empty():
+						typed.append(md)
 				modifiers = typed
 
 	_update_label()
@@ -443,6 +445,43 @@ func _on_area_input_event(_vp: Viewport, event: InputEvent, _shape_idx: int) -> 
 
 		clicked.emit(self)
 		get_viewport().set_input_as_handled()
+
+
+
+func _modifier_to_dict(m: Variant) -> Dictionary:
+	if typeof(m) == TYPE_DICTIONARY:
+		return m
+	if typeof(m) != TYPE_STRING:
+		return {}
+
+	var mod_str: String = String(m)
+	var header: String = mod_str
+	var detail: String = ""
+
+	# Split "Header: Detail"
+	var parts := mod_str.split(": ", false, 2)
+	if parts.size() > 0:
+		header = parts[0]
+	if parts.size() > 1:
+		detail = parts[1]
+
+	var kind_base := header
+	var skill_id := ""
+
+	# Look for "[skill]" inside the header, e.g. "Resource Spawn [mining]"
+	var open_idx := header.find("[")
+	if open_idx != -1:
+		var close_idx := header.find("]", open_idx + 1)
+		if close_idx != -1:
+			kind_base = header.substr(0, open_idx).strip_edges()
+			skill_id = header.substr(open_idx + 1, close_idx - open_idx - 1).strip_edges().to_lower()
+
+	return {
+		"kind": kind_base.strip_edges(),
+		"skill": skill_id,
+		"name": detail.strip_edges(),
+		"rarity": "",
+	}
 
 func get_recruited_villager_idx() -> int:
 	return recruited_villager_idx
@@ -517,6 +556,7 @@ func _hex_points_open() -> PackedVector2Array:
 		Vector2(-SQRT3 * 0.5 * s, 0.5 * s),
 		Vector2(-SQRT3 * 0.5 * s, -0.5 * s),
 	])
+
 
 func _update_label() -> void:
 	if label != null:
