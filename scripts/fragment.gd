@@ -28,6 +28,7 @@ var region: String = ""
 
 const HEX_SIZE: float = 60.0
 const SQRT3: float = 1.7320508075688772
+const MOD_ICON_MAX_SIZE: float = 2.0
 
 # ---------------------------------------------------
 # Biome → icon texture path
@@ -260,9 +261,41 @@ const HERBALISM_PATCH_NAME_TO_ICON := {
 	"Lichencrust Patch":       "res://assets/icons/modifiers/herb_lichencrust_patch.png",
 	"Pitchcap Patch":          "res://assets/icons/modifiers/herb_pitchcap_patch.png",
 	"Voidbark Patch":          "res://assets/icons/modifiers/herb_voidbark_patch.png",
-}
 
-
+	# -----------------------------
+	# World.gd naming aliases
+	# -----------------------------
+	"Stoneedge Cragweave Beds":        "res://assets/icons/modifiers/herb_stoneedge_patch.png",
+	"Greenveil Forestglade":           "res://assets/icons/modifiers/herb_greenveil_patch.png",
+	"Reedrun Riverbank Reeds":          "res://assets/icons/modifiers/herb_reedrun_patch.png",
+	"Maplefold Vale Understory":        "res://assets/icons/modifiers/herb_maplefold_patch.png",
+	"Brineback Estuary Saltbeds":       "res://assets/icons/modifiers/herb_brineback_patch.png",
+	"Tanninbush Foothill Thicket":      "res://assets/icons/modifiers/herb_tanninbush_patch.png",
+	"Silkshade Canopy Beds":            "res://assets/icons/modifiers/herb_silkshade_patch.png",
+	"Sinkbloom Cenote Bloomring":       "res://assets/icons/modifiers/herb_sinkbloom_patch.png",
+	"Ochreshelf Canyon Fibreflats":     "res://assets/icons/modifiers/herb_ochreshelf_patch.png",
+	"Cloudpine Terrace Needlebed":      "res://assets/icons/modifiers/herb_cloudpine_patch.png",
+	"Echofall Sprayroot Ledge":         "res://assets/icons/modifiers/herb_echofall_patch.png",
+	"Ironmoss Talus Mats":              "res://assets/icons/modifiers/herb_ironmoss_patch.png",
+	"Baobab Sunleaf Flats":             "res://assets/icons/modifiers/herb_baobab_patch.png",
+	"Lotusbank Floodplain Pools":       "res://assets/icons/modifiers/herb_lotusbank_patch.png",
+	"Redroot Riftvine Beds":            "res://assets/icons/modifiers/herb_redroot_patch.png",
+	"Highwood Rain-Thicket":            "res://assets/icons/modifiers/herb_highwood_patch.png",
+	"Mistshelf Gorge Vaporgrowth":      "res://assets/icons/modifiers/herb_mistshelf_patch.png",
+	"Caprock Mesa Cordfields":          "res://assets/icons/modifiers/herb_caprock_patch.png",
+	"Incense Grove Resinwalk":          "res://assets/icons/modifiers/herb_incense_patch.png",
+	"Skywell Oasis Dewbeds":            "res://assets/icons/modifiers/herb_skywell_patch.png",
+	"Saltbloom Dome Brinefields":       "res://assets/icons/modifiers/herb_saltbloom_patch.png",
+	"Boreal Needleheath":               "res://assets/icons/modifiers/herb_boreal_patch.png",
+	"Frostlip Tarn Iceleaf Beds":       "res://assets/icons/modifiers/herb_frostlip_patch.png",
+	"Lichencrust Steppe Threadflats":   "res://assets/icons/modifiers/herb_lichencrust_patch.png",
+	"Cinderwood Ashgarden":             "res://assets/icons/modifiers/herb_cinder_patch.png",
+	"Steamroot Geysergarden":           "res://assets/icons/modifiers/herb_steamroot_patch.png",
+	"Pitchcap Underforge Caps":         "res://assets/icons/modifiers/herb_pitchcap_patch.png",
+	"Starbloom Skymeadow":              "res://assets/icons/modifiers/herb_starbloom_patch.png",
+	"Starkelp Kelpfields":              "res://assets/icons/modifiers/herb_starkelp_patch.png",
+	"Umbralweave Voidbeds":             "res://assets/icons/modifiers/herb_voidbark_patch.png",
+	}
 # ===================================================
 # Lifecycle
 # ===================================================
@@ -325,44 +358,47 @@ func _resolve_resource_spawn_icon(name: String, skill: String) -> String:
 			return ""
 
 func _update_modifier_icons() -> void:
-	# Clear existing
-	for c in mod_icons_root.get_children():
-		c.queue_free()
+	if mod_icons_root == null:
+		return
+
+	var slots := _get_mod_icon_sprites()
+	if slots.is_empty():
+		return
+
+	for slot in slots:
+		slot.texture = null
+		slot.visible = false
 
 	if modifiers.is_empty():
 		return
 
-	var x := 0.0
+	var icon_idx := 0
 	for m in modifiers:
-		if typeof(m) != TYPE_DICTIONARY:
-			continue
+		if icon_idx >= slots.size():
+			break
 
 		var md: Dictionary = m
 		var kind: String  = String(md.get("kind", "")).strip_edges()
 		var skill: String = String(md.get("skill", "")).strip_edges().to_lower()
 		var name: String  = String(md.get("name", md.get("detail", ""))).strip_edges()
 
-		var icon := "•"
+		var icon_path := ""
 		if kind == "Resource Spawn":
-			match skill:
-				"mining":       icon = "⛏"
-				"woodcutting":  icon = "🪓"
-				"fishing":      icon = "🎣"
-				"herbalism":    icon = "🌿"
-				"farming":      icon = "🌾"
-				_:              icon = "•"
-		elif kind == "Hazard":
-			icon = "⚠"
-		elif kind == "Boon":
-			icon = "✦"
+			icon_path = _resolve_resource_spawn_icon(name, skill)
+		if icon_path == "" and MOD_KIND_ICON_PATHS.has(kind):
+			icon_path = String(MOD_KIND_ICON_PATHS[kind])
+		if icon_path == "" and MOD_SKILL_ICON_PATHS.has(skill):
+			icon_path = String(MOD_SKILL_ICON_PATHS[skill])
+		if icon_path == "":
+			continue
 
-		var l := Label.new()
-		l.text = icon
-		l.position = Vector2(x, 0)
-		l.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		mod_icons_root.add_child(l)
+		var tex := load(icon_path) as Texture2D
+		if tex == null:
+			continue
 
-		x += 18.0
+		slots[icon_idx].texture = tex
+		slots[icon_idx].visible = true
+		icon_idx += 1
 
 func get_modifier_lines() -> Array[String]:
 	var out: Array[String] = []

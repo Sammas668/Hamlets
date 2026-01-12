@@ -43,8 +43,16 @@ func _skills_from_modifiers(mods: Array) -> Dictionary:
 	# returns { "herbalism": true, "mining": true, ... }
 	var out := {}
 	for m in mods:
-		var s := String(m).to_lower()
+		if typeof(m) == TYPE_DICTIONARY:
+			var md: Dictionary = m
+			var kind := String(md.get("kind", "")).strip_edges()
+			if kind == "Resource Spawn":
+				var skill := String(md.get("skill", "")).strip_edges().to_lower()
+				if skill != "":
+					out[skill] = true
+			continue
 
+		var s := str(m).to_lower()
 		# Expecting: "resource spawn [herbalism]: ..."
 		var lb := s.find("[")
 		var rb := s.find("]", lb + 1)
