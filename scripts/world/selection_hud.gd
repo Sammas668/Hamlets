@@ -2,6 +2,7 @@
 extends Panel
 
 signal building_equip_requested(ax: Vector2i, building_id: String)
+signal building_slot_requested(ax: Vector2i, slot_type: String, slot_index: int)
 
 @export var debug_logging: bool = false
 
@@ -21,6 +22,10 @@ var _mods_expanded: bool = false
 
 # UI refs
 var _mode_tabs: TabContainer = null
+var _mode_header: Control = null
+var _tile_tab_button: Button = null
+var _building_tab_button: Button = null
+var _scroll_container: ScrollContainer = null
 
 var _tile_icon: TextureRect = null
 var _tile_name_label: Label = null
@@ -37,11 +42,12 @@ var _tile_resources_list: VBoxContainer = null
 var _tile_effects_section: Control = null
 var _tile_effects_list: VBoxContainer = null
 
-var _building_icon: TextureRect = null
+var _building_slot: Button = null
 var _building_name_label: Label = null
 var _building_status_label: Label = null
 var _building_tier_label: Label = null
 
+var _building_chips_row: Control = null
 var _chip_workers_label: Label = null
 var _chip_queue_label: Label = null
 var _chip_upkeep_label: Label = null
@@ -87,6 +93,7 @@ func _ready() -> void:
 	_apply_panel_style()
 	_cache_nodes()
 	_setup_mode_tabs()
+	_apply_slot_styles()
 
 	if _tile_modifiers_expand:
 		_tile_modifiers_expand.pressed.connect(_on_modifiers_expand_pressed)
@@ -99,43 +106,48 @@ func _ready() -> void:
 
 
 func _cache_nodes() -> void:
-	_mode_tabs = get_node_or_null("Margin/RootVBox/ModeTabs") as TabContainer
+	_mode_tabs = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs") as TabContainer
+	_mode_header = get_node_or_null("Margin/RootVBox/ModeHeader") as Control
+	_tile_tab_button = get_node_or_null("Margin/RootVBox/ModeHeader/TileTabButton") as Button
+	_building_tab_button = get_node_or_null("Margin/RootVBox/ModeHeader/BuildingTabButton") as Button
+	_scroll_container = get_node_or_null("Margin/RootVBox/Scroll") as ScrollContainer
 
-	_tile_icon = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileIcon") as TextureRect
-	_tile_name_label = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileName") as Label
-	_tile_coord_label = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileCoord") as Label
-	_tile_tier_label = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileTierChip/TileTierLabel") as Label
+	_tile_icon = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileIcon") as TextureRect
+	_tile_name_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileName") as Label
+	_tile_coord_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileCoord") as Label
+	_tile_tier_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileTierChip/TileTierLabel") as Label
 
-	_tile_modifiers_section = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection") as Control
-	_tile_modifiers_grid = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection/TileModifiersGrid") as GridContainer
-	_tile_modifiers_expand = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader/TileModifiersExpand") as Button
+	_tile_modifiers_section = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection") as Control
+	_tile_modifiers_grid = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersGrid") as GridContainer
+	_tile_modifiers_expand = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader/TileModifiersExpand") as Button
 
-	_tile_resources_section = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileResourcesSection") as Control
-	_tile_resources_list = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileResourcesSection/TileResourcesList") as VBoxContainer
+	_tile_resources_section = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileResourcesSection") as Control
+	_tile_resources_list = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileResourcesSection/TileResourcesList") as VBoxContainer
 
-	_tile_effects_section = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileEffectsSection") as Control
-	_tile_effects_list = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileEffectsSection/TileEffectsList") as VBoxContainer
+	_tile_effects_section = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileEffectsSection") as Control
+	_tile_effects_list = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileEffectsSection/TileEffectsList") as VBoxContainer
 
-	_building_icon = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingIcon") as TextureRect
-	_building_name_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingHeaderText/BuildingName") as Label
-	_building_status_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingHeaderText/BuildingStatus") as Label
-	_building_tier_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingTierChip/BuildingTierLabel") as Label
+	_building_slot = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSlot") as Button
+	_building_name_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary/BuildingName") as Label
+	_building_status_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary/BuildingStatus") as Label
+	_building_tier_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary/BuildingTierChip/BuildingTierLabel") as Label
 
-	_chip_workers_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipWorkers/ChipWorkersLabel") as Label
-	_chip_queue_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipQueue/ChipQueueLabel") as Label
-	_chip_upkeep_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipUpkeep/ChipUpkeepLabel") as Label
-	_chip_integrity_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipIntegrity/ChipIntegrityLabel") as Label
+	_building_chips_row = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow") as Control
+	_chip_workers_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipWorkers/ChipWorkersLabel") as Label
+	_chip_queue_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipQueue/ChipQueueLabel") as Label
+	_chip_upkeep_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipUpkeep/ChipUpkeepLabel") as Label
+	_chip_integrity_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipIntegrity/ChipIntegrityLabel") as Label
 
-	_building_io_row = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow") as Control
-	_building_inputs_list = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs/BuildingInputsList") as VBoxContainer
-	_building_outputs_list = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs/BuildingOutputsList") as VBoxContainer
+	_building_io_row = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow") as Control
+	_building_inputs_list = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs/BuildingInputsList") as VBoxContainer
+	_building_outputs_list = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs/BuildingOutputsList") as VBoxContainer
 
-	_building_buttons_row = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingButtonsRow") as Control
+	_building_buttons_row = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow") as Control
 
-	_base_slot = get_node_or_null("BaseSlot") as Button
+	_base_slot = _building_slot
 	_module_slots.clear()
 	for i in range(1, 4):
-		var btn := find_child("ModuleSlot%d" % i, true, false) as Button
+		var btn := get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/ModulesRow/ModuleSlot%d" % i) as Button
 		if btn:
 			_module_slots.append(btn)
 
@@ -146,6 +158,18 @@ func _setup_mode_tabs() -> void:
 	if _mode_tabs.get_tab_count() >= 2:
 		_mode_tabs.set_tab_title(0, "Tile")
 		_mode_tabs.set_tab_title(1, "Building")
+		if not _mode_tabs.tab_changed.is_connected(_on_tab_changed):
+			_mode_tabs.tab_changed.connect(_on_tab_changed)
+
+	if _tile_tab_button:
+		if not _tile_tab_button.pressed.is_connected(_on_tile_tab_pressed):
+			_tile_tab_button.pressed.connect(_on_tile_tab_pressed)
+	if _building_tab_button:
+		if not _building_tab_button.pressed.is_connected(_on_building_tab_pressed):
+			_building_tab_button.pressed.connect(_on_building_tab_pressed)
+
+	_sync_tab_buttons()
+	_wire_slot_buttons()
 
 
 func _apply_panel_style() -> void:
@@ -163,6 +187,8 @@ func _apply_panel_style() -> void:
 	style.shadow_color = Color(0.0, 0.0, 0.0, 0.4)
 	style.shadow_size = 6
 	add_theme_stylebox_override("panel", style)
+	add_theme_font_size_override("font_size", 18)
+	add_theme_constant_override("line_spacing", 2)
 
 
 func _on_viewport_size_changed() -> void:
@@ -174,11 +200,21 @@ func _dock_bottom_left() -> void:
 	if not is_inside_tree():
 		return
 
-	var min_size: Vector2 = get_combined_minimum_size()
-	if size.x < min_size.x or size.y < min_size.y:
-		size = min_size
-
 	var vp: Vector2 = get_viewport_rect().size
+	var min_size: Vector2 = get_combined_minimum_size()
+	var available := Vector2(
+		max(0.0, vp.x - (dock_padding.x * 2.0)),
+		max(0.0, vp.y - (dock_padding.y * 2.0))
+	)
+	var target := Vector2(
+		min(min_size.x, available.x),
+		min(min_size.y, available.y)
+	)
+	if target.x <= 0.0:
+		target.x = min_size.x
+	if target.y <= 0.0:
+		target.y = min_size.y
+	size = target
 	var x: float = dock_padding.x
 	var y: float = vp.y - size.y - dock_padding.y
 
@@ -186,6 +222,82 @@ func _dock_bottom_left() -> void:
 		y = dock_padding.y
 
 	position = Vector2(x, y)
+
+
+func _on_tab_changed(tab_index: int) -> void:
+	if _mode_tabs == null:
+		return
+	_sync_tab_buttons()
+	if _scroll_container:
+		_scroll_container.scroll_vertical = 0
+
+
+func _on_tile_tab_pressed() -> void:
+	if _mode_tabs:
+		_mode_tabs.current_tab = 0
+	_sync_tab_buttons()
+
+
+func _on_building_tab_pressed() -> void:
+	if _mode_tabs:
+		_mode_tabs.current_tab = 1
+	_sync_tab_buttons()
+
+
+func _sync_tab_buttons() -> void:
+	if _mode_tabs == null:
+		return
+	if _tile_tab_button:
+		_tile_tab_button.button_pressed = _mode_tabs.current_tab == 0
+	if _building_tab_button:
+		_building_tab_button.button_pressed = _mode_tabs.current_tab == 1
+
+
+func _wire_slot_buttons() -> void:
+	if _building_slot and not _building_slot.pressed.is_connected(_on_building_slot_pressed):
+		_building_slot.pressed.connect(_on_building_slot_pressed)
+	for i in range(_module_slots.size()):
+		var btn := _module_slots[i]
+		if btn and not btn.pressed.is_connected(_on_module_slot_pressed.bind(i)):
+			btn.pressed.connect(_on_module_slot_pressed.bind(i))
+
+
+func _apply_slot_styles() -> void:
+	var normal := StyleBoxFlat.new()
+	normal.bg_color = Color(0.1, 0.1, 0.12, 0.9)
+	normal.border_width_left = 2
+	normal.border_width_right = 2
+	normal.border_width_top = 2
+	normal.border_width_bottom = 2
+	normal.border_color = Color(0.18, 0.18, 0.22)
+	normal.corner_radius_top_left = 6
+	normal.corner_radius_top_right = 6
+	normal.corner_radius_bottom_left = 6
+	normal.corner_radius_bottom_right = 6
+
+	var hover := normal.duplicate()
+	hover.border_color = Color(0.35, 0.55, 0.9)
+
+	var pressed := normal.duplicate()
+	pressed.border_color = Color(0.7, 0.7, 0.85)
+
+	var focus := normal.duplicate()
+	focus.border_color = Color(0.45, 0.8, 1.0)
+
+	var slots: Array[Button] = []
+	if _building_slot:
+		slots.append(_building_slot)
+	slots.append_array(_module_slots)
+
+	for slot in slots:
+		slot.add_theme_stylebox_override("normal", normal)
+		slot.add_theme_stylebox_override("hover", hover)
+		slot.add_theme_stylebox_override("pressed", pressed)
+		slot.add_theme_stylebox_override("focus", focus)
+		slot.add_theme_stylebox_override("disabled", normal)
+		slot.text = ""
+		slot.clip_text = true
+		slot.expand_icon = true
 
 
 func set_fragment(fragment: Node) -> void:
@@ -462,6 +574,7 @@ func _get_effect_lines(fragment: Node) -> Array[String]:
 			return lines
 	return []
 
+
 func _populate_list(list_node: VBoxContainer, lines: Array[String]) -> void:
 	if list_node == null:
 		return
@@ -480,18 +593,12 @@ func _set_section_visible(section: Control, should_show: bool) -> void:
 
 # ---------- Buildings tab ----------
 func _update_building_tab() -> void:
+	var base_id := _get_equipped_building_id(_current_fragment)
+	var has_building := base_id != ""
+
+	_refresh_building_equipment(_current_fragment)
+
 	var building_data := _get_building_data(_current_fragment)
-	var has_building := not building_data.is_empty()
-
-	if _building_icon:
-		_building_icon.texture = building_data.get("icon", null)
-	if _building_name_label:
-		_building_name_label.text = String(building_data.get("name", "No Building"))
-	if _building_status_label:
-		_building_status_label.text = String(building_data.get("status", "Select a tile"))
-	if _building_tier_label:
-		_building_tier_label.text = String(building_data.get("tier", "T0"))
-
 	if _chip_workers_label:
 		_chip_workers_label.text = "Workers: %s" % String(building_data.get("workers", "0"))
 	if _chip_queue_label:
@@ -506,6 +613,8 @@ func _update_building_tab() -> void:
 	_populate_list(_building_inputs_list, _normalize_string_array(inputs))
 	_populate_list(_building_outputs_list, _normalize_string_array(outputs))
 
+	if _building_chips_row:
+		_building_chips_row.visible = has_building
 	if _building_io_row:
 		_building_io_row.visible = has_building and (not inputs.is_empty() or not outputs.is_empty())
 	if _building_buttons_row:
@@ -523,17 +632,11 @@ func _get_building_data(fragment: Node) -> Dictionary:
 	if fragment == null or not is_instance_valid(fragment):
 		return {}
 
-	var base_id := ""
-	if fragment.has_meta("building_id"):
-		base_id = String(fragment.get_meta("building_id"))
+	var base_id := _get_equipped_building_id(fragment)
 	if base_id == "":
 		return {}
 
 	var data: Dictionary = {
-		"name": _get_building_label(base_id),
-		"status": "Operational",
-		"tier": _get_building_tier_label(base_id),
-		"icon": _get_building_icon(base_id),
 		"workers": _get_building_workers(base_id, fragment),
 		"queue": _get_building_queue(base_id, fragment),
 		"upkeep": _get_building_upkeep(base_id, fragment),
@@ -554,8 +657,23 @@ func _get_building_label(base_id: String) -> String:
 
 
 func _get_building_tier_label(base_id: String) -> String:
-	# TODO: pull building tier/status from ConstructionSystem or building instance.
-	return "T1"
+	if _construction and _construction.has_method("get_recipe_by_id"):
+		var rec: Dictionary = _construction.call("get_recipe_by_id", StringName(base_id))
+		var tier := int(rec.get("build_tier", 0))
+		if tier > 0:
+			return "T%d" % tier
+	return "T0"
+
+
+func _get_building_desc(base_id: String) -> String:
+	if _construction and _construction.has_method("get_recipe_by_id"):
+		var rec: Dictionary = _construction.call("get_recipe_by_id", StringName(base_id))
+		var desc := String(rec.get("desc", "")).strip_edges()
+		if desc != "":
+			return desc
+		var effect := String(rec.get("effect_raw", "")).strip_edges()
+		return effect
+	return ""
 
 
 func _get_building_icon(base_id: String) -> Texture2D:
@@ -608,6 +726,71 @@ func _get_building_outputs(_base_id: String, fragment: Node) -> Array:
 		if v is Array:
 			return v
 	return []
+
+
+func _get_equipped_building_id(fragment: Node) -> String:
+	if fragment == null or not is_instance_valid(fragment):
+		return ""
+	if fragment.has_meta("building_id"):
+		return String(fragment.get_meta("building_id"))
+	return ""
+
+
+func _get_equipped_modules(fragment: Node) -> Array:
+	if fragment == null or not is_instance_valid(fragment):
+		return []
+	if fragment.has_meta("building_modules"):
+		var m: Variant = fragment.get_meta("building_modules")
+		if m is Array:
+			return m
+	return []
+
+
+func _refresh_building_equipment(fragment: Node) -> void:
+	var base_id := _get_equipped_building_id(fragment)
+	var modules := _get_equipped_modules(fragment)
+
+	if _building_slot:
+		if base_id != "":
+			var icon := _get_building_icon(base_id)
+			_building_slot.icon = icon
+			var title := _get_building_label(base_id)
+			var desc := _get_building_desc(base_id)
+			_building_slot.tooltip_text = _build_tooltip(title, desc)
+		else:
+			_building_slot.icon = null
+			_building_slot.tooltip_text = "Empty"
+
+	if _building_name_label:
+		_building_name_label.text = "No Building" if base_id == "" else _get_building_label(base_id)
+	if _building_status_label:
+		_building_status_label.text = "Empty" if base_id == "" else "Equipped"
+	if _building_tier_label:
+		_building_tier_label.text = _get_building_tier_label(base_id) if base_id != "" else "T0"
+
+	for i in range(_module_slots.size()):
+		var slot := _module_slots[i]
+		if slot == null:
+			continue
+		var module_id := ""
+		if i < modules.size() and modules[i] is String:
+			module_id = String(modules[i])
+		if module_id != "":
+			slot.icon = _get_building_icon(module_id)
+			var title_m := _get_building_label(module_id)
+			var desc_m := _get_building_desc(module_id)
+			slot.tooltip_text = _build_tooltip(title_m, desc_m)
+		else:
+			slot.icon = null
+			slot.tooltip_text = "Empty"
+
+
+func _build_tooltip(title: String, desc: String) -> String:
+	if title == "":
+		return desc
+	if desc == "":
+		return title
+	return "%s\n%s" % [title, desc]
 
 
 func _on_modifiers_expand_pressed() -> void:
@@ -815,6 +998,14 @@ func _equip_module_from_drop(slot_index: int, building_id: String, icon_tex: Tex
 
 	emit_signal("building_equip_requested", _current_coord, building_id)
 	_update_building_tab()
+
+
+func _on_building_slot_pressed() -> void:
+	emit_signal("building_slot_requested", _current_coord, "building", -1)
+
+
+func _on_module_slot_pressed(slot_index: int) -> void:
+	emit_signal("building_slot_requested", _current_coord, "module", slot_index)
 
 
 func _is_valid_building_item_for_slot(item_id: String, slot_type: String) -> bool:
