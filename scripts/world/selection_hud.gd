@@ -299,16 +299,16 @@ func _populate_modifiers_grid(mods: Array) -> void:
 
 	_set_section_visible(_tile_modifiers_section, true)
 
-	var total := mods.size()
-	var max_visible := MAX_MODIFIERS_COLLAPSED if not _mods_expanded else total
-	var visible_count := min(total, max_visible)
+	var total: int = mods.size()
+	var max_visible: int = total if _mods_expanded else MAX_MODIFIERS_COLLAPSED
+	var visible_count: int = min(total, max_visible)
 
 	for i in range(visible_count):
 		var m: Variant = mods[i]
 		var card := _build_modifier_card(m)
 		_tile_modifiers_grid.add_child(card)
 
-	var remaining := total - visible_count
+	var remaining: int = total - visible_count
 	if _tile_modifiers_expand:
 		if remaining > 0 and not _mods_expanded:
 			_tile_modifiers_expand.visible = true
