@@ -456,9 +456,11 @@ func _get_effect_lines(fragment: Node) -> Array[String]:
 	if fragment.has_method("get_local_effects_summary"):
 		var summary := String(fragment.call("get_local_effects_summary")).strip_edges()
 		if summary != "":
-			return summary.split("\n", false)
+			var lines: Array[String] = []
+			for entry in summary.split("\n", false):
+				lines.append(String(entry))
+			return lines
 	return []
-
 
 func _populate_list(list_node: VBoxContainer, lines: Array[String]) -> void:
 	if list_node == null:
