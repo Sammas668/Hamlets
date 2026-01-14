@@ -279,223 +279,65 @@ text = "Close"
 custom_minimum_size = Vector2(360, 240)
 offset_left = 7.0
 offset_top = 59.0
-offset_right = 367.0
-offset_bottom = 299.0
+offset_right = 247.0
+offset_bottom = 179.0
 script = ExtResource("2_32lhk")
+debug_logging = null
+force_top_level = null
+dock_to_bottom_left = null
+dock_padding = null
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer/SelectionHUD"]
-layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+[node name="Tabs" type="TabContainer" parent="CanvasLayer/SelectionHUD"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 136.0
+offset_bottom = 40.0
+current_tab = 0
 
-[node name="RootVBox" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="ModeTabs" type="TabContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox"]
-layout_mode = 2
-theme_override_constants/content_margin_left = 4
-theme_override_constants/content_margin_right = 4
-theme_override_constants/content_margin_top = 6
-theme_override_constants/content_margin_bottom = 6
-
-[node name="TileTab" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs"]
+[node name="Info" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Tabs"]
 layout_mode = 2
 metadata/_tab_index = 0
-theme_override_constants/separation = 10
 
-[node name="TileHeaderRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="TileIcon" type="TextureRect" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow"]
-layout_mode = 2
-custom_minimum_size = Vector2(36, 36)
-expand_mode = 2
-stretch_mode = 5
-
-[node name="TileHeaderText" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 2
-
-[node name="TileName" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileHeaderText"]
-layout_mode = 2
-text = "Tile Name"
-
-[node name="TileCoord" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileHeaderText"]
-layout_mode = 2
-text = "(0,0)"
-
-[node name="TileTierChip" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow"]
+[node name="Biome" type="Label" parent="CanvasLayer/SelectionHUD/Tabs/Info"]
 layout_mode = 2
 
-[node name="TileTierLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileTierChip"]
-layout_mode = 2
-text = "T1"
-
-[node name="TileModifiersSection" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="TileModifiersHeader" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection"]
+[node name="Coord" type="Label" parent="CanvasLayer/SelectionHUD/Tabs/Info"]
 layout_mode = 2
 
-[node name="TileModifiersTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader"]
+[node name="BuffsText" type="Label" parent="CanvasLayer/SelectionHUD/Tabs/Info"]
 layout_mode = 2
-text = "Modifiers"
 
-[node name="TileModifiersExpand" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader"]
+[node name="EffectsText" type="Label" parent="CanvasLayer/SelectionHUD/Tabs/Info"]
 layout_mode = 2
-size_flags_horizontal = 3
-text = "+0"
 
-[node name="TileModifiersGrid" type="GridContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection"]
+[node name="ModifiersText" type="Label" parent="CanvasLayer/SelectionHUD/Tabs/Info"]
 layout_mode = 2
-columns = 5
 
-[node name="TileResourcesSection" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="TileResourcesTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileResourcesSection"]
-layout_mode = 2
-text = "Resource Nodes"
-
-[node name="TileResourcesList" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileResourcesSection"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="TileEffectsSection" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab"]
-layout_mode = 2
-theme_override_constants/separation = 6
-
-[node name="TileEffectsTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileEffectsSection"]
-layout_mode = 2
-text = "Effects"
-
-[node name="TileEffectsList" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/TileTab/TileEffectsSection"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="BuildingTab" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs"]
+[node name="Buildings" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Tabs"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 1
-theme_override_constants/separation = 10
 
-[node name="BuildingHeaderRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="BuildingIcon" type="TextureRect" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow"]
-layout_mode = 2
-custom_minimum_size = Vector2(36, 36)
-expand_mode = 2
-stretch_mode = 5
-
-[node name="BuildingHeaderText" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 2
-
-[node name="BuildingName" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingHeaderText"]
-layout_mode = 2
-text = "Building"
-
-[node name="BuildingStatus" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingHeaderText"]
-layout_mode = 2
-text = "Status"
-
-[node name="BuildingTierChip" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow"]
+[node name="CurrentBuilding" type="Label" parent="CanvasLayer/SelectionHUD/Tabs/Buildings"]
 layout_mode = 2
 
-[node name="BuildingTierLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingTierChip"]
-layout_mode = 2
-text = "T1"
-
-[node name="BuildingChipsRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="ChipWorkers" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow"]
+[node name="BaseRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Tabs/Buildings"]
 layout_mode = 2
 
-[node name="ChipWorkersLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipWorkers"]
-layout_mode = 2
-text = "Workers: 0"
-
-[node name="ChipQueue" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow"]
+[node name="BaseSlot" type="Button" parent="CanvasLayer/SelectionHUD/Tabs/Buildings/BaseRow"]
 layout_mode = 2
 
-[node name="ChipQueueLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipQueue"]
-layout_mode = 2
-text = "Queue: 0"
-
-[node name="ChipUpkeep" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow"]
+[node name="ModulesRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Tabs/Buildings"]
 layout_mode = 2
 
-[node name="ChipUpkeepLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipUpkeep"]
-layout_mode = 2
-text = "Upkeep: -"
-
-[node name="ChipIntegrity" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow"]
+[node name="ModuleSlot1" type="Button" parent="CanvasLayer/SelectionHUD/Tabs/Buildings/ModulesRow"]
 layout_mode = 2
 
-[node name="ChipIntegrityLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipIntegrity"]
+[node name="ModuleSlot2" type="Button" parent="CanvasLayer/SelectionHUD/Tabs/Buildings/ModulesRow"]
 layout_mode = 2
-text = "Integrity: 100%"
 
-[node name="BuildingIORow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab"]
+[node name="ModuleSlot3" type="Button" parent="CanvasLayer/SelectionHUD/Tabs/Buildings/ModulesRow"]
 layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="BuildingInputs" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="BuildingInputsTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs"]
-layout_mode = 2
-text = "Inputs"
-
-[node name="BuildingInputsList" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="BuildingOutputs" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow"]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="BuildingOutputsTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs"]
-layout_mode = 2
-text = "Outputs"
-
-[node name="BuildingOutputsList" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs"]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="BuildingButtonsRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab"]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="AssignButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingButtonsRow"]
-layout_mode = 2
-text = "Assign"
-
-[node name="UpgradeButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingButtonsRow"]
-layout_mode = 2
-text = "Upgrade"
-
-[node name="EquipModuleButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingButtonsRow"]
-layout_mode = 2
-text = "Equip Module"
-
-[node name="OpenQueueButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeTabs/BuildingTab/BuildingButtonsRow"]
-layout_mode = 2
-text = "Open Queue"
 
 [node name="RightDock" parent="CanvasLayer" instance=ExtResource("8_b3faq")]
 

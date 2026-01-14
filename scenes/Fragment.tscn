@@ -37,6 +37,7 @@ position = Vector2(0, 26)
 position = Vector2(-32, 0)
 
 [node name="ModIcon2" type="Sprite2D" parent="ModIcons"]
+position = Vector2(0, 14)
 
 [node name="ModIcon3" type="Sprite2D" parent="ModIcons"]
 position = Vector2(32, 0)

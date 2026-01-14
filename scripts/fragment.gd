@@ -100,12 +100,13 @@ const MOD_SKILL_ICON_PATHS := {
 # Use these to tweak specific modifier icons when their art is naturally
 # larger/smaller than others. Values are multipliers on top of the base scale.
 const MOD_ICON_SCALE_OVERRIDES_BY_NAME := {
-	"Recruit Event": 0.2,
+
 	# "Copper Vein": 0.9,
 	# "Herb-Circle Plot": 1.1,
 }
 
 const MOD_ICON_SCALE_OVERRIDES_BY_PATH := {
+	"res://assets/icons/modifiers/recruit.png": 0.8
 	# "res://assets/icons/modifiers/structure.png": 0.85,
 }
 
@@ -371,9 +372,10 @@ func _resolve_resource_spawn_icon(name: String, skill: String) -> String:
 				return String(MOD_SKILL_ICON_PATHS[skill])
 			return ""
 
-func _get_modifier_icon_scale(name: String, icon_path: String) -> float:
-	if MOD_ICON_SCALE_OVERRIDES_BY_NAME.has(name):
-		return float(MOD_ICON_SCALE_OVERRIDES_BY_NAME[name])
+func _get_modifier_icon_scale(name: String, kind: String, icon_path: String) -> float:
+	var scale_key := name if name != "" else kind
+	if MOD_ICON_SCALE_OVERRIDES_BY_NAME.has(scale_key):
+		return float(MOD_ICON_SCALE_OVERRIDES_BY_NAME[scale_key])
 	if MOD_ICON_SCALE_OVERRIDES_BY_PATH.has(icon_path):
 		return float(MOD_ICON_SCALE_OVERRIDES_BY_PATH[icon_path])
 	return 1.0
@@ -422,7 +424,7 @@ func _update_modifier_icons() -> void:
 		var max_dim: float = float(max(tex.get_width(), tex.get_height()))
 		if max_dim > 0.0:
 			var scale_factor: float = MOD_ICON_MAX_SIZE / max_dim
-			var scale_override: float = _get_modifier_icon_scale(name, icon_path)
+			var scale_override: float = _get_modifier_icon_scale(name, kind, icon_path)
 			slots[icon_idx].scale = Vector2.ONE * scale_factor * scale_override
 		slots[icon_idx].visible = true
 		icon_idx += 1

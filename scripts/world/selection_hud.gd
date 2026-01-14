@@ -12,19 +12,48 @@ signal building_equip_requested(ax: Vector2i, building_id: String)
 @export var dock_to_bottom_left: bool = true
 @export var dock_padding: Vector2 = Vector2(16, 16)
 
+const MAX_MODIFIERS_COLLAPSED := 9
+const MODIFIER_ICON_SIZE := Vector2(28, 28)
+
 var _current_fragment: Node = null
 var _current_coord: Vector2i = Vector2i.ZERO
+var _mods_expanded: bool = false
 
-# UI refs (found by name; keep these node names in your scene)
-var _tile_tab: Control = null
-var _build_tab: Control = null
+# UI refs
+var _mode_tabs: TabContainer = null
 
-var _biome_label: Label = null
-var _tier_label: Label = null
-var _mods_text: Control = null   # Label or RichTextLabel
-var _effects_text: Control = null
+var _tile_icon: TextureRect = null
+var _tile_name_label: Label = null
+var _tile_coord_label: Label = null
+var _tile_tier_label: Label = null
 
-var _current_building_label: Label = null
+var _tile_modifiers_section: Control = null
+var _tile_modifiers_grid: GridContainer = null
+var _tile_modifiers_expand: Button = null
+
+var _tile_resources_section: Control = null
+var _tile_resources_list: VBoxContainer = null
+
+var _tile_effects_section: Control = null
+var _tile_effects_list: VBoxContainer = null
+
+var _building_icon: TextureRect = null
+var _building_name_label: Label = null
+var _building_status_label: Label = null
+var _building_tier_label: Label = null
+
+var _chip_workers_label: Label = null
+var _chip_queue_label: Label = null
+var _chip_upkeep_label: Label = null
+var _chip_integrity_label: Label = null
+
+var _building_io_row: Control = null
+var _building_inputs_list: VBoxContainer = null
+var _building_outputs_list: VBoxContainer = null
+
+var _building_buttons_row: Control = null
+
+# Legacy slots (optional)
 var _base_slot: Button = null
 var _module_slots: Array[Button] = []
 
@@ -33,6 +62,7 @@ var _selection: Node = null
 var _bank: Node = null
 var _resource_nodes: Node = null
 var _construction: Node = null
+var _items: Node = null
 
 
 func _ready() -> void:
@@ -42,51 +72,24 @@ func _ready() -> void:
 	_bank = get_node_or_null("/root/Bank")
 	_resource_nodes = get_node_or_null("/root/ResourceNodes")
 	_construction = get_node_or_null("/root/ConstructionSystem")
+	_items = get_node_or_null("/root/Items")
 
-	# Optional: make sure layout can’t be overridden by Containers
 	if force_top_level:
 		top_level = true
 		set_anchors_preset(Control.PRESET_TOP_LEFT, true)
 
-	# Dock (fixes “top-left” panel issues)
 	if dock_to_bottom_left:
 		call_deferred("_dock_bottom_left")
 		var vp := get_viewport()
 		if vp and not vp.size_changed.is_connected(_on_viewport_size_changed):
 			vp.size_changed.connect(_on_viewport_size_changed)
 
-	# Find tabs / controls by name (keeps the script resilient)
-	_tile_tab = find_child("TileTab", true, false) as Control
-	if _tile_tab == null:
-		_tile_tab = find_child("Info", true, false) as Control
+	_apply_panel_style()
+	_cache_nodes()
+	_setup_mode_tabs()
 
-	_build_tab = find_child("BuildTab", true, false) as Control
-	if _build_tab == null:
-		_build_tab = find_child("Buildings", true, false) as Control
-
-	_biome_label = find_child("BiomeLabel", true, false) as Label
-	if _biome_label == null:
-		_biome_label = find_child("Biome", true, false) as Label
-
-	_tier_label = find_child("TierLabel", true, false) as Label
-	if _tier_label == null:
-		_tier_label = find_child("Coord", true, false) as Label
-
-	_mods_text = find_child("ModifiersText", true, false) as Control
-	_effects_text = find_child("EffectsText", true, false) as Control
-
-	_current_building_label = find_child("CurrentBuildingLabel", true, false) as Label
-	if _current_building_label == null:
-		_current_building_label = find_child("CurrentBuilding", true, false) as Label
-
-	_base_slot = find_child("BaseSlot", true, false) as Button
-
-	# Module slots: ModuleSlot1, ModuleSlot2, ModuleSlot3
-	_module_slots.clear()
-	for i in range(1, 4):
-		var btn := find_child("ModuleSlot%d" % i, true, false) as Button
-		if btn:
-			_module_slots.append(btn)
+	if _tile_modifiers_expand:
+		_tile_modifiers_expand.pressed.connect(_on_modifiers_expand_pressed)
 
 	# Wire selection
 	if _selection and _selection.has_signal("fragment_selected"):
@@ -94,8 +97,72 @@ func _ready() -> void:
 	elif debug_logging:
 		print("[SelectionHUD] Selection autoload missing or has no fragment_selected signal.")
 
-	if debug_logging:
-		print("[SelectionHUD] Ready. tile_tab=", _tile_tab, " build_tab=", _build_tab)
+
+func _cache_nodes() -> void:
+	_mode_tabs = get_node_or_null("Margin/RootVBox/ModeTabs") as TabContainer
+
+	_tile_icon = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileIcon") as TextureRect
+	_tile_name_label = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileName") as Label
+	_tile_coord_label = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileCoord") as Label
+	_tile_tier_label = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileHeaderRow/TileTierChip/TileTierLabel") as Label
+
+	_tile_modifiers_section = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection") as Control
+	_tile_modifiers_grid = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection/TileModifiersGrid") as GridContainer
+	_tile_modifiers_expand = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader/TileModifiersExpand") as Button
+
+	_tile_resources_section = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileResourcesSection") as Control
+	_tile_resources_list = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileResourcesSection/TileResourcesList") as VBoxContainer
+
+	_tile_effects_section = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileEffectsSection") as Control
+	_tile_effects_list = get_node_or_null("Margin/RootVBox/ModeTabs/TileTab/TileEffectsSection/TileEffectsList") as VBoxContainer
+
+	_building_icon = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingIcon") as TextureRect
+	_building_name_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingHeaderText/BuildingName") as Label
+	_building_status_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingHeaderText/BuildingStatus") as Label
+	_building_tier_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingHeaderRow/BuildingTierChip/BuildingTierLabel") as Label
+
+	_chip_workers_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipWorkers/ChipWorkersLabel") as Label
+	_chip_queue_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipQueue/ChipQueueLabel") as Label
+	_chip_upkeep_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipUpkeep/ChipUpkeepLabel") as Label
+	_chip_integrity_label = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingChipsRow/ChipIntegrity/ChipIntegrityLabel") as Label
+
+	_building_io_row = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow") as Control
+	_building_inputs_list = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs/BuildingInputsList") as VBoxContainer
+	_building_outputs_list = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs/BuildingOutputsList") as VBoxContainer
+
+	_building_buttons_row = get_node_or_null("Margin/RootVBox/ModeTabs/BuildingTab/BuildingButtonsRow") as Control
+
+	_base_slot = get_node_or_null("BaseSlot") as Button
+	_module_slots.clear()
+	for i in range(1, 4):
+		var btn := find_child("ModuleSlot%d" % i, true, false) as Button
+		if btn:
+			_module_slots.append(btn)
+
+
+func _setup_mode_tabs() -> void:
+	if _mode_tabs == null:
+		return
+	if _mode_tabs.get_tab_count() >= 2:
+		_mode_tabs.set_tab_title(0, "Tile")
+		_mode_tabs.set_tab_title(1, "Building")
+
+
+func _apply_panel_style() -> void:
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.07, 0.07, 0.08, 0.92)
+	style.border_width_left = 1
+	style.border_width_right = 1
+	style.border_width_top = 1
+	style.border_width_bottom = 1
+	style.border_color = Color(0.2, 0.2, 0.24, 0.9)
+	style.corner_radius_top_left = 8
+	style.corner_radius_top_right = 8
+	style.corner_radius_bottom_left = 8
+	style.corner_radius_bottom_right = 8
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.4)
+	style.shadow_size = 6
+	add_theme_stylebox_override("panel", style)
 
 
 func _on_viewport_size_changed() -> void:
@@ -107,7 +174,6 @@ func _dock_bottom_left() -> void:
 	if not is_inside_tree():
 		return
 
-	# Make sure we have a sensible size before docking
 	var min_size: Vector2 = get_combined_minimum_size()
 	if size.x < min_size.x or size.y < min_size.y:
 		size = min_size
@@ -116,15 +182,13 @@ func _dock_bottom_left() -> void:
 	var x: float = dock_padding.x
 	var y: float = vp.y - size.y - dock_padding.y
 
-	# Clamp in case the viewport is tiny
 	if y < dock_padding.y:
 		y = dock_padding.y
 
 	position = Vector2(x, y)
 
 
-# Called by Selection autoload
-func _on_fragment_selected(fragment: Node) -> void:
+func set_fragment(fragment: Node) -> void:
 	_current_fragment = fragment
 	_current_coord = Vector2i.ZERO
 
@@ -133,7 +197,15 @@ func _on_fragment_selected(fragment: Node) -> void:
 		if coord_v is Vector2i:
 			_current_coord = coord_v
 
-	_apply_fragment() # ✅ THIS WAS MISSING
+	_apply_fragment()
+
+
+func show_fragment(fragment: Node) -> void:
+	set_fragment(fragment)
+
+
+func _on_fragment_selected(fragment: Node) -> void:
+	set_fragment(fragment)
 
 
 func _apply_fragment() -> void:
@@ -145,57 +217,63 @@ func _apply_fragment() -> void:
 	_update_tile_tab()
 	_update_building_tab()
 
-	# Re-dock after content changes (size may change due to text)
 	if dock_to_bottom_left:
 		call_deferred("_dock_bottom_left")
 
 
 # ---------- Tile tab ----------
 func _update_tile_tab() -> void:
-	var biome_str: String = ""
-	var tier_val: int = 0
+	var biome_str := _get_biome_string(_current_fragment)
+	var tile_name := _get_tile_name(_current_fragment, biome_str)
+	var tier_val := _get_tile_tier(_current_fragment)
+	var coord_text := "%d,%d" % [_current_coord.x, _current_coord.y]
 
-	if _current_fragment != null and is_instance_valid(_current_fragment):
-		if "biome" in _current_fragment:
-			biome_str = String(_current_fragment.biome)
-		if "tier" in _current_fragment:
-			tier_val = int(_current_fragment.tier)
+	if _tile_icon:
+		_tile_icon.texture = _get_biome_icon(_current_fragment, biome_str)
+	if _tile_name_label:
+		_tile_name_label.text = tile_name
+	if _tile_coord_label:
+		_tile_coord_label.text = "Coord: %s" % coord_text
+	if _tile_tier_label:
+		_tile_tier_label.text = "T%d" % tier_val
 
-	if _biome_label:
-		_biome_label.text = "Biome: %s" % (biome_str if biome_str != "" else "(unknown)")
-
-	if _tier_label:
-		var coord_text := "%d,%d" % [_current_coord.x, _current_coord.y]
-		_tier_label.text = "Tier: %d  (Coord: %s)" % [tier_val, coord_text]
-
-	# --- Modifiers ---
 	var mods: Array = _get_modifiers_from_fragment(_current_fragment)
-	var mod_lines: Array[String] = []
-	for m: Variant in mods:
-		var line: String = _modifier_to_line(m)
-		if line != "":
-			mod_lines.append(line)
-	mod_lines.sort()
+	_populate_modifiers_grid(mods)
 
-	var mods_block: String = "None"
-	if not mod_lines.is_empty():
-		mods_block = "\n".join(mod_lines)
+	var resources := _get_resource_nodes_for_tile(_current_coord)
+	var resource_lines := _build_resource_lines(resources)
+	_populate_list(_tile_resources_list, resource_lines)
+	_set_section_visible(_tile_resources_section, not resource_lines.is_empty())
 
-	# Resource node summary (optional)
-	var node_summary: String = ""
-	if _resource_nodes and _resource_nodes.has_method("get_summary_for_tile"):
-		node_summary = String(_resource_nodes.call("get_summary_for_tile", _current_coord))
-	if node_summary == "":
-		node_summary = "No resource nodes"
+	var effect_lines := _get_effect_lines(_current_fragment)
+	_populate_list(_tile_effects_list, effect_lines)
+	_set_section_visible(_tile_effects_section, not effect_lines.is_empty())
 
-	var tile_text: String = "Resource nodes: %s\n\nModifiers:\n%s" % [node_summary, mods_block]
-	_set_text_control(_mods_text, tile_text)
 
-	# Local effects summary (if Fragment implements it)
-	var eff_text: String = "None"
-	if _current_fragment != null and is_instance_valid(_current_fragment) and _current_fragment.has_method("get_local_effects_summary"):
-		eff_text = String(_current_fragment.call("get_local_effects_summary"))
-	_set_text_control(_effects_text, eff_text)
+func _get_biome_string(fragment: Node) -> String:
+	if fragment != null and is_instance_valid(fragment) and "biome" in fragment:
+		return String(fragment.biome)
+	return "Unknown"
+
+
+func _get_tile_name(fragment: Node, biome_str: String) -> String:
+	if fragment != null and is_instance_valid(fragment):
+		if "tile_name" in fragment:
+			var name_str := String(fragment.tile_name)
+			if name_str != "":
+				return name_str
+	return biome_str if biome_str != "" else "Tile"
+
+
+func _get_tile_tier(fragment: Node) -> int:
+	if fragment != null and is_instance_valid(fragment) and "tier" in fragment:
+		return int(fragment.tier)
+	return 0
+
+
+func _get_biome_icon(fragment: Node, biome_str: String) -> Texture2D:
+	# TODO: Wire in biome-specific icon lookups.
+	return null
 
 
 func _get_modifiers_from_fragment(frag: Node) -> Array:
@@ -209,99 +287,335 @@ func _get_modifiers_from_fragment(frag: Node) -> Array:
 	return []
 
 
-func _modifier_to_line(m: Variant) -> String:
-	# New format (Dictionary)
-	if m is Dictionary:
-		var d: Dictionary = m
-		var kind: String = String(d.get("kind", "")).strip_edges()
-		var skill: String = String(d.get("skill", "")).strip_edges().to_lower()
-		var name: String = String(d.get("name", d.get("detail", ""))).strip_edges()
-		var rarity: String = String(d.get("rarity", "")).strip_edges()
+func _populate_modifiers_grid(mods: Array) -> void:
+	if _tile_modifiers_grid == null:
+		return
 
-		if name == "":
-			name = String(d.get("text", "")).strip_edges()
-		if kind == "":
-			return ""
+	_clear_container(_tile_modifiers_grid)
 
-		var out: String = ""
-		if rarity != "":
-			out += "%s " % rarity
-		out += kind
-		if skill != "":
-			out += " [%s]" % skill
-		if name != "":
-			out += ": %s" % name
-		return out
+	if mods.is_empty():
+		_set_section_visible(_tile_modifiers_section, false)
+		return
 
-	# Legacy format (String)
-	if typeof(m) == TYPE_STRING:
-		return String(m).strip_edges()
+	_set_section_visible(_tile_modifiers_section, true)
 
+	var total := mods.size()
+	var max_visible := MAX_MODIFIERS_COLLAPSED if not _mods_expanded else total
+	var visible_count := min(total, max_visible)
+
+	for i in range(visible_count):
+		var m: Variant = mods[i]
+		var card := _build_modifier_card(m)
+		_tile_modifiers_grid.add_child(card)
+
+	var remaining := total - visible_count
+	if _tile_modifiers_expand:
+		if remaining > 0 and not _mods_expanded:
+			_tile_modifiers_expand.visible = true
+			_tile_modifiers_expand.text = "+%d" % remaining
+		elif _mods_expanded and total > MAX_MODIFIERS_COLLAPSED:
+			_tile_modifiers_expand.visible = true
+			_tile_modifiers_expand.text = "Show less"
+		else:
+			_tile_modifiers_expand.visible = false
+
+
+func _build_modifier_card(mod: Variant) -> Control:
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = MODIFIER_ICON_SIZE
+
+	var rarity := _modifier_get_rarity(mod)
+	var border_color := _rarity_color(rarity)
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.12, 0.12, 0.14, 0.95)
+	style.border_color = border_color
+	style.border_width_left = 2
+	style.border_width_right = 2
+	style.border_width_top = 2
+	style.border_width_bottom = 2
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_left = 6
+	style.corner_radius_bottom_right = 6
+	panel.add_theme_stylebox_override("panel", style)
+
+	var icon := TextureRect.new()
+	icon.custom_minimum_size = MODIFIER_ICON_SIZE
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.texture = _get_modifier_icon(mod)
+	panel.add_child(icon)
+
+	panel.tooltip_text = _modifier_to_tooltip(mod)
+	return panel
+
+
+func _modifier_get_rarity(mod: Variant) -> String:
+	if mod is Dictionary:
+		var d: Dictionary = mod
+		return String(d.get("rarity", ""))
 	return ""
 
 
-func _set_text_control(ctrl: Control, text: String) -> void:
-	if ctrl == null:
+func _rarity_color(rarity: String) -> Color:
+	var key := rarity.strip_edges().to_lower()
+	match key:
+		"common":
+			return Color(0.55, 0.55, 0.6)
+		"uncommon":
+			return Color(0.35, 0.7, 0.45)
+		"rare":
+			return Color(0.35, 0.55, 0.9)
+		"epic":
+			return Color(0.7, 0.45, 0.9)
+		"legendary":
+			return Color(0.95, 0.7, 0.2)
+		_:
+			return Color(0.4, 0.4, 0.45)
+
+
+func _get_modifier_icon(mod: Variant) -> Texture2D:
+	if mod is Dictionary:
+		var d: Dictionary = mod
+		var kind := String(d.get("kind", "")).to_lower()
+		var skill := String(d.get("skill", "")).to_lower()
+		if kind == "resource spawn" and skill != "":
+			var path := "res://assets/icons/modifiers/%s_node.png" % skill
+			if ResourceLoader.exists(path):
+				return load(path) as Texture2D
+	return null
+
+
+func _modifier_to_tooltip(mod: Variant) -> String:
+	if mod is Dictionary:
+		var d: Dictionary = mod
+		var name := String(d.get("name", d.get("detail", ""))).strip_edges()
+		var kind := String(d.get("kind", "")).strip_edges()
+		var rarity := String(d.get("rarity", "")).strip_edges()
+		var skill := String(d.get("skill", "")).strip_edges()
+		var bits: Array[String] = []
+		if name != "":
+			bits.append(name)
+		if rarity != "":
+			bits.append("Rarity: %s" % rarity)
+		if kind != "":
+			bits.append("Kind: %s" % kind)
+		if skill != "":
+			bits.append("Skill: %s" % skill)
+		return "\n".join(bits)
+	if typeof(mod) == TYPE_STRING:
+		return String(mod)
+	return ""
+
+
+func _get_resource_nodes_for_tile(coord: Vector2i) -> Array:
+	if _resource_nodes == null:
+		return []
+	if not _resource_nodes.has_method("get_nodes"):
+		return []
+	var nodes_v: Variant = _resource_nodes.call("get_nodes", coord)
+	if nodes_v is Array:
+		return nodes_v
+	return []
+
+
+func _build_resource_lines(nodes: Array) -> Array[String]:
+	var counts: Dictionary = {}
+	for n_v in nodes:
+		if typeof(n_v) != TYPE_DICTIONARY:
+			continue
+		var n: Dictionary = n_v
+		var skill := String(n.get("skill", "")).strip_edges()
+		var detail := String(n.get("detail", "")).strip_edges()
+		var label := detail if detail != "" else skill
+		if label == "":
+			continue
+		counts[label] = int(counts.get(label, 0)) + 1
+
+	var lines: Array[String] = []
+	for key in counts.keys():
+		var qty := int(counts[key])
+		if qty > 1:
+			lines.append("%s ×%d" % [String(key), qty])
+		else:
+			lines.append(String(key))
+	lines.sort()
+	return lines
+
+
+func _get_effect_lines(fragment: Node) -> Array[String]:
+	if fragment == null or not is_instance_valid(fragment):
+		return []
+	if fragment.has_method("get_local_effects_list"):
+		var eff_v: Variant = fragment.call("get_local_effects_list")
+		if eff_v is Array:
+			var lines: Array[String] = []
+			for entry in eff_v:
+				lines.append(String(entry))
+			return lines
+	if fragment.has_method("get_local_effects_summary"):
+		var summary := String(fragment.call("get_local_effects_summary")).strip_edges()
+		if summary != "":
+			return summary.split("\n", false)
+	return []
+
+
+func _populate_list(list_node: VBoxContainer, lines: Array[String]) -> void:
+	if list_node == null:
 		return
-	if ctrl is RichTextLabel:
-		var r: RichTextLabel = ctrl as RichTextLabel
-		r.clear()
-		r.append_text(text)
-	elif ctrl is Label:
-		(ctrl as Label).text = text
-	elif ctrl.has_method("set_text"):
-		ctrl.call("set_text", text)
+	_clear_container(list_node)
+	for line in lines:
+		var label := Label.new()
+		label.text = line
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		list_node.add_child(label)
+
+
+func _set_section_visible(section: Control, should_show: bool) -> void:
+	if section:
+		section.visible = should_show
 
 
 # ---------- Buildings tab ----------
 func _update_building_tab() -> void:
-	if _base_slot == null:
-		return
+	var building_data := _get_building_data(_current_fragment)
+	var has_building := not building_data.is_empty()
 
-	if _current_fragment == null or not is_instance_valid(_current_fragment):
-		_base_slot.icon = null
-		_base_slot.text = ""
-		if _current_building_label:
-			_current_building_label.text = "Current: (no tile)"
-		_set_module_slots_visible(0)
-		_set_module_slot_labels([])
-		return
+	if _building_icon:
+		_building_icon.texture = building_data.get("icon", null)
+	if _building_name_label:
+		_building_name_label.text = String(building_data.get("name", "No Building"))
+	if _building_status_label:
+		_building_status_label.text = String(building_data.get("status", "Select a tile"))
+	if _building_tier_label:
+		_building_tier_label.text = String(building_data.get("tier", "T0"))
 
-	var base_id: String = ""
-	if _current_fragment.has_meta("building_id"):
-		base_id = String(_current_fragment.get_meta("building_id"))
+	if _chip_workers_label:
+		_chip_workers_label.text = "Workers: %s" % String(building_data.get("workers", "0"))
+	if _chip_queue_label:
+		_chip_queue_label.text = "Queue: %s" % String(building_data.get("queue", "0"))
+	if _chip_upkeep_label:
+		_chip_upkeep_label.text = "Upkeep: %s" % String(building_data.get("upkeep", "-"))
+	if _chip_integrity_label:
+		_chip_integrity_label.text = "Integrity: %s" % String(building_data.get("integrity", "-"))
 
-	var modules: Array = []
-	if _current_fragment.has_meta("building_modules"):
-		var m: Variant = _current_fragment.get_meta("building_modules")
-		if m is Array:
-			modules = m
+	var inputs: Array = building_data.get("inputs", [])
+	var outputs: Array = building_data.get("outputs", [])
+	_populate_list(_building_inputs_list, _normalize_string_array(inputs))
+	_populate_list(_building_outputs_list, _normalize_string_array(outputs))
 
-	var max_slots: int = 0
-	if base_id != "":
-		max_slots = 3
-
-	_set_module_slots_visible(max_slots)
-
-	if _current_building_label:
-		_current_building_label.text = "Current base: %s" % (base_id if base_id != "" else "(none)")
-
-	_base_slot.text = ""
-	_set_module_slot_labels(modules)
+	if _building_io_row:
+		_building_io_row.visible = has_building and (not inputs.is_empty() or not outputs.is_empty())
+	if _building_buttons_row:
+		_building_buttons_row.visible = has_building
 
 
-func _set_module_slots_visible(count: int) -> void:
-	for i in range(_module_slots.size()):
-		var btn: Button = _module_slots[i]
-		if btn:
-			btn.visible = (i < count)
+func _normalize_string_array(arr: Array) -> Array[String]:
+	var out: Array[String] = []
+	for entry in arr:
+		out.append(String(entry))
+	return out
 
 
-func _set_module_slot_labels(modules: Array) -> void:
-	for i in range(_module_slots.size()):
-		var btn: Button = _module_slots[i]
-		if btn:
-			btn.text = ""  # icon-only look
+func _get_building_data(fragment: Node) -> Dictionary:
+	if fragment == null or not is_instance_valid(fragment):
+		return {}
+
+	var base_id := ""
+	if fragment.has_meta("building_id"):
+		base_id = String(fragment.get_meta("building_id"))
+	if base_id == "":
+		return {}
+
+	var data: Dictionary = {
+		"name": _get_building_label(base_id),
+		"status": "Operational",
+		"tier": _get_building_tier_label(base_id),
+		"icon": _get_building_icon(base_id),
+		"workers": _get_building_workers(base_id, fragment),
+		"queue": _get_building_queue(base_id, fragment),
+		"upkeep": _get_building_upkeep(base_id, fragment),
+		"integrity": _get_building_integrity(base_id, fragment),
+		"inputs": _get_building_inputs(base_id, fragment),
+		"outputs": _get_building_outputs(base_id, fragment),
+	}
+	return data
+
+
+func _get_building_label(base_id: String) -> String:
+	if _items and _items.has_method("display_name"):
+		return String(_items.call("display_name", StringName(base_id)))
+	if _construction and _construction.has_method("get_recipe_by_id"):
+		var rec: Dictionary = _construction.call("get_recipe_by_id", StringName(base_id))
+		return String(rec.get("label", base_id))
+	return base_id
+
+
+func _get_building_tier_label(base_id: String) -> String:
+	# TODO: pull building tier/status from ConstructionSystem or building instance.
+	return "T1"
+
+
+func _get_building_icon(base_id: String) -> Texture2D:
+	if _items and _items.has_method("get_icon"):
+		return _items.call("get_icon", StringName(base_id)) as Texture2D
+	return null
+
+
+func _get_building_workers(_base_id: String, fragment: Node) -> String:
+	# TODO: connect to your workforce system.
+	if fragment.has_meta("workers"):
+		return String(fragment.get_meta("workers"))
+	return "0"
+
+
+func _get_building_queue(_base_id: String, fragment: Node) -> String:
+	# TODO: connect to building queue system.
+	if fragment.has_meta("queue"):
+		return String(fragment.get_meta("queue"))
+	return "0"
+
+
+func _get_building_upkeep(_base_id: String, fragment: Node) -> String:
+	# TODO: connect upkeep values.
+	if fragment.has_meta("upkeep"):
+		return String(fragment.get_meta("upkeep"))
+	return "-"
+
+
+func _get_building_integrity(_base_id: String, fragment: Node) -> String:
+	# TODO: connect building integrity.
+	if fragment.has_meta("integrity"):
+		return String(fragment.get_meta("integrity"))
+	return "-"
+
+
+func _get_building_inputs(_base_id: String, fragment: Node) -> Array:
+	# TODO: connect building inputs.
+	if fragment.has_meta("inputs"):
+		var v: Variant = fragment.get_meta("inputs")
+		if v is Array:
+			return v
+	return []
+
+
+func _get_building_outputs(_base_id: String, fragment: Node) -> Array:
+	# TODO: connect building outputs.
+	if fragment.has_meta("outputs"):
+		var v: Variant = fragment.get_meta("outputs")
+		if v is Array:
+			return v
+	return []
+
+
+func _on_modifiers_expand_pressed() -> void:
+	_mods_expanded = not _mods_expanded
+	_update_tile_tab()
+
+
+func _clear_container(container: Control) -> void:
+	for child in container.get_children():
+		child.queue_free()
 
 
 # ---------- Helpers for future equip ----------
@@ -505,18 +819,16 @@ func _is_valid_building_item_for_slot(item_id: String, slot_type: String) -> boo
 	if item_id == "":
 		return false
 
-	# Preferred: use ConstructionSystem blueprints if available.
-	if _construction and _construction.has_method("get_blueprint"):
-		var bp: Variant = _construction.call("get_blueprint", item_id)
-		if bp is Dictionary:
-			var kind: String = String((bp as Dictionary).get("kind", ""))
+	if _construction and _construction.has_method("get_recipe_by_id"):
+		var rec: Variant = _construction.call("get_recipe_by_id", StringName(item_id))
+		if rec is Dictionary:
+			var kind: String = String((rec as Dictionary).get("kind", ""))
 			if slot_type == "base":
 				return kind == "base"
 			if slot_type == "module":
 				return kind == "module"
 			return false
 
-	# Fallback: naming convention
 	if slot_type == "base":
 		return item_id.ends_with("_base")
 	if slot_type == "module":
