@@ -292,10 +292,13 @@ theme_override_constants/margin_bottom = 16
 
 [node name="RootVBox" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 12
 
 [node name="ModeHeader" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
 [node name="TileTabButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeHeader"]
@@ -320,15 +323,20 @@ size_flags_vertical = 3
 [node name="ScrollContent" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 10
 
 [node name="ModeTabs" type="TabContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 current_tab = 0
 tabs_visible = false
 
 [node name="TileTab" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs"]
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 10
 metadata/_tab_index = 0
 
@@ -409,6 +417,8 @@ theme_override_constants/separation = 2
 [node name="BuildingTab" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs"]
 visible = false
 layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 10
 metadata/_tab_index = 1
 
@@ -427,7 +437,6 @@ theme_override_constants/separation = 12
 [node name="BuildingSlot" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow"]
 custom_minimum_size = Vector2(68, 68)
 layout_mode = 2
-text = ""
 
 [node name="BuildingSummary" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow"]
 layout_mode = 2
@@ -456,17 +465,14 @@ theme_override_constants/separation = 10
 [node name="ModuleSlot1" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/ModulesRow"]
 custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
-text = ""
 
 [node name="ModuleSlot2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/ModulesRow"]
 custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
-text = ""
 
 [node name="ModuleSlot3" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/ModulesRow"]
 custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
-text = ""
 
 [node name="BuildingChipsRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab"]
 layout_mode = 2
