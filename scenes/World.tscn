@@ -316,17 +316,20 @@ toggle_mode = true
 text = "Building"
 
 [node name="Scroll" type="ScrollContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox"]
+custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="ScrollContent" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll"]
+custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 10
 
 [node name="ModeTabs" type="TabContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent"]
+custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -506,6 +509,13 @@ layout_mode = 2
 layout_mode = 2
 text = "Integrity: 100%"
 
+[node name="ChipIntegrityLabel2" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipIntegrity"]
+layout_mode = 2
+text = "Integrity: 100%"
+
+[node name="ChipIntegrity2" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow"]
+layout_mode = 2
+
 [node name="BuildingIORow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab"]
 layout_mode = 2
 theme_override_constants/separation = 12
@@ -523,6 +533,14 @@ text = "Inputs"
 layout_mode = 2
 theme_override_constants/separation = 2
 
+[node name="BuildingInputsTitle2" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs"]
+layout_mode = 2
+text = "Inputs"
+
+[node name="BuildingInputsList2" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
 [node name="BuildingOutputs" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow"]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -535,6 +553,24 @@ text = "Outputs"
 [node name="BuildingOutputsList" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs"]
 layout_mode = 2
 theme_override_constants/separation = 2
+
+[node name="BuildingOutputsTitle2" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs"]
+layout_mode = 2
+text = "Outputs"
+
+[node name="BuildingOutputsList2" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="BuildingInputs2" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+
+[node name="BuildingOutputs2" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
 
 [node name="BuildingButtonsRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab"]
 layout_mode = 2
@@ -556,6 +592,34 @@ text = "Equip Module"
 layout_mode = 2
 text = "Open Queue"
 
+[node name="AssignButton2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow"]
+layout_mode = 2
+text = "Assign"
+
+[node name="UpgradeButton2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow"]
+layout_mode = 2
+text = "Upgrade"
+
+[node name="EquipModuleButton2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow"]
+layout_mode = 2
+text = "Equip Module"
+
+[node name="OpenQueueButton2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow"]
+layout_mode = 2
+text = "Open Queue"
+
+[node name="BuildingIORow2" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BuildingButtonsRow2" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
 [node name="RightDock" parent="CanvasLayer" instance=ExtResource("8_b3faq")]
 
+[node name="RightDock2" parent="CanvasLayer" instance=ExtResource("8_b3faq")]
+
 [node name="Cam" type="Camera2D" parent="."]
+
+[node name="Cam2" type="Camera2D" parent="."]
