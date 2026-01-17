@@ -26,6 +26,8 @@ var _mode_header: Control = null
 var _tile_tab_button: Button = null
 var _building_tab_button: Button = null
 var _scroll_container: ScrollContainer = null
+var _tile_tab: Control = null
+var _building_tab: Control = null
 
 var _tile_icon: TextureRect = null
 var _tile_name_label: Label = null
@@ -107,42 +109,75 @@ func _ready() -> void:
 
 func _cache_nodes() -> void:
 	_mode_tabs = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs") as TabContainer
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs", _mode_tabs)
+	_tile_tab = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab") as Control
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab", _tile_tab)
+	_building_tab = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab") as Control
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab", _building_tab)
 	_mode_header = get_node_or_null("Margin/RootVBox/ModeHeader") as Control
+	_log_missing_node("Margin/RootVBox/ModeHeader", _mode_header)
 	_tile_tab_button = get_node_or_null("Margin/RootVBox/ModeHeader/TileTabButton") as Button
+	_log_missing_node("Margin/RootVBox/ModeHeader/TileTabButton", _tile_tab_button)
 	_building_tab_button = get_node_or_null("Margin/RootVBox/ModeHeader/BuildingTabButton") as Button
+	_log_missing_node("Margin/RootVBox/ModeHeader/BuildingTabButton", _building_tab_button)
 	_scroll_container = get_node_or_null("Margin/RootVBox/Scroll") as ScrollContainer
+	_log_missing_node("Margin/RootVBox/Scroll", _scroll_container)
 
 	_tile_icon = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileIcon") as TextureRect
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileIcon", _tile_icon)
 	_tile_name_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileName") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileName", _tile_name_label)
 	_tile_coord_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileCoord") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileHeaderText/TileCoord", _tile_coord_label)
 	_tile_tier_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileTierChip/TileTierLabel") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileTierChip/TileTierLabel", _tile_tier_label)
 
 	_tile_modifiers_section = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection") as Control
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection", _tile_modifiers_section)
 	_tile_modifiers_grid = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersGrid") as GridContainer
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersGrid", _tile_modifiers_grid)
 	_tile_modifiers_expand = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader/TileModifiersExpand") as Button
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader/TileModifiersExpand", _tile_modifiers_expand)
 
 	_tile_resources_section = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileResourcesSection") as Control
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileResourcesSection", _tile_resources_section)
 	_tile_resources_list = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileResourcesSection/TileResourcesList") as VBoxContainer
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileResourcesSection/TileResourcesList", _tile_resources_list)
 
 	_tile_effects_section = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileEffectsSection") as Control
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileEffectsSection", _tile_effects_section)
 	_tile_effects_list = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileEffectsSection/TileEffectsList") as VBoxContainer
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileEffectsSection/TileEffectsList", _tile_effects_list)
 
 	_building_slot = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSlot") as Button
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSlot", _building_slot)
 	_building_name_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary/BuildingName") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary/BuildingName", _building_name_label)
 	_building_status_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary/BuildingStatus") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary/BuildingStatus", _building_status_label)
 	_building_tier_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary/BuildingTierChip/BuildingTierLabel") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary/BuildingTierChip/BuildingTierLabel", _building_tier_label)
 
 	_building_chips_row = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow") as Control
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow", _building_chips_row)
 	_chip_workers_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipWorkers/ChipWorkersLabel") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipWorkers/ChipWorkersLabel", _chip_workers_label)
 	_chip_queue_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipQueue/ChipQueueLabel") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipQueue/ChipQueueLabel", _chip_queue_label)
 	_chip_upkeep_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipUpkeep/ChipUpkeepLabel") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipUpkeep/ChipUpkeepLabel", _chip_upkeep_label)
 	_chip_integrity_label = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipIntegrity/ChipIntegrityLabel") as Label
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipIntegrity/ChipIntegrityLabel", _chip_integrity_label)
 
 	_building_io_row = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow") as Control
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow", _building_io_row)
 	_building_inputs_list = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs/BuildingInputsList") as VBoxContainer
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs/BuildingInputsList", _building_inputs_list)
 	_building_outputs_list = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs/BuildingOutputsList") as VBoxContainer
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs/BuildingOutputsList", _building_outputs_list)
 
 	_building_buttons_row = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow") as Control
+	_log_missing_node("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow", _building_buttons_row)
 
 	_base_slot = _building_slot
 	_module_slots.clear()
@@ -228,6 +263,10 @@ func _on_tab_changed(tab_index: int) -> void:
 	if _mode_tabs == null:
 		return
 	_sync_tab_buttons()
+	if _tile_tab:
+		_tile_tab.visible = _mode_tabs.current_tab == 0
+	if _building_tab:
+		_building_tab.visible = _mode_tabs.current_tab == 1
 	if _scroll_container:
 		_scroll_container.scroll_vertical = 0
 
@@ -317,6 +356,8 @@ func show_fragment(fragment: Node) -> void:
 
 
 func _on_fragment_selected(fragment: Node) -> void:
+	if debug_logging:
+		print("[SelectionHUD] fragment_selected: ", fragment)
 	set_fragment(fragment)
 
 
@@ -328,6 +369,20 @@ func _apply_fragment() -> void:
 	visible = true
 	_update_tile_tab()
 	_update_building_tab()
+	if _tile_tab:
+		_tile_tab.visible = true
+	if _building_tab:
+		_building_tab.visible = true
+	if debug_logging:
+		var biome_str := _get_biome_string(_current_fragment)
+		var tier_val := _get_tile_tier(_current_fragment)
+		var mods := _get_modifiers_from_fragment(_current_fragment)
+		var resources := _get_resource_nodes_for_tile(_current_coord)
+		var building_id := _get_equipped_building_id(_current_fragment)
+		var modules := _get_equipped_modules(_current_fragment)
+		print("[SelectionHUD] apply_fragment coord=%s biome=%s tier=%s mods=%d resources=%d building=%s modules=%s" % [
+			_current_coord, biome_str, tier_val, mods.size(), resources.size(), building_id, modules
+		])
 
 	if dock_to_bottom_left:
 		call_deferred("_dock_bottom_left")
@@ -354,12 +409,12 @@ func _update_tile_tab() -> void:
 
 	var resources := _get_resource_nodes_for_tile(_current_coord)
 	var resource_lines := _build_resource_lines(resources)
-	_populate_list(_tile_resources_list, resource_lines)
-	_set_section_visible(_tile_resources_section, not resource_lines.is_empty())
+	_populate_list(_tile_resources_list, resource_lines, "No resource nodes")
+	_set_section_visible(_tile_resources_section, true)
 
 	var effect_lines := _get_effect_lines(_current_fragment)
-	_populate_list(_tile_effects_list, effect_lines)
-	_set_section_visible(_tile_effects_section, not effect_lines.is_empty())
+	_populate_list(_tile_effects_list, effect_lines, "No effects")
+	_set_section_visible(_tile_effects_section, true)
 
 
 func _get_biome_string(fragment: Node) -> String:
@@ -406,7 +461,13 @@ func _populate_modifiers_grid(mods: Array) -> void:
 	_clear_container(_tile_modifiers_grid)
 
 	if mods.is_empty():
-		_set_section_visible(_tile_modifiers_section, false)
+		_set_section_visible(_tile_modifiers_section, true)
+		var label := Label.new()
+		label.text = "No modifiers"
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		_tile_modifiers_grid.add_child(label)
+		if _tile_modifiers_expand:
+			_tile_modifiers_expand.visible = false
 		return
 
 	_set_section_visible(_tile_modifiers_section, true)
@@ -457,9 +518,32 @@ func _build_modifier_card(mod: Variant) -> Control:
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = _get_modifier_icon(mod)
 	panel.add_child(icon)
+	if icon.texture == null:
+		var label := Label.new()
+		label.text = _modifier_get_name(mod)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		panel.add_child(label)
 
 	panel.tooltip_text = _modifier_to_tooltip(mod)
 	return panel
+
+
+func _modifier_get_name(mod: Variant) -> String:
+	if mod is Dictionary:
+		var d: Dictionary = mod
+		var name := String(d.get("name", d.get("detail", ""))).strip_edges()
+		if name != "":
+			return name
+		var kind := String(d.get("kind", "")).strip_edges()
+		if kind != "":
+			return kind
+	if typeof(mod) == TYPE_STRING:
+		return String(mod)
+	return "Modifier"
 
 
 func _modifier_get_rarity(mod: Variant) -> String:
@@ -522,13 +606,40 @@ func _modifier_to_tooltip(mod: Variant) -> String:
 
 func _get_resource_nodes_for_tile(coord: Vector2i) -> Array:
 	if _resource_nodes == null:
-		return []
+		return _build_resource_nodes_from_modifiers(_current_fragment)
 	if not _resource_nodes.has_method("get_nodes"):
-		return []
+		return _build_resource_nodes_from_modifiers(_current_fragment)
 	var nodes_v: Variant = _resource_nodes.call("get_nodes", coord)
 	if nodes_v is Array:
-		return nodes_v
-	return []
+		var nodes := nodes_v as Array
+		if not nodes.is_empty():
+			return nodes
+	return _build_resource_nodes_from_modifiers(_current_fragment)
+
+
+func _build_resource_nodes_from_modifiers(fragment: Node) -> Array:
+	var nodes: Array = []
+	if fragment == null or not is_instance_valid(fragment):
+		return nodes
+	if not ("modifiers" in fragment):
+		return nodes
+	var mods_v: Variant = fragment.get("modifiers")
+	if not (mods_v is Array):
+		return nodes
+	for m in (mods_v as Array):
+		if typeof(m) != TYPE_DICTIONARY:
+			continue
+		var md: Dictionary = m
+		var kind := String(md.get("kind", "")).strip_edges()
+		if kind != "Resource Spawn":
+			continue
+		var detail := String(md.get("name", md.get("detail", ""))).strip_edges()
+		var skill := String(md.get("skill", "")).strip_edges()
+		nodes.append({
+			"detail": detail,
+			"skill": skill,
+		})
+	return nodes
 
 
 func _build_resource_lines(nodes: Array) -> Array[String]:
@@ -575,11 +686,14 @@ func _get_effect_lines(fragment: Node) -> Array[String]:
 	return []
 
 
-func _populate_list(list_node: VBoxContainer, lines: Array[String]) -> void:
+func _populate_list(list_node: VBoxContainer, lines: Array[String], placeholder: String = "") -> void:
 	if list_node == null:
 		return
 	_clear_container(list_node)
-	for line in lines:
+	var output_lines := lines
+	if output_lines.is_empty() and placeholder != "":
+		output_lines = [placeholder]
+	for line in output_lines:
 		var label := Label.new()
 		label.text = line
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD
@@ -589,6 +703,14 @@ func _populate_list(list_node: VBoxContainer, lines: Array[String]) -> void:
 func _set_section_visible(section: Control, should_show: bool) -> void:
 	if section:
 		section.visible = should_show
+
+
+func _set_buttons_enabled(container: Control, is_enabled: bool) -> void:
+	if container == null:
+		return
+	for child in container.get_children():
+		if child is Button:
+			(child as Button).disabled = not is_enabled
 
 
 # ---------- Buildings tab ----------
@@ -610,15 +732,16 @@ func _update_building_tab() -> void:
 
 	var inputs: Array = building_data.get("inputs", [])
 	var outputs: Array = building_data.get("outputs", [])
-	_populate_list(_building_inputs_list, _normalize_string_array(inputs))
-	_populate_list(_building_outputs_list, _normalize_string_array(outputs))
+	_populate_list(_building_inputs_list, _normalize_string_array(inputs), "No inputs")
+	_populate_list(_building_outputs_list, _normalize_string_array(outputs), "No outputs")
 
 	if _building_chips_row:
-		_building_chips_row.visible = has_building
+		_building_chips_row.visible = true
 	if _building_io_row:
-		_building_io_row.visible = has_building and (not inputs.is_empty() or not outputs.is_empty())
+		_building_io_row.visible = true
 	if _building_buttons_row:
-		_building_buttons_row.visible = has_building
+		_building_buttons_row.visible = true
+		_set_buttons_enabled(_building_buttons_row, has_building)
 
 
 func _normalize_string_array(arr: Array) -> Array[String]:
@@ -764,7 +887,7 @@ func _refresh_building_equipment(fragment: Node) -> void:
 	if _building_name_label:
 		_building_name_label.text = "No Building" if base_id == "" else _get_building_label(base_id)
 	if _building_status_label:
-		_building_status_label.text = "Empty" if base_id == "" else "Equipped"
+		_building_status_label.text = "No building placed" if base_id == "" else "Equipped"
 	if _building_tier_label:
 		_building_tier_label.text = _get_building_tier_label(base_id) if base_id != "" else "T0"
 
@@ -1028,3 +1151,8 @@ func _is_valid_building_item_for_slot(item_id: String, slot_type: String) -> boo
 		return not item_id.ends_with("_base")
 
 	return false
+
+
+func _log_missing_node(path: String, node: Node) -> void:
+	if debug_logging and node == null:
+		print("[SelectionHUD] Missing node at path: ", path)

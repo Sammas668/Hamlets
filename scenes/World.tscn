@@ -282,6 +282,7 @@ offset_top = 59.0
 offset_right = 427.0
 offset_bottom = 379.0
 script = ExtResource("2_32lhk")
+debug_logging = true
 
 [node name="Margin" type="MarginContainer" parent="CanvasLayer/SelectionHUD"]
 layout_mode = 0
