@@ -17,12 +17,12 @@ signal building_slot_requested(ax: Vector2i, slot_type: String, slot_index: int)
 # Keep the HUD above other UI/world drawing
 @export var force_on_top: bool = true
 
-# Hard floor for layout so inner containers never collapse to 0 height
-@export var min_panel_size: Vector2 = Vector2(420, 320)
-@export var min_scroll_height: float = 260.0
+# Larger, readable defaults (tweak in inspector if desired)
+@export var min_panel_size: Vector2 = Vector2(560, 460)
+@export var min_scroll_height: float = 380.0
 
 const MAX_MODIFIERS_COLLAPSED: int = 9
-const MODIFIER_ICON_SIZE: Vector2 = Vector2(28, 28)
+const MODIFIER_ICON_SIZE: Vector2 = Vector2(34, 34)
 
 var _current_fragment: Node = null
 var _current_coord: Vector2i = Vector2i.ZERO
@@ -59,6 +59,7 @@ var _building_name_label: Label = null
 var _building_status_label: Label = null
 var _building_tier_label: Label = null
 
+# Legacy "chips" row (we keep nodes for scene compatibility, but hide it)
 var _building_chips_row: Control = null
 var _chip_workers_label: Label = null
 var _chip_queue_label: Label = null
@@ -81,6 +82,7 @@ var _bank: Node = null
 var _resource_nodes: Node = null
 var _construction: Node = null
 var _items: Node = null
+var _apply_seq: int = 0
 
 
 func _ready() -> void:
@@ -104,6 +106,8 @@ func _ready() -> void:
 	_cache_nodes()
 	_enforce_layout_floors()
 
+	call_deferred("_apply_full_width_constraints")
+
 	if dock_to_bottom_left:
 		call_deferred("_dock_bottom_left")
 		var vp_node: Viewport = get_viewport()
@@ -119,8 +123,9 @@ func _ready() -> void:
 
 	# Wire selection autoload
 	if _selection and _selection.has_signal("fragment_selected"):
-		if not _selection.is_connected("fragment_selected", Callable(self, "_on_fragment_selected")):
-			_selection.connect("fragment_selected", Callable(self, "_on_fragment_selected"))
+		var cb: Callable = Callable(self, "_on_fragment_selected")
+		if not _selection.is_connected("fragment_selected", cb):
+			_selection.connect("fragment_selected", cb)
 	else:
 		if debug_logging:
 			print("[SelectionHUD] Selection autoload missing or has no fragment_selected signal.")
@@ -235,22 +240,91 @@ func _cache_nodes() -> void:
 
 	_base_slot = _building_slot
 	_module_slots.clear()
-
 	for i in range(1, 4):
 		var btn: Button = get_node_or_null("Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/ModulesRow/ModuleSlot%d" % i) as Button
 		if btn:
 			_module_slots.append(btn)
 
+	# --- Critical: make cross-axis containers fill width (fixes “wrap at 1/5”)
+	_apply_horizontal_fill_fixes()
+
+	# Improve header labels behaviour
+	if _tile_name_label:
+		_tile_name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_tile_name_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		_tile_name_label.clip_text = false
+	if _tile_coord_label:
+		_tile_coord_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_tile_coord_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		_tile_coord_label.clip_text = false
+
+	if _building_name_label:
+		_building_name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_building_name_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		_building_name_label.clip_text = false
+	if _building_status_label:
+		_building_status_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_building_status_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		_building_status_label.clip_text = false
+
+
+func _apply_horizontal_fill_fixes() -> void:
+	var tile_header_row: Control = get_node_or_null(
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow"
+	) as Control
+	if tile_header_row:
+		tile_header_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var tile_header_text: Control = get_node_or_null(
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileHeaderText"
+	) as Control
+	if tile_header_text:
+		tile_header_text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	if _tile_modifiers_section:
+		_tile_modifiers_section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if _tile_modifiers_grid:
+		_tile_modifiers_grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	if _tile_resources_section:
+		_tile_resources_section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if _tile_resources_list:
+		_tile_resources_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	if _tile_effects_section:
+		_tile_effects_section.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if _tile_effects_list:
+		_tile_effects_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	if _building_io_row:
+		_building_io_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var building_inputs_col: Control = get_node_or_null(
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs"
+	) as Control
+	if building_inputs_col:
+		building_inputs_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if _building_inputs_list:
+		_building_inputs_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	var building_outputs_col: Control = get_node_or_null(
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs"
+	) as Control
+	if building_outputs_col:
+		building_outputs_col.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	if _building_outputs_list:
+		_building_outputs_list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
+	if _building_buttons_row:
+		_building_buttons_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+
 
 func _enforce_layout_floors() -> void:
-	# Ensure we start with a real size (prevents collapse-to-nothing)
 	if custom_minimum_size.x < min_panel_size.x or custom_minimum_size.y < min_panel_size.y:
 		custom_minimum_size = min_panel_size
-
 	if size.x < min_panel_size.x or size.y < min_panel_size.y:
 		size = min_panel_size
 
-	# Force inner containers to actually take space (fixes "blank panel" when Containers collapse)
 	if _root_vbox:
 		_root_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_root_vbox.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -258,6 +332,9 @@ func _enforce_layout_floors() -> void:
 	if _scroll_container:
 		_scroll_container.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		_scroll_container.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		_scroll_container.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		_scroll_container.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_ALWAYS
+
 		if _scroll_container.custom_minimum_size.y < min_scroll_height:
 			_scroll_container.custom_minimum_size = Vector2(0, min_scroll_height)
 
@@ -270,6 +347,16 @@ func _enforce_layout_floors() -> void:
 		_mode_tabs.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		if _mode_tabs.custom_minimum_size.y < (min_scroll_height - 40.0):
 			_mode_tabs.custom_minimum_size = Vector2(0, min_scroll_height - 40.0)
+
+	if _tile_tab:
+		_tile_tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_tile_tab.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	if _building_tab:
+		_building_tab.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_building_tab.size_flags_vertical = Control.SIZE_EXPAND_FILL
+
+	_apply_horizontal_fill_fixes()
 
 
 func _setup_mode_tabs() -> void:
@@ -292,48 +379,84 @@ func _setup_mode_tabs() -> void:
 
 	_sync_tab_buttons()
 	_wire_slot_buttons()
-
-	# Apply correct initial visibility
 	_on_tab_changed(_mode_tabs.current_tab)
 
 
+# -------------------------
+# Visual styling
+# -------------------------
 func _apply_panel_style() -> void:
 	var style: StyleBoxFlat = StyleBoxFlat.new()
-	style.bg_color = Color(0.07, 0.07, 0.08, 0.92)
+	style.bg_color = Color(0.06, 0.06, 0.075, 0.94)
 	style.border_width_left = 1
 	style.border_width_right = 1
 	style.border_width_top = 1
 	style.border_width_bottom = 1
-	style.border_color = Color(0.2, 0.2, 0.24, 0.9)
-	style.corner_radius_top_left = 8
-	style.corner_radius_top_right = 8
-	style.corner_radius_bottom_left = 8
-	style.corner_radius_bottom_right = 8
-	style.shadow_color = Color(0.0, 0.0, 0.0, 0.4)
-	style.shadow_size = 6
+	style.border_color = Color(0.22, 0.22, 0.28, 0.95)
+	style.corner_radius_top_left = 12
+	style.corner_radius_top_right = 12
+	style.corner_radius_bottom_left = 12
+	style.corner_radius_bottom_right = 12
+	style.shadow_color = Color(0.0, 0.0, 0.0, 0.45)
+	style.shadow_size = 10
 	add_theme_stylebox_override("panel", style)
-	add_theme_font_size_override("font_size", 18)
-	add_theme_constant_override("line_spacing", 2)
+
+	add_theme_font_size_override("font_size", 20)
+	add_theme_constant_override("line_spacing", 4)
+	add_theme_constant_override("separation", 10)
+
+	add_theme_constant_override("content_margin_left", 14)
+	add_theme_constant_override("content_margin_right", 14)
+	add_theme_constant_override("content_margin_top", 14)
+	add_theme_constant_override("content_margin_bottom", 14)
+
+
+func _apply_tab_button_style(btn: Button, active: bool) -> void:
+	if btn == null:
+		return
+
+	btn.custom_minimum_size = Vector2(0, 44)
+
+	var sb: StyleBoxFlat = StyleBoxFlat.new()
+	sb.corner_radius_top_left = 10
+	sb.corner_radius_top_right = 10
+	sb.corner_radius_bottom_left = 10
+	sb.corner_radius_bottom_right = 10
+	sb.border_width_left = 1
+	sb.border_width_right = 1
+	sb.border_width_top = 1
+	sb.border_width_bottom = 1
+
+	if active:
+		sb.bg_color = Color(0.14, 0.16, 0.20, 0.95)
+		sb.border_color = Color(0.45, 0.55, 0.75, 0.95)
+	else:
+		sb.bg_color = Color(0.09, 0.09, 0.11, 0.85)
+		sb.border_color = Color(0.22, 0.22, 0.26, 0.9)
+
+	btn.add_theme_stylebox_override("normal", sb)
+	btn.add_theme_stylebox_override("hover", sb)
+	btn.add_theme_stylebox_override("pressed", sb)
+	btn.add_theme_stylebox_override("focus", sb)
+	btn.add_theme_font_size_override("font_size", 18)
 
 
 func _on_viewport_size_changed() -> void:
 	if dock_to_bottom_left:
 		_dock_bottom_left()
+	call_deferred("_apply_full_width_constraints")
 
 
-# IMPORTANT: never collapse based on combined minimum size (can evaluate tiny on container UIs)
 func _dock_bottom_left() -> void:
 	if not is_inside_tree():
 		return
 
 	var vp: Vector2 = get_viewport_rect().size
 
-	# Keep a sane size (avoid collapsing to 0)
 	var s: Vector2 = size
 	if s.x < min_panel_size.x or s.y < min_panel_size.y:
 		s = min_panel_size
 
-	# Clamp to viewport (leave padding)
 	var max_w: float = max(120.0, vp.x - (dock_padding.x * 2.0))
 	var max_h: float = max(120.0, vp.y - (dock_padding.y * 2.0))
 	s.x = min(s.x, max_w)
@@ -346,6 +469,7 @@ func _dock_bottom_left() -> void:
 		y = dock_padding.y
 
 	position = Vector2(x, y)
+	call_deferred("_apply_full_width_constraints")
 
 
 func _on_tab_changed(_tab_index: int) -> void:
@@ -354,7 +478,6 @@ func _on_tab_changed(_tab_index: int) -> void:
 
 	_sync_tab_buttons()
 
-	# TabContainer normally manages visibility itself, but we keep this for explicitness.
 	if _tile_tab:
 		_tile_tab.visible = (_mode_tabs.current_tab == 0)
 	if _building_tab:
@@ -381,10 +504,17 @@ func _on_building_tab_pressed() -> void:
 func _sync_tab_buttons() -> void:
 	if _mode_tabs == null:
 		return
+
+	var tile_active: bool = (_mode_tabs.current_tab == 0)
+	var build_active: bool = (_mode_tabs.current_tab == 1)
+
 	if _tile_tab_button:
-		_tile_tab_button.button_pressed = (_mode_tabs.current_tab == 0)
+		_tile_tab_button.button_pressed = tile_active
+		_apply_tab_button_style(_tile_tab_button, tile_active)
+
 	if _building_tab_button:
-		_building_tab_button.button_pressed = (_mode_tabs.current_tab == 1)
+		_building_tab_button.button_pressed = build_active
+		_apply_tab_button_style(_building_tab_button, build_active)
 
 
 func _wire_slot_buttons() -> void:
@@ -403,25 +533,25 @@ func _wire_slot_buttons() -> void:
 
 func _apply_slot_styles() -> void:
 	var normal: StyleBoxFlat = StyleBoxFlat.new()
-	normal.bg_color = Color(0.1, 0.1, 0.12, 0.9)
+	normal.bg_color = Color(0.10, 0.10, 0.12, 0.92)
 	normal.border_width_left = 2
 	normal.border_width_right = 2
 	normal.border_width_top = 2
 	normal.border_width_bottom = 2
-	normal.border_color = Color(0.18, 0.18, 0.22)
-	normal.corner_radius_top_left = 6
-	normal.corner_radius_top_right = 6
-	normal.corner_radius_bottom_left = 6
-	normal.corner_radius_bottom_right = 6
+	normal.border_color = Color(0.18, 0.18, 0.24)
+	normal.corner_radius_top_left = 10
+	normal.corner_radius_top_right = 10
+	normal.corner_radius_bottom_left = 10
+	normal.corner_radius_bottom_right = 10
 
 	var hover: StyleBoxFlat = normal.duplicate() as StyleBoxFlat
-	hover.border_color = Color(0.35, 0.55, 0.9)
+	hover.border_color = Color(0.35, 0.55, 0.90)
 
 	var pressed: StyleBoxFlat = normal.duplicate() as StyleBoxFlat
-	pressed.border_color = Color(0.7, 0.7, 0.85)
+	pressed.border_color = Color(0.70, 0.70, 0.85)
 
 	var focus: StyleBoxFlat = normal.duplicate() as StyleBoxFlat
-	focus.border_color = Color(0.45, 0.8, 1.0)
+	focus.border_color = Color(0.45, 0.80, 1.00)
 
 	var slots: Array[Button] = []
 	if _building_slot:
@@ -434,6 +564,7 @@ func _apply_slot_styles() -> void:
 		slot.add_theme_stylebox_override("pressed", pressed)
 		slot.add_theme_stylebox_override("focus", focus)
 		slot.add_theme_stylebox_override("disabled", normal)
+		slot.custom_minimum_size = Vector2(54, 54)
 		slot.text = ""
 		slot.clip_text = true
 		slot.expand_icon = true
@@ -444,20 +575,25 @@ func _apply_slot_styles() -> void:
 # -------------------------
 func set_fragment(fragment: Node) -> void:
 	_current_fragment = fragment
-	_current_coord = Vector2i.ZERO
+	_mods_expanded = false
 
-	if _current_fragment != null and is_instance_valid(_current_fragment):
-		var coord_v: Variant = _p(_current_fragment, "coord", null)
-		if coord_v is Vector2i:
-			_current_coord = coord_v as Vector2i
-		else:
-			var ax_v: Variant = _p(_current_fragment, "axial", null)
-			if ax_v is Vector2i:
-				_current_coord = ax_v as Vector2i
-			else:
-				var meta_ax: Variant = _current_fragment.get_meta("coord", null)
-				if meta_ax is Vector2i:
-					_current_coord = meta_ax as Vector2i
+	_apply_seq += 1
+	var seq: int = _apply_seq
+	call_deferred("_apply_fragment_seq", seq, fragment)
+
+
+func _apply_fragment_seq(seq: int, frag: Node) -> void:
+	# Wait for fragment data (coord/modifiers/resources) to finish being assigned.
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	# Ignore outdated runs
+	if seq != _apply_seq:
+		return
+
+	# Ensure we're still looking at the same fragment
+	if frag != _current_fragment:
+		return
 
 	_apply_fragment()
 
@@ -477,13 +613,18 @@ func _apply_fragment() -> void:
 		visible = false
 		return
 
+	_sync_coord_from_fragment(_current_fragment)
+
 	visible = true
+
+	if _scroll_container:
+		_scroll_container.scroll_vertical = 0
+
 	_enforce_layout_floors()
 
 	_update_tile_tab()
 	_update_building_tab()
 
-	# Ensure tab visibility is applied
 	if _mode_tabs:
 		_on_tab_changed(_mode_tabs.current_tab)
 
@@ -494,13 +635,9 @@ func _apply_fragment() -> void:
 		var resources: Array = _get_resource_nodes_for_tile(_current_coord)
 		var building_id: String = _get_equipped_building_id(_current_fragment)
 		var modules: Array = _get_equipped_modules(_current_fragment)
-
 		print("[SelectionHUD] coord=%s biome=%s tier=%s mods=%d resources=%d building=%s modules=%s" % [
 			_current_coord, biome_str, tier_val, mods.size(), resources.size(), building_id, modules
 		])
-
-		if _scroll_container and _mode_tabs:
-			print("[SelectionHUD] sizes panel=%s scroll=%s tabs=%s" % [size, _scroll_container.size, _mode_tabs.size])
 
 	if dock_to_bottom_left:
 		call_deferred("_dock_bottom_left")
@@ -516,13 +653,17 @@ func _update_tile_tab() -> void:
 	var coord_text: String = "%d,%d" % [_current_coord.x, _current_coord.y]
 
 	if _tile_icon:
+		_tile_icon.custom_minimum_size = Vector2(48, 48)
 		_tile_icon.texture = _get_biome_icon(_current_fragment, biome_str)
 	if _tile_name_label:
 		_tile_name_label.text = tile_name
+		_tile_name_label.add_theme_font_size_override("font_size", 22)
 	if _tile_coord_label:
 		_tile_coord_label.text = "Coord: %s" % coord_text
+		_tile_coord_label.add_theme_font_size_override("font_size", 18)
 	if _tile_tier_label:
 		_tile_tier_label.text = "T%d" % tier_val
+		_tile_tier_label.add_theme_font_size_override("font_size", 18)
 
 	var mods: Array = _get_modifiers_from_fragment(_current_fragment)
 	_populate_modifiers_grid(mods)
@@ -567,7 +708,6 @@ func _get_tile_tier(fragment: Node) -> int:
 
 
 func _get_biome_icon(_fragment: Node, _biome_str: String) -> Texture2D:
-	# TODO: Wire biome-specific icon lookups later.
 	return null
 
 
@@ -591,6 +731,9 @@ func _populate_modifiers_grid(mods: Array) -> void:
 		var label: Label = Label.new()
 		label.text = "No modifiers"
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		label.add_theme_font_size_override("font_size", 18)
 		_tile_modifiers_grid.add_child(label)
 		if _tile_modifiers_expand:
 			_tile_modifiers_expand.visible = false
@@ -619,22 +762,22 @@ func _populate_modifiers_grid(mods: Array) -> void:
 
 func _build_modifier_card(mod: Variant) -> Control:
 	var panel: PanelContainer = PanelContainer.new()
-	panel.custom_minimum_size = MODIFIER_ICON_SIZE
+	panel.custom_minimum_size = Vector2(MODIFIER_ICON_SIZE.x + 12.0, MODIFIER_ICON_SIZE.y + 12.0)
 
 	var rarity: String = _modifier_get_rarity(mod)
 	var border_color: Color = _rarity_color(rarity)
 
 	var style: StyleBoxFlat = StyleBoxFlat.new()
-	style.bg_color = Color(0.12, 0.12, 0.14, 0.95)
+	style.bg_color = Color(0.115, 0.115, 0.135, 0.96)
 	style.border_color = border_color
 	style.border_width_left = 2
 	style.border_width_right = 2
 	style.border_width_top = 2
 	style.border_width_bottom = 2
-	style.corner_radius_top_left = 6
-	style.corner_radius_top_right = 6
-	style.corner_radius_bottom_left = 6
-	style.corner_radius_bottom_right = 6
+	style.corner_radius_top_left = 8
+	style.corner_radius_top_right = 8
+	style.corner_radius_bottom_left = 8
+	style.corner_radius_bottom_right = 8
 	panel.add_theme_stylebox_override("panel", style)
 
 	var icon: TextureRect = TextureRect.new()
@@ -642,7 +785,14 @@ func _build_modifier_card(mod: Variant) -> Control:
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.texture = _get_modifier_icon(mod)
-	panel.add_child(icon)
+
+	var margin: MarginContainer = MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 6)
+	margin.add_theme_constant_override("margin_right", 6)
+	margin.add_theme_constant_override("margin_top", 6)
+	margin.add_theme_constant_override("margin_bottom", 6)
+	margin.add_child(icon)
+	panel.add_child(margin)
 
 	if icon.texture == null:
 		var label: Label = Label.new()
@@ -652,6 +802,7 @@ func _build_modifier_card(mod: Variant) -> Control:
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		label.size_flags_vertical = Control.SIZE_EXPAND_FILL
+		label.add_theme_font_size_override("font_size", 14)
 		panel.add_child(label)
 
 	panel.tooltip_text = _modifier_to_tooltip(mod)
@@ -683,17 +834,17 @@ func _rarity_color(rarity: String) -> Color:
 	var key: String = rarity.strip_edges().to_lower()
 	match key:
 		"common":
-			return Color(0.55, 0.55, 0.6)
+			return Color(0.55, 0.55, 0.60)
 		"uncommon":
-			return Color(0.35, 0.7, 0.45)
+			return Color(0.35, 0.70, 0.45)
 		"rare":
-			return Color(0.35, 0.55, 0.9)
+			return Color(0.35, 0.55, 0.90)
 		"epic":
-			return Color(0.7, 0.45, 0.9)
+			return Color(0.70, 0.45, 0.90)
 		"legendary":
-			return Color(0.95, 0.7, 0.2)
+			return Color(0.95, 0.70, 0.20)
 		_:
-			return Color(0.4, 0.4, 0.45)
+			return Color(0.40, 0.40, 0.45)
 
 
 func _get_modifier_icon(mod: Variant) -> Texture2D:
@@ -764,17 +915,13 @@ func _build_resource_nodes_from_modifiers(fragment: Node) -> Array:
 
 		var kind: String = String(md.get("kind", "")).strip_edges()
 		var kind_key: String = kind.to_lower().replace("_", " ")
-
 		if kind_key != "resource spawn":
 			continue
 
 		var detail: String = String(md.get("name", md.get("detail", ""))).strip_edges()
 		var skill: String = String(md.get("skill", "")).strip_edges()
 
-		nodes.append({
-			"detail": detail,
-			"skill": skill,
-		})
+		nodes.append({"detail": detail, "skill": skill})
 
 	return nodes
 
@@ -841,6 +988,13 @@ func _populate_list(list_node: VBoxContainer, lines: Array[String], placeholder:
 		var label: Label = Label.new()
 		label.text = line
 		label.autowrap_mode = TextServer.AUTOWRAP_WORD
+		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		label.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+		label.clip_text = false
+		label.add_theme_font_size_override("font_size", 18)
+		label.add_theme_color_override("font_color", Color(0.90, 0.90, 0.92))
+		label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.35))
+		label.add_theme_constant_override("outline_size", 1)
 		list_node.add_child(label)
 
 
@@ -858,177 +1012,224 @@ func _set_buttons_enabled(container: Control, is_enabled: bool) -> void:
 
 
 # -------------------------
-# Building tab
+# Building tab (ConstructionSystem-truthful)
 # -------------------------
 func _update_building_tab() -> void:
 	var base_id: String = _get_equipped_building_id(_current_fragment)
-	var has_building: bool = (base_id != "")
+	var has_base: bool = (base_id != "")
 
+	# Equipment slots (icons + tooltips)
 	_refresh_building_equipment(_current_fragment)
 
-	var building_data: Dictionary = _get_building_data(_current_fragment)
-
-	if _chip_workers_label:
-		_chip_workers_label.text = "Workers: %s" % String(building_data.get("workers", "0"))
-	if _chip_queue_label:
-		_chip_queue_label.text = "Queue: %s" % String(building_data.get("queue", "0"))
-	if _chip_upkeep_label:
-		_chip_upkeep_label.text = "Upkeep: %s" % String(building_data.get("upkeep", "-"))
-	if _chip_integrity_label:
-		_chip_integrity_label.text = "Integrity: %s" % String(building_data.get("integrity", "-"))
-
-	var inputs: Array = building_data.get("inputs", [])
-	var outputs: Array = building_data.get("outputs", [])
-
-	_populate_list(_building_inputs_list, _normalize_string_array(inputs), "No inputs")
-	_populate_list(_building_outputs_list, _normalize_string_array(outputs), "No outputs")
-
+	# Hide fabricated chips row (workers/queue/upkeep/integrity not part of ConstructionSystem)
 	if _building_chips_row:
-		_building_chips_row.visible = true
-	if _building_io_row:
-		_building_io_row.visible = true
+		_building_chips_row.visible = false
+
+	# No base building -> disable/hide modules and IO
+	if not has_base:
+		if _building_name_label:
+			_building_name_label.text = "No Building"
+			_building_name_label.add_theme_font_size_override("font_size", 22)
+		if _building_status_label:
+			_building_status_label.text = "No building placed"
+			_building_status_label.add_theme_font_size_override("font_size", 18)
+		if _building_tier_label:
+			_building_tier_label.text = ""
+		for btn0 in _module_slots:
+			if btn0:
+				btn0.disabled = true
+				btn0.visible = false
+
+		if _building_io_row:
+			_building_io_row.visible = false
+		if _building_buttons_row:
+			_building_buttons_row.visible = false
+		return
+
+	# Base exists -> show module slots + IO row
+	for btn1 in _module_slots:
+		if btn1:
+			btn1.visible = true
+			btn1.disabled = false
+
 	if _building_buttons_row:
 		_building_buttons_row.visible = true
-		_set_buttons_enabled(_building_buttons_row, has_building)
+		_set_buttons_enabled(_building_buttons_row, true)
+
+	if _building_io_row:
+		_building_io_row.visible = true
+
+	# Pull recipe data from ConstructionSystem
+	var base_rec: Dictionary = _get_construction_recipe(base_id)
+
+	var b_label: String = String(base_rec.get("label", base_id))
+	var b_desc: String = String(base_rec.get("desc", "")).strip_edges()
+	var b_skill: String = String(base_rec.get("linked_skill", "")).strip_edges()
+	var b_level_req: int = int(base_rec.get("level_req", 0))
+	var b_build_tier: int = int(base_rec.get("build_tier", 0))
+
+	if _building_name_label:
+		_building_name_label.text = b_label
+		_building_name_label.add_theme_font_size_override("font_size", 22)
+
+	# Status text: only real data (linked_skill / level_req / modules summary)
+	var status_lines: Array[String] = []
+	if b_skill != "":
+		status_lines.append("Linked skill: %s" % b_skill)
+	if b_level_req > 0:
+		status_lines.append("Construction req: %d" % b_level_req)
+	if b_desc != "":
+		status_lines.append(b_desc)
+
+	# Modules summary
+	var mods: Array = _get_equipped_modules(_current_fragment)
+	var mod_summaries: Array[String] = []
+	for m_v in mods:
+		if typeof(m_v) != TYPE_STRING:
+			continue
+		var mid: String = String(m_v).strip_edges()
+		if mid == "":
+			continue
+		var mrec: Dictionary = _get_construction_recipe(mid)
+		var mlab: String = String(mrec.get("label", mid))
+		var mtier: int = int(mrec.get("module_tier", 0))
+		if mtier > 0:
+			mod_summaries.append("%s (T%d)" % [mlab, mtier])
+		else:
+			mod_summaries.append(mlab)
+
+	if mod_summaries.is_empty():
+		status_lines.append("Modules: (none)")
+	else:
+		status_lines.append("Modules: %s" % ", ".join(mod_summaries))
+
+	if _building_status_label:
+		_building_status_label.text = "\n".join(status_lines)
+		_building_status_label.add_theme_font_size_override("font_size", 18)
+
+	if _building_tier_label:
+		_building_tier_label.text = "T%d" % b_build_tier if b_build_tier > 0 else ""
+		_building_tier_label.add_theme_font_size_override("font_size", 18)
+
+	# Inputs: recipe.inputs for base + (optionally) each module
+	var input_lines: Array[String] = []
+	input_lines.append("Base inputs:")
+	input_lines.append_array(_format_inputs_from_recipe(base_rec))
+
+	# Add module inputs
+	for m_v2 in mods:
+		if typeof(m_v2) != TYPE_STRING:
+			continue
+		var mid2: String = String(m_v2).strip_edges()
+		if mid2 == "":
+			continue
+		var mrec2: Dictionary = _get_construction_recipe(mid2)
+		var mlabel2: String = String(mrec2.get("label", mid2))
+		input_lines.append("") # spacer
+		input_lines.append("Module: %s" % mlabel2)
+		input_lines.append_array(_format_inputs_from_recipe(mrec2))
+
+	_populate_list(_building_inputs_list, input_lines, "No inputs")
+
+	# Outputs: do not fabricate (ConstructionSystem recipes don’t define outputs for buildings)
+	_populate_list(_building_outputs_list, ["(not defined)"], "(not defined)")
 
 
-func _normalize_string_array(arr: Array) -> Array[String]:
-	var out: Array[String] = []
-	for entry in arr:
-		out.append(String(entry))
-	return out
-
-
-func _get_building_data(fragment: Node) -> Dictionary:
-	if fragment == null or not is_instance_valid(fragment):
+func _get_construction_recipe(id: String) -> Dictionary:
+	if id == "":
 		return {}
-
-	var base_id: String = _get_equipped_building_id(fragment)
-	if base_id == "":
-		return {}
-
-	var data: Dictionary = {
-		"workers": _get_building_workers(base_id, fragment),
-		"queue": _get_building_queue(base_id, fragment),
-		"upkeep": _get_building_upkeep(base_id, fragment),
-		"integrity": _get_building_integrity(base_id, fragment),
-		"inputs": _get_building_inputs(base_id, fragment),
-		"outputs": _get_building_outputs(base_id, fragment),
-	}
-	return data
-
-
-func _get_building_label(base_id: String) -> String:
-	if _items and _items.has_method("display_name"):
-		return String(_items.call("display_name", StringName(base_id)))
 	if _construction and _construction.has_method("get_recipe_by_id"):
-		var rec_v: Variant = _construction.call("get_recipe_by_id", StringName(base_id))
+		var rec_v: Variant = _construction.call("get_recipe_by_id", StringName(id))
 		if rec_v is Dictionary:
-			var rec: Dictionary = rec_v as Dictionary
-			return String(rec.get("label", base_id))
-	return base_id
+			return rec_v as Dictionary
+	return {}
 
 
-func _get_building_tier_label(base_id: String) -> String:
-	if _construction and _construction.has_method("get_recipe_by_id"):
-		var rec_v: Variant = _construction.call("get_recipe_by_id", StringName(base_id))
-		if rec_v is Dictionary:
-			var rec: Dictionary = rec_v as Dictionary
-			var tier: int = int(rec.get("build_tier", 0))
-			if tier > 0:
-				return "T%d" % tier
-	return "T0"
+func _format_inputs_from_recipe(rec: Dictionary) -> Array[String]:
+	var lines: Array[String] = []
+	var inputs_v: Variant = rec.get("inputs", [])
+	if typeof(inputs_v) != TYPE_ARRAY:
+		return lines
+
+	var inputs: Array = inputs_v as Array
+	if inputs.is_empty():
+		lines.append("(none)")
+		return lines
+
+	for inp_v in inputs:
+		if typeof(inp_v) != TYPE_DICTIONARY:
+			continue
+		var inp: Dictionary = inp_v as Dictionary
+		var qty: int = int(inp.get("qty", 0))
+		if qty <= 0:
+			continue
+
+		var item_any: Variant = inp.get("item", "")
+		var item_id: StringName = StringName("")
+		if item_any is StringName:
+			item_id = item_any as StringName
+		else:
+			item_id = StringName(String(item_any))
+
+		var item_label: String = _resolve_item_label(item_id)
+		lines.append("%d× %s" % [qty, item_label])
+
+	if lines.is_empty():
+		lines.append("(none)")
+	return lines
 
 
-func _get_building_desc(base_id: String) -> String:
-	if _construction and _construction.has_method("get_recipe_by_id"):
-		var rec_v: Variant = _construction.call("get_recipe_by_id", StringName(base_id))
-		if rec_v is Dictionary:
-			var rec: Dictionary = rec_v as Dictionary
-			var desc: String = String(rec.get("desc", "")).strip_edges()
-			if desc != "":
-				return desc
-			var effect: String = String(rec.get("effect_raw", "")).strip_edges()
-			return effect
-	return ""
+func _resolve_item_label(id: StringName) -> String:
+	var label: String = String(id)
+	if _items and _items.has_method("is_valid") and _items.has_method("display_name"):
+		if bool(_items.call("is_valid", id)):
+			label = String(_items.call("display_name", id))
+	return label
 
 
-func _get_building_icon(base_id: String) -> Texture2D:
+func _resolve_building_icon(id: String) -> Texture2D:
+	if id == "":
+		return null
+	# Prefer Items.get_icon if present
 	if _items and _items.has_method("get_icon"):
-		return _items.call("get_icon", StringName(base_id)) as Texture2D
+		var t: Variant = _items.call("get_icon", StringName(id))
+		if t is Texture2D:
+			return t as Texture2D
+	# Fallback: Items.get_icon_path
+	if _items and _items.has_method("get_icon_path"):
+		var p: Variant = _items.call("get_icon_path", StringName(id))
+		var path: String = String(p)
+		if path != "" and ResourceLoader.exists(path):
+			return load(path) as Texture2D
 	return null
 
 
-func _get_building_workers(_base_id: String, fragment: Node) -> String:
-	if fragment and fragment.has_meta("workers"):
-		var v: Variant = fragment.get_meta("workers", "0")
-		return String(v)
-	return "0"
-
-
-func _get_building_queue(_base_id: String, fragment: Node) -> String:
-	if fragment and fragment.has_meta("queue"):
-		var v: Variant = fragment.get_meta("queue", "0")
-		return String(v)
-	return "0"
-
-
-func _get_building_upkeep(_base_id: String, fragment: Node) -> String:
-	if fragment and fragment.has_meta("upkeep"):
-		var v: Variant = fragment.get_meta("upkeep", "-")
-		return String(v)
-	return "-"
-
-
-func _get_building_integrity(_base_id: String, fragment: Node) -> String:
-	if fragment and fragment.has_meta("integrity"):
-		var v: Variant = fragment.get_meta("integrity", "-")
-		return String(v)
-	return "-"
-
-
-func _get_building_inputs(_base_id: String, fragment: Node) -> Array:
-	if fragment == null or not is_instance_valid(fragment):
-		return []
-	if fragment.has_meta("inputs"):
-		var v: Variant = fragment.get_meta("inputs", [])
-		if v is Array:
-			return v as Array
-	var pv: Variant = _p(fragment, "inputs", null)
-	if pv is Array:
-		return pv as Array
-	return []
-
-
-func _get_building_outputs(_base_id: String, fragment: Node) -> Array:
-	if fragment == null or not is_instance_valid(fragment):
-		return []
-	if fragment.has_meta("outputs"):
-		var v: Variant = fragment.get_meta("outputs", [])
-		if v is Array:
-			return v as Array
-	var pv: Variant = _p(fragment, "outputs", null)
-	if pv is Array:
-		return pv as Array
-	return []
+func _build_tooltip_from_recipe(id: String) -> String:
+	var rec: Dictionary = _get_construction_recipe(id)
+	if rec.is_empty():
+		return id
+	var title: String = String(rec.get("label", id))
+	var desc: String = String(rec.get("desc", "")).strip_edges()
+	if desc == "":
+		desc = String(rec.get("effect_raw", "")).strip_edges()
+	if desc == "":
+		return title
+	return "%s\n%s" % [title, desc]
 
 
 func _get_equipped_building_id(fragment: Node) -> String:
 	if fragment == null or not is_instance_valid(fragment):
 		return ""
 
-	# 1) meta
 	if fragment.has_meta("building_id"):
 		var m: String = String(fragment.get_meta("building_id", ""))
 		if m != "":
 			return m
 
-	# 2) property
 	var p_id: String = _p_str(fragment, "building_id", "")
 	if p_id != "":
 		return p_id
 
-	# 3) dictionary payload
 	var b: Variant = _p(fragment, "building", null)
 	if b is Dictionary:
 		var base_v: Variant = (b as Dictionary).get("base", "")
@@ -1041,18 +1242,15 @@ func _get_equipped_modules(fragment: Node) -> Array:
 	if fragment == null or not is_instance_valid(fragment):
 		return []
 
-	# 1) meta
 	if fragment.has_meta("building_modules"):
 		var m: Variant = fragment.get_meta("building_modules", [])
 		if m is Array:
 			return m as Array
 
-	# 2) property
 	var pv: Variant = _p(fragment, "building_modules", null)
 	if pv is Array:
 		return pv as Array
 
-	# 3) building dictionary
 	var b: Variant = _p(fragment, "building", null)
 	if b is Dictionary:
 		var mods_v: Variant = (b as Dictionary).get("modules", [])
@@ -1067,48 +1265,31 @@ func _refresh_building_equipment(fragment: Node) -> void:
 	var modules: Array = _get_equipped_modules(fragment)
 
 	if _building_slot:
+		_building_slot.custom_minimum_size = Vector2(64, 64)
 		if base_id != "":
-			var icon: Texture2D = _get_building_icon(base_id)
-			_building_slot.icon = icon
-			var title: String = _get_building_label(base_id)
-			var desc: String = _get_building_desc(base_id)
-			_building_slot.tooltip_text = _build_tooltip(title, desc)
+			_building_slot.icon = _resolve_building_icon(base_id)
+			_building_slot.tooltip_text = _build_tooltip_from_recipe(base_id)
 		else:
 			_building_slot.icon = null
 			_building_slot.tooltip_text = "Empty"
-
-	if _building_name_label:
-		_building_name_label.text = "No Building" if base_id == "" else _get_building_label(base_id)
-	if _building_status_label:
-		_building_status_label.text = "No building placed" if base_id == "" else "Equipped"
-	if _building_tier_label:
-		_building_tier_label.text = _get_building_tier_label(base_id) if base_id != "" else "T0"
 
 	for i in range(_module_slots.size()):
 		var slot: Button = _module_slots[i]
 		if slot == null:
 			continue
 
+		slot.custom_minimum_size = Vector2(54, 54)
+
 		var module_id: String = ""
 		if i < modules.size() and modules[i] is String:
 			module_id = String(modules[i])
 
 		if module_id != "":
-			slot.icon = _get_building_icon(module_id)
-			var title_m: String = _get_building_label(module_id)
-			var desc_m: String = _get_building_desc(module_id)
-			slot.tooltip_text = _build_tooltip(title_m, desc_m)
+			slot.icon = _resolve_building_icon(module_id)
+			slot.tooltip_text = _build_tooltip_from_recipe(module_id)
 		else:
 			slot.icon = null
 			slot.tooltip_text = "Empty"
-
-
-func _build_tooltip(title: String, desc: String) -> String:
-	if title == "":
-		return desc
-	if desc == "":
-		return title
-	return "%s\n%s" % [title, desc]
 
 
 func _on_modifiers_expand_pressed() -> void:
@@ -1117,8 +1298,13 @@ func _on_modifiers_expand_pressed() -> void:
 
 
 func _clear_container(container: Control) -> void:
-	for child in container.get_children():
+	if container == null:
+		return
+	while container.get_child_count() > 0:
+		var child: Node = container.get_child(0)
+		container.remove_child(child)  # remove immediately so layout updates now
 		child.queue_free()
+
 
 
 # -------------------------
@@ -1157,6 +1343,7 @@ func equip_module(slot_index: int, building_id: String) -> void:
 
 # -------------------------
 # Drag-and-drop from Bank into slots
+# NOTE: HUD does NOT consume Bank items (per requirement).
 # -------------------------
 func _get_drop_slot_info(at_position: Vector2, data: Variant) -> Dictionary:
 	var info: Dictionary = {}
@@ -1216,8 +1403,9 @@ func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
 		if not has_base:
 			return false
 
+	# Bank is only used to check existence (optional)
 	if _bank == null:
-		return false
+		return true
 	if not _bank.has_method("has_at_least"):
 		return true
 
@@ -1234,12 +1422,6 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 	if info.has("icon") and info["icon"] is Texture2D:
 		icon_tex = info["icon"] as Texture2D
 
-	# Pay cost: remove 1 from bank
-	if _bank and _bank.has_method("has_at_least") and _bank.has_method("add"):
-		if not bool(_bank.call("has_at_least", building_id, 1)):
-			return
-		_bank.call("add", building_id, -1)
-
 	var slot_type: String = String(info.get("slot_type", ""))
 	if slot_type == "base":
 		_equip_base_from_drop(building_id, icon_tex)
@@ -1250,16 +1432,6 @@ func _drop_data(at_position: Vector2, data: Variant) -> void:
 func _equip_base_from_drop(building_id: String, icon_tex: Texture2D) -> void:
 	if _current_fragment == null or not is_instance_valid(_current_fragment):
 		return
-
-	var old_base: String = ""
-	if _current_fragment.has_meta("building_id"):
-		old_base = String(_current_fragment.get_meta("building_id", ""))
-
-	var old_modules: Array = []
-	if _current_fragment.has_meta("building_modules"):
-		var m: Variant = _current_fragment.get_meta("building_modules", [])
-		if m is Array:
-			old_modules = m as Array
 
 	_current_fragment.set_meta("building_id", building_id)
 	_current_fragment.set_meta("building_modules", [])
@@ -1272,14 +1444,6 @@ func _equip_base_from_drop(building_id: String, icon_tex: Texture2D) -> void:
 		if btn:
 			btn.icon = null
 			btn.text = ""
-
-	# Return old base + modules to bank
-	if _bank and _bank.has_method("add"):
-		if old_base != "":
-			_bank.call("add", old_base, 1)
-		for m_id in old_modules:
-			if m_id is String and String(m_id) != "":
-				_bank.call("add", String(m_id), 1)
 
 	building_equip_requested.emit(_current_coord, building_id)
 	_update_building_tab()
@@ -1301,10 +1465,6 @@ func _equip_module_from_drop(slot_index: int, building_id: String, icon_tex: Tex
 		if m is Array:
 			modules = (m as Array).duplicate()
 
-	var old_id: String = ""
-	if idx < modules.size() and modules[idx] is String:
-		old_id = String(modules[idx])
-
 	if modules.size() <= idx:
 		modules.resize(idx + 1)
 	modules[idx] = building_id
@@ -1317,15 +1477,13 @@ func _equip_module_from_drop(slot_index: int, building_id: String, icon_tex: Tex
 			btn.text = ""
 			btn.visible = true
 
-	if old_id != "" and _bank and _bank.has_method("add"):
-		_bank.call("add", old_id, 1)
-
 	building_equip_requested.emit(_current_coord, building_id)
 	_update_building_tab()
 
 
 func _on_building_slot_pressed() -> void:
-	building_slot_requested.emit(_current_coord, "building", -1)
+	# REQUIRED: base slot uses ("base", 0)
+	building_slot_requested.emit(_current_coord, "base", 0)
 
 
 func _on_module_slot_pressed(slot_index: int) -> void:
@@ -1376,3 +1534,75 @@ func _p_str(obj: Object, key: String, default_value: String = "") -> String:
 func _log_missing_node(path: String, node: Node) -> void:
 	if debug_logging and node == null:
 		print("[SelectionHUD] Missing node at path: ", path)
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_RESIZED:
+		call_deferred("_apply_full_width_constraints")
+
+
+func _apply_full_width_constraints() -> void:
+	if not is_inside_tree():
+		return
+
+	_apply_horizontal_fill_fixes()
+
+	var inner_w: float = max(120.0, size.x - 32.0)
+
+	_force_fill_control(_root_vbox)
+	_force_fill_control(_scroll_container)
+	_force_fill_control(_scroll_content)
+	_force_fill_control(_mode_tabs)
+	_force_fill_control(_tile_tab)
+	_force_fill_control(_building_tab)
+
+	if _scroll_content:
+		var cm: Vector2 = _scroll_content.custom_minimum_size
+		if cm.x < inner_w:
+			_scroll_content.custom_minimum_size = Vector2(inner_w, cm.y)
+
+	if _mode_tabs:
+		var cm2: Vector2 = _mode_tabs.custom_minimum_size
+		if cm2.x < inner_w:
+			_mode_tabs.custom_minimum_size = Vector2(inner_w, cm2.y)
+
+	_force_fill_control(_tile_modifiers_section)
+	_force_fill_control(_tile_modifiers_grid)
+	_force_fill_control(_tile_resources_section)
+	_force_fill_control(_tile_resources_list)
+	_force_fill_control(_tile_effects_section)
+	_force_fill_control(_tile_effects_list)
+
+	_force_fill_control(_building_io_row)
+	_force_fill_control(_building_inputs_list)
+	_force_fill_control(_building_outputs_list)
+	_force_fill_control(_building_buttons_row)
+
+
+func _force_fill_control(c: Control) -> void:
+	if c == null:
+		return
+	c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	c.anchor_left = 0.0
+	c.anchor_right = 1.0
+	c.offset_left = 0.0
+	c.offset_right = 0.0
+
+func _sync_coord_from_fragment(frag: Node) -> void:
+	_current_coord = Vector2i.ZERO
+	if frag == null or not is_instance_valid(frag):
+		return
+
+	var coord_v: Variant = _p(frag, "coord", null)
+	if coord_v is Vector2i:
+		_current_coord = coord_v as Vector2i
+		return
+
+	var ax_v: Variant = _p(frag, "axial", null)
+	if ax_v is Vector2i:
+		_current_coord = ax_v as Vector2i
+		return
+
+	var meta_ax: Variant = frag.get_meta("coord", null)
+	if meta_ax is Vector2i:
+		_current_coord = meta_ax as Vector2i

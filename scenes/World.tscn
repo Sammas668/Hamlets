@@ -285,7 +285,11 @@ script = ExtResource("2_32lhk")
 debug_logging = true
 
 [node name="Margin" type="MarginContainer" parent="CanvasLayer/SelectionHUD"]
+custom_minimum_size = Vector2(540, 0)
 layout_mode = 0
+offset_left = 10.0
+offset_right = 550.0
+offset_bottom = 81.0
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
@@ -368,6 +372,7 @@ layout_mode = 2
 text = "(0,0)"
 
 [node name="TileTierChip" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow"]
+custom_minimum_size = Vector2(-17.63, 0)
 layout_mode = 2
 
 [node name="TileTierLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileTierChip"]
