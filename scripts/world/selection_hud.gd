@@ -134,7 +134,9 @@ func _ready() -> void:
 	if _mode_tabs:
 		_on_tab_changed(_mode_tabs.current_tab)
 
-
+func _get_drag_data(_at_position: Vector2) -> Variant:
+	# HUD should NEVER be a drag source.
+	return null
 # -------------------------
 # Node caching
 # -------------------------
@@ -444,7 +446,8 @@ func _apply_tab_button_style(btn: Button, active: bool) -> void:
 func _on_viewport_size_changed() -> void:
 	if dock_to_bottom_left:
 		_dock_bottom_left()
-	call_deferred("_apply_full_width_constraints")
+	_apply_full_width_constraints()
+
 
 
 func _dock_bottom_left() -> void:
@@ -453,9 +456,9 @@ func _dock_bottom_left() -> void:
 
 	var vp: Vector2 = get_viewport_rect().size
 
-	var s: Vector2 = size
-	if s.x < min_panel_size.x or s.y < min_panel_size.y:
-		s = min_panel_size
+	# Keep the panel stable; don’t let content resize it.
+	var s: Vector2 = min_panel_size
+
 
 	var max_w: float = max(120.0, vp.x - (dock_padding.x * 2.0))
 	var max_h: float = max(120.0, vp.y - (dock_padding.y * 2.0))
@@ -469,7 +472,7 @@ func _dock_bottom_left() -> void:
 		y = dock_padding.y
 
 	position = Vector2(x, y)
-	call_deferred("_apply_full_width_constraints")
+
 
 
 func _on_tab_changed(_tab_index: int) -> void:
@@ -581,21 +584,38 @@ func set_fragment(fragment: Node) -> void:
 	var seq: int = _apply_seq
 	call_deferred("_apply_fragment_seq", seq, fragment)
 
-
 func _apply_fragment_seq(seq: int, frag: Node) -> void:
-	# Wait for fragment data (coord/modifiers/resources) to finish being assigned.
-	await get_tree().process_frame
-	await get_tree().process_frame
-
-	# Ignore outdated runs
+	# Outdated call? bail immediately.
 	if seq != _apply_seq:
 		return
 
-	# Ensure we're still looking at the same fragment
+	# If we're not in the tree yet, try again next idle.
+	if not is_inside_tree():
+		call_deferred("_apply_fragment_seq", seq, frag)
+		return
+
+	var tree := get_tree()
+	if tree == null:
+		call_deferred("_apply_fragment_seq", seq, frag)
+		return
+
+	# Wait for fragment data to “settle”
+	await tree.process_frame
+	if not is_inside_tree() or get_tree() == null:
+		return
+
+	await tree.process_frame
+	if not is_inside_tree() or get_tree() == null:
+		return
+
+	# Still the latest selection?
+	if seq != _apply_seq:
+		return
 	if frag != _current_fragment:
 		return
 
 	_apply_fragment()
+
 
 
 func show_fragment(fragment: Node) -> void:
@@ -640,7 +660,8 @@ func _apply_fragment() -> void:
 		])
 
 	if dock_to_bottom_left:
-		call_deferred("_dock_bottom_left")
+		_dock_bottom_left()
+		_apply_full_width_constraints()
 
 
 # -------------------------
@@ -1385,6 +1406,11 @@ func _get_drop_slot_info(at_position: Vector2, data: Variant) -> Dictionary:
 
 
 func _can_drop_data(at_position: Vector2, data: Variant) -> bool:
+	var viewport := get_viewport()
+	if viewport and viewport.has_method("gui_is_dragging"):
+		if not viewport.gui_is_dragging():
+			return false
+
 	var info: Dictionary = _get_drop_slot_info(at_position, data)
 	if info.is_empty():
 		return false

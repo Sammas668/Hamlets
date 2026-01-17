@@ -4,6 +4,7 @@ class_name BankView
 # 1.0 = same as the Button’s icon size
 # 0.5 = half that size, etc.
 const DRAG_ICON_SCALE := 0.15  
+const DRAG_THRESHOLD := 8.0
 
 @export var columns: int = 5   # 5 columns = nice wide tokens
 
@@ -12,14 +13,103 @@ const DRAG_ICON_SCALE := 0.15
 @onready var _grid: GridContainer = get_node_or_null("VBoxContainer/Grid")
 
 var _cells: Array[Button] = []   # Array of bank slot buttons (BankSlotButton extends Button)
+var _sb_cell_normal: StyleBoxFlat
+var _sb_cell_hover: StyleBoxFlat
+var _sb_cell_pressed: StyleBoxFlat
+var _sb_cell_focus: StyleBoxFlat
 
 
 # --- Local drag-enabled bank button class ---
 class BankSlotButton:
 	extends Button
 
-	func _get_drag_data(at_position: Vector2) -> Variant:
-		# Read item id stored in this slot
+	# Extra debounce so “click jitter” never triggers a drag.
+	const DRAG_HOLD_MS: int = 140
+
+	var _drag_start_pos: Vector2 = Vector2.ZERO
+	var _drag_tracking: bool = false
+	var _drag_initiated: bool = false
+	var _press_time_ms: int = 0
+
+	func _gui_input(event: InputEvent) -> void:
+		# Only track drags when this slot actually has something draggable.
+		# (Prevents noise from empty slots.)
+		var has_item: bool = (String(get_meta("item_id", "")) != "" and icon != null)
+
+		if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+			var mb := event as InputEventMouseButton
+			if mb.pressed:
+				if not has_item:
+					_drag_tracking = false
+					_drag_initiated = false
+					return
+				_drag_start_pos = mb.position
+				_press_time_ms = Time.get_ticks_msec()
+				_drag_tracking = true
+				_drag_initiated = false
+				accept_event()
+			else:
+				_drag_tracking = false
+				_drag_initiated = false
+				accept_event()
+			return
+
+		if event is InputEventMouseMotion and _drag_tracking:
+			# If mouse is no longer down, stop tracking.
+			if not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+				_drag_tracking = false
+				_drag_initiated = false
+				return
+
+			# Already started a drag this press.
+			if _drag_initiated:
+				return
+
+			# Hold-time gate: prevents micro-moves during click from triggering drag.
+			var elapsed_ms: int = Time.get_ticks_msec() - _press_time_ms
+			if elapsed_ms < DRAG_HOLD_MS:
+				return
+
+			var mm := event as InputEventMouseMotion
+			var dist: float = (mm.position - _drag_start_pos).length()
+
+			# Distance gate
+			if dist >= BankView.DRAG_THRESHOLD:
+				_start_drag()
+				accept_event()
+			return
+
+	func _notification(what: int) -> void:
+		if what == NOTIFICATION_DRAG_END:
+			_drag_tracking = false
+			_drag_initiated = false
+
+	# IMPORTANT:
+	# We are using force_drag() manually, so we don't want Godot's automatic
+	# drag pipeline to kick in at all. Removing _get_drag_data prevents any
+	# automatic drag start attempts.
+	#
+	# (If you leave _get_drag_data in, it usually still works, but this is
+	# the cleanest way to guarantee no ghost drag starts.)
+	# func _get_drag_data(_at_position: Vector2) -> Variant:
+	# 	return null
+
+	func _start_drag() -> void:
+		_drag_tracking = false
+		_drag_initiated = true
+
+		var data: Variant = _build_drag_data()
+		if data == null:
+			_drag_initiated = false
+			return
+
+		var preview: Control = _build_drag_preview(data as Dictionary)
+		if preview:
+			preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+		force_drag(data, preview)
+
+	func _build_drag_data() -> Variant:
 		var item_id: String = String(get_meta("item_id", ""))
 		if item_id == "" or icon == null:
 			return null
@@ -28,54 +118,43 @@ class BankSlotButton:
 		if tex == null:
 			return null
 
-		var data: Dictionary = {
+		return {
 			"kind": "bank_item",
 			"item_id": item_id,
 			"icon": tex,
 		}
 
-		# --- Drag preview: match the Button's icon sizing rules ---
+	func _build_drag_preview(data: Dictionary) -> Control:
+		if not data.has("icon") or not (data["icon"] is Texture2D):
+			return null
 
-		# Start from texture pixel size
-		var w: int = tex.get_width()
-		var h: int = tex.get_height()
+		var tex := data["icon"] as Texture2D
 
-		# Clamp using the same theme constants the Button uses for its icon
-		var max_w := get_theme_constant("icon_max_width", "Button")
-		var max_h := get_theme_constant("icon_max_height", "Button")
+		var w: int = max(1, tex.get_width())
+		var h: int = max(1, tex.get_height())
 
+		var max_w: int = get_theme_constant("icon_max_width", "Button")
+		var max_h: int = get_theme_constant("icon_max_height", "Button")
 		if max_w > 0:
 			w = min(w, max_w)
 		if max_h > 0:
 			h = min(h, max_h)
-
-		# Safety fallback
-		if w <= 0:
-			w = 16
-		if h <= 0:
-			h = 16
 
 		var icon_size := Vector2(w, h)
 
 		var preview := TextureRect.new()
 		preview.texture = tex
 		preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-
-		# This defines the logical icon box before scaling
 		preview.custom_minimum_size = icon_size
 		preview.size = icon_size
 
-		# Apply a visual scale so you can nudge the size.
-		# DRAG_ICON_SCALE is defined on BankView.
 		var s := BankView.DRAG_ICON_SCALE
 		preview.scale = Vector2(s, s)
+		preview.position = -(icon_size * s * 0.5)
 
-		# Center under the cursor, taking scale into account
-		var half_size_scaled: Vector2 = icon_size * s * 0.5
-		preview.position = -half_size_scaled
+		return preview
 
-		set_drag_preview(preview)
-		return data
+
 
 
 func _ready() -> void:
@@ -121,9 +200,10 @@ func _ready() -> void:
 
 	if _title and _title.text == "":
 		_title.text = "Bank"
-
+	_init_cell_styleboxes()
 	_build_cells()
 	_refresh()
+
 
 	# Listen to Bank changes
 	if typeof(Bank) != TYPE_NIL:
@@ -153,6 +233,14 @@ func _build_cells() -> void:
 
 	for i in range(total):
 		var b := BankSlotButton.new()
+		b.add_theme_stylebox_override("normal", _sb_cell_normal)
+		b.add_theme_stylebox_override("hover", _sb_cell_hover)
+		b.add_theme_stylebox_override("pressed", _sb_cell_pressed)
+		b.add_theme_stylebox_override("focus", _sb_cell_focus)
+
+		# Optional: remove any leftover focus visuals
+		b.focus_mode = Control.FOCUS_NONE
+
 		b.focus_mode = Control.FOCUS_NONE
 		b.clip_text = true
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -276,3 +364,26 @@ func _on_bank_cleared() -> void:
 func _on_bank_capacity_changed(_max_slots: int) -> void:
 	_build_cells()
 	_refresh()
+
+
+func _init_cell_styleboxes() -> void:
+	_sb_cell_normal = StyleBoxFlat.new()
+	_sb_cell_normal.bg_color = Color(0.08, 0.08, 0.10, 0.95)
+	_sb_cell_normal.border_width_left = 2
+	_sb_cell_normal.border_width_right = 2
+	_sb_cell_normal.border_width_top = 2
+	_sb_cell_normal.border_width_bottom = 2
+	_sb_cell_normal.border_color = Color(0.18, 0.18, 0.24, 1.0)
+	_sb_cell_normal.corner_radius_top_left = 10
+	_sb_cell_normal.corner_radius_top_right = 10
+	_sb_cell_normal.corner_radius_bottom_left = 10
+	_sb_cell_normal.corner_radius_bottom_right = 10
+
+	_sb_cell_hover = _sb_cell_normal.duplicate() as StyleBoxFlat
+	_sb_cell_hover.border_color = Color(0.35, 0.55, 0.90, 1.0)
+
+	# IMPORTANT: pressed = normal (removes the flash “ghost box”)
+	_sb_cell_pressed = _sb_cell_normal.duplicate() as StyleBoxFlat
+
+	_sb_cell_focus = _sb_cell_normal.duplicate() as StyleBoxFlat
+	_sb_cell_focus.border_color = Color(0.45, 0.80, 1.00, 1.0)
