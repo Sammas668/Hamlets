@@ -489,6 +489,16 @@ func from_save_dict(d: Dictionary) -> void:
 	list_changed.emit()
 	selected_changed.emit(_selected_idx)
 
+func reset_runtime_state() -> void:
+	_villagers.clear()
+	_id_to_index.clear()
+	_used_icons.clear()
+	_selected_idx = -1
+	_next_id = 1
+	_founder_id = -1
+	list_changed.emit()
+	selected_changed.emit(_selected_idx)
+
 
 # --- Attributes (base/effective) -----------------------------------
 

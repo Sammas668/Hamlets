@@ -61,6 +61,19 @@ func from_dict(d: Dictionary) -> void:
 
 	# (later you can add: global skills, settings, etc.)
 
+func reset_runtime_state() -> void:
+	_pending_world = {}
+
+	if typeof(WorldData) != TYPE_NIL and WorldData.has_method("reset_runtime_state"):
+		WorldData.reset_runtime_state()
+	if typeof(Villagers) != TYPE_NIL and Villagers.has_method("reset_runtime_state"):
+		Villagers.reset_runtime_state()
+	if typeof(VillagerManager) != TYPE_NIL and VillagerManager.has_method("reset_runtime_state"):
+		VillagerManager.reset_runtime_state()
+	if typeof(Selection) != TYPE_NIL and Selection.has_method("clear"):
+		Selection.clear()
+	if typeof(WorldQuery) != TYPE_NIL and WorldQuery.has_method("set_selected"):
+		WorldQuery.set_selected(Vector2i.ZERO)
 
 func to_dict() -> Dictionary:
 	var data: Dictionary = {}

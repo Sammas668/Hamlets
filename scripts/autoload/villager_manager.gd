@@ -968,6 +968,9 @@ func from_save_dict(d: Dictionary) -> void:
 		job_changed.emit(v2, job2)
 		job_progress.emit(v2, job2, elapsed2, duration2)
 
+func reset_runtime_state() -> void:
+	_jobs.clear()
+
 # -------------------------------------------------------------------
 # Helpers: build recipes for node-driven gathering jobs
 # -------------------------------------------------------------------

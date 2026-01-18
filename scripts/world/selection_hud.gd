@@ -879,7 +879,6 @@ func _build_modifier_card(mod: Variant) -> Control:
 func _modifier_get_name(mod: Variant) -> String:
 	if mod is Dictionary:
 		var d: Dictionary = mod as Dictionary
-		var name: String = String(d.get("name", d.get("detail", ""))).strip_edges()
 		if name != "":
 			return name
 		var kind: String = String(d.get("kind", "")).strip_edges()
@@ -929,7 +928,6 @@ func _get_modifier_icon(mod: Variant) -> Texture2D:
 func _modifier_to_tooltip(mod: Variant) -> String:
 	if mod is Dictionary:
 		var d: Dictionary = mod as Dictionary
-		var name: String = String(d.get("name", d.get("detail", ""))).strip_edges()
 		var kind: String = String(d.get("kind", "")).strip_edges()
 		var rarity: String = String(d.get("rarity", "")).strip_edges()
 		var skill: String = String(d.get("skill", "")).strip_edges()

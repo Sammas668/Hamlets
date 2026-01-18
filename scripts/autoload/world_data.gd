@@ -248,3 +248,16 @@ func from_dict(d: Dictionary) -> void:
 		for k in sd.keys():
 			var key_str: String = String(k)
 			shards[key_str] = int(sd[k])
+
+func reset_runtime_state() -> void:
+	essence = 30
+	last_placed_q = 0
+	last_placed_r = 0
+	_occupied.clear()
+	_anchored.clear()
+	_biomes.clear()
+	_tiers.clear()
+	_modifiers.clear()
+	_bound_villagers.clear()
+	augury.clear()
+	shards.clear()

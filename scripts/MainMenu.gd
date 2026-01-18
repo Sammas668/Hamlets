@@ -152,6 +152,8 @@ func _on_QuitButton_pressed() -> void:
 func _on_NewButton_pressed() -> void:
 	# Start a fresh grove: clear any pending loaded world so World.tscn boots clean.
 	var GS := get_node_or_null("/root/GameState")
+	if GS and GS.has_method("reset_runtime_state"):
+		GS.call("reset_runtime_state")
 	if GS and GS.has_method("from_dict"):
 		GS.call("from_dict", {})  # reset pending
 	_change_to_game()

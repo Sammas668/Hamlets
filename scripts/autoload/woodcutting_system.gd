@@ -723,7 +723,6 @@ func _roll_bonus_drops(
 
 		_add_item(item_id, qty)
 
-		var name: String = ""
 		if typeof(Items) != TYPE_NIL \
 		and Items.has_method("is_valid") \
 		and Items.has_method("display_name") \

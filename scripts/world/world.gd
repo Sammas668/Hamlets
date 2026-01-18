@@ -2367,6 +2367,3 @@ func _sanity_log_missing() -> void:
 	if save_panel == null:     missing.append("CanvasLayer/Panel/SavePanel")
 	if load_panel == null:     missing.append("CanvasLayer/Panel/LoadPanel")
 	if settings_panel == null: missing.append("CanvasLayer/Panel/SettingsPanel")
-
-	if missing.size() > 0:
-		push_warning("World.gd missing nodes: %s" % ", ".join(missing))

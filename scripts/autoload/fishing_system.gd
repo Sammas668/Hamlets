@@ -725,7 +725,6 @@ func do_fish(
 		if typeof(Bank) != TYPE_NIL and Bank.has_method("add"):
 			Bank.add(item_id, 1)
 
-		var name := String(item_id)
 		if typeof(Items) != TYPE_NIL \
 		and Items.has_method("is_valid") \
 		and Items.has_method("display_name") \

@@ -5,7 +5,7 @@ signal saves_changed
 
 const SAVE_DIR  := "user://saves"
 const AUTOSAVE  := "autosave"
-const VERSION   := 1
+const VERSION   := 2
 
 func _ready() -> void:
 	_ensure_dir()
@@ -30,6 +30,10 @@ func list_saves() -> Array[Dictionary]:
 		var d: Dictionary = _try_read_json(p)
 		if d.is_empty():
 			continue
+		var meta: Dictionary = {}
+		var meta_v: Variant = d.get("meta", {})
+		if meta_v is Dictionary:
+			meta = meta_v as Dictionary
 
 		var size_bytes: int = 0
 		var fh: FileAccess = FileAccess.open(p, FileAccess.READ)
@@ -40,8 +44,8 @@ func list_saves() -> Array[Dictionary]:
 		out.append({
 			"id": f.get_basename(),                                  # "slot_1" or "autosave"
 			"version": int(d.get("version", 1)),
-			"timestamp": int(d.get("timestamp", 0)),
-			"label": String(d.get("label", f.get_basename())),
+			"timestamp": int(meta.get("timestamp", d.get("timestamp", 0))),
+			"label": String(meta.get("label", d.get("label", f.get_basename()))),
 			"size_bytes": size_bytes,
 		})
 	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
@@ -60,12 +64,16 @@ func save_grove(slot_id: String, label: String = "") -> bool:
 	var path: String = _slot_path(slot_id)
 	var tmp: String = path + ".tmp"
 
+	var snapshot: Dictionary = GameState.to_dict()
 	var payload: Dictionary = {
 		"version": VERSION,
-		"timestamp": int(Time.get_unix_time_from_system()),
-		"label": (label if label != "" else slot_id),
-		"grove": GameState.to_dict(),                                 # ⬅ pulls current world snapshot
+		"meta": {
+			"timestamp": int(Time.get_unix_time_from_system()),
+			"label": (label if label != "" else slot_id),
+		},
 	}
+	for k in snapshot.keys():
+		payload[k] = snapshot[k]                          # ⬅ pulls current world snapshot
 
 	var json_str: String = JSON.stringify(payload, "\t")
 	var f: FileAccess = FileAccess.open(tmp, FileAccess.WRITE)
@@ -92,10 +100,11 @@ func load_grove(slot_id: String) -> bool:
 		push_error("Load failed: bad or missing file")
 		return false
 	var v: int = int(data.get("version", 1))
-	var grove_raw: Variant = data.get("grove", {})
-	var grove: Dictionary = grove_raw as Dictionary if grove_raw is Dictionary else {}
+	var grove: Dictionary = _normalize_payload(data)
 	if v != VERSION:
 		grove = _migrate(grove, v, VERSION)
+	if typeof(GameState) != TYPE_NIL and GameState.has_method("reset_runtime_state"):
+		GameState.reset_runtime_state()
 	GameState.from_dict(grove)                                         # ⬅ puts dict into pending
 	return true
 
@@ -116,6 +125,28 @@ func _try_read_json(path: String) -> Dictionary:
 	var v: Variant = JSON.parse_string(txt)
 	return (v as Dictionary) if v is Dictionary else {}
 
+func _normalize_payload(data: Dictionary) -> Dictionary:
+	if data.has("grove"):
+		var grove_v: Variant = data.get("grove", {})
+		var grove: Dictionary = grove_v as Dictionary if grove_v is Dictionary else {}
+		if grove.has("world") or grove.has("bank") or grove.has("villagers") or grove.has("villager_manager"):
+			return grove.duplicate(true)
+		return { "world": grove.duplicate(true) }
+
+	var normalized: Dictionary = {}
+	var world_v: Variant = data.get("world", null)
+	if world_v is Dictionary:
+		normalized["world"] = world_v
+	elif data.has("tiles"):
+		normalized["world"] = { "tiles": data.get("tiles", []) }
+
+	for k in ["bank", "villagers", "villager_manager", "settings"]:
+		var section_v: Variant = data.get(k, null)
+		if section_v is Dictionary:
+			normalized[k] = section_v
+
+	return normalized
+
 func _migrate(grove: Dictionary, from_v: int, to_v: int) -> Dictionary:
 	var data: Dictionary = grove.duplicate(true)
 	var v: int = from_v
@@ -128,3 +159,6 @@ func _migrate(grove: Dictionary, from_v: int, to_v: int) -> Dictionary:
 				pass
 		v += 1
 	return data
+	
+func load_run(slot_id: String) -> bool:
+	return load_grove(slot_id)
