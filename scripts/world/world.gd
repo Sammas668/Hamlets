@@ -1711,13 +1711,15 @@ func _on_fragment_clicked(f) -> void:
 func _on_fragment_selected(f: Node) -> void:
 	if f == null or not is_instance_valid(f):
 		return
+
+	# If HUD is docked, NEVER position it near the clicked tile.
+	if selection_hud != null and is_instance_valid(selection_hud) and selection_hud.has_method("get"):
+		if bool(selection_hud.get("dock_to_bottom_left")):
+			return
+
 	if f is Node2D:
 		var frag := f as Node2D
 		_update_selection_hud_position(frag.global_position)
-		if selection_hud != null and selection_hud.has_method("get"):
-			var docked: bool = bool(selection_hud.get("dock_to_bottom_left"))
-			if docked:
-				return
 
 func _update_selection_hud_position(world_pos: Vector2) -> void:
 	if selection_hud == null or not is_instance_valid(selection_hud):
@@ -2027,7 +2029,14 @@ func _show_empty_marker(ax: Vector2i) -> void:
 	var ok: bool = (not _has_fragment_at(ax)) and _is_adjacent_to_any(ax)
 	empty_marker.default_color = (Color(0.2, 1.0, 0.2, 0.9) if ok else Color(1.0, 0.2, 0.2, 0.9))
 	empty_marker.visible = true
+
+	# If docked, don't "follow" the marker.
+	if selection_hud != null and is_instance_valid(selection_hud) and selection_hud.has_method("get"):
+		if bool(selection_hud.get("dock_to_bottom_left")):
+			return
+
 	_update_selection_hud_position(to_global(empty_marker.position))
+
 
 func _has_fragment_at(ax: Vector2i) -> bool:
 	# Authoritative: scan children and check their coord

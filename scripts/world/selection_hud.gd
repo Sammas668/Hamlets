@@ -18,11 +18,25 @@ signal building_slot_requested(ax: Vector2i, slot_type: String, slot_index: int)
 @export var force_on_top: bool = true
 
 # Larger, readable defaults (tweak in inspector if desired)
-@export var min_panel_size: Vector2 = Vector2(560, 460)
-@export var min_scroll_height: float = 380.0
+@export var min_panel_size: Vector2 = Vector2(720, 620)
+@export var min_scroll_height: float = 520.0
+
+@export var font_tile_title: int = 34
+@export var font_section_title: int = 26
+@export var font_body: int = 22
+@export var font_small: int = 20
+
+@export var header_icon_size: Vector2 = Vector2(64, 64)
+@export var list_icon_size: Vector2 = Vector2(28, 28)
+@export var list_row_sep: int = 10
+
 
 const MAX_MODIFIERS_COLLAPSED: int = 9
-const MODIFIER_ICON_SIZE: Vector2 = Vector2(34, 34)
+const MODIFIER_ICON_SIZE: Vector2 = Vector2(36, 36)
+
+const LIST_ICON_SIZE: Vector2 = Vector2(22, 22) # icons before names in lists
+const LIST_ROW_SEP: int = 8
+
 
 var _current_fragment: Node = null
 var _current_coord: Vector2i = Vector2i.ZERO
@@ -86,6 +100,7 @@ var _apply_seq: int = 0
 
 
 func _ready() -> void:
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	visible = false
 
 	if force_on_top:
@@ -104,6 +119,7 @@ func _ready() -> void:
 
 	_apply_panel_style()
 	_cache_nodes()
+	_apply_readability_pass()
 	_enforce_layout_floors()
 
 	call_deferred("_apply_full_width_constraints")
@@ -136,6 +152,11 @@ func _ready() -> void:
 
 func _get_drag_data(_at_position: Vector2) -> Variant:
 	# HUD should NEVER be a drag source.
+	print("[SelectionHUD] DRAG START ", get_path())
+	print_stack()
+	var vp: Viewport = get_viewport()
+	if vp != null:
+		vp.gui_cancel_drag()
 	return null
 # -------------------------
 # Node caching
@@ -403,14 +424,15 @@ func _apply_panel_style() -> void:
 	style.shadow_size = 10
 	add_theme_stylebox_override("panel", style)
 
-	add_theme_font_size_override("font_size", 20)
-	add_theme_constant_override("line_spacing", 4)
-	add_theme_constant_override("separation", 10)
+	add_theme_font_size_override("font_size", 22)
+	add_theme_constant_override("separation", 14)
+	add_theme_constant_override("line_spacing", 8)
 
-	add_theme_constant_override("content_margin_left", 14)
-	add_theme_constant_override("content_margin_right", 14)
-	add_theme_constant_override("content_margin_top", 14)
-	add_theme_constant_override("content_margin_bottom", 14)
+	add_theme_constant_override("content_margin_left", 18)
+	add_theme_constant_override("content_margin_right", 18)
+	add_theme_constant_override("content_margin_top", 18)
+	add_theme_constant_override("content_margin_bottom", 18)
+
 
 
 func _apply_tab_button_style(btn: Button, active: bool) -> void:
@@ -440,7 +462,7 @@ func _apply_tab_button_style(btn: Button, active: bool) -> void:
 	btn.add_theme_stylebox_override("hover", sb)
 	btn.add_theme_stylebox_override("pressed", sb)
 	btn.add_theme_stylebox_override("focus", sb)
-	btn.add_theme_font_size_override("font_size", 18)
+	btn.add_theme_font_size_override("font_size", 20)
 
 
 func _on_viewport_size_changed() -> void:
@@ -674,24 +696,28 @@ func _update_tile_tab() -> void:
 	var coord_text: String = "%d,%d" % [_current_coord.x, _current_coord.y]
 
 	if _tile_icon:
-		_tile_icon.custom_minimum_size = Vector2(48, 48)
-		_tile_icon.texture = _get_biome_icon(_current_fragment, biome_str)
+		_tile_icon.custom_minimum_size = header_icon_size
+
 	if _tile_name_label:
 		_tile_name_label.text = tile_name
-		_tile_name_label.add_theme_font_size_override("font_size", 22)
+		_tile_name_label.add_theme_font_size_override("font_size", font_tile_title)
+
 	if _tile_coord_label:
 		_tile_coord_label.text = "Coord: %s" % coord_text
-		_tile_coord_label.add_theme_font_size_override("font_size", 18)
+		_tile_coord_label.add_theme_font_size_override("font_size", font_small)
+
 	if _tile_tier_label:
 		_tile_tier_label.text = "T%d" % tier_val
-		_tile_tier_label.add_theme_font_size_override("font_size", 18)
+		_tile_tier_label.add_theme_font_size_override("font_size", font_small)
+		
 
 	var mods: Array = _get_modifiers_from_fragment(_current_fragment)
 	_populate_modifiers_grid(mods)
 
 	var resources: Array = _get_resource_nodes_for_tile(_current_coord)
-	var resource_lines: Array[String] = _build_resource_lines(resources)
-	_populate_list(_tile_resources_list, resource_lines, "No resource nodes")
+	var resource_entries: Array = _build_resource_entries(resources)
+	_populate_entries(_tile_resources_list, resource_entries, "No resource nodes")
+
 	_set_section_visible(_tile_resources_section, true)
 
 	var effect_lines: Array[String] = _get_effect_lines(_current_fragment)
@@ -728,8 +754,28 @@ func _get_tile_tier(fragment: Node) -> int:
 	return int(v)
 
 
-func _get_biome_icon(_fragment: Node, _biome_str: String) -> Texture2D:
+func _get_biome_icon(_fragment: Node, biome_str: String) -> Texture2D:
+	var key := biome_str.strip_edges().to_lower()
+	if key == "":
+		return null
+
+	# Try a biome icon first
+	var p1 := "res://assets/icons/biomes/%s.png" % key
+	if ResourceLoader.exists(p1):
+		return load(p1) as Texture2D
+
+	# Fallback to your existing biome icon set if it's somewhere else
+	var p2 := "res://assets/icons/biomes/%s_icon.png" % key
+	if ResourceLoader.exists(p2):
+		return load(p2) as Texture2D
+
+	# Final fallback
+	var p3 := "res://assets/icons/biomes/default.png"
+	if ResourceLoader.exists(p3):
+		return load(p3) as Texture2D
+
 	return null
+
 
 
 func _get_modifiers_from_fragment(frag: Node) -> Array:
@@ -947,8 +993,11 @@ func _build_resource_nodes_from_modifiers(fragment: Node) -> Array:
 	return nodes
 
 
-func _build_resource_lines(nodes: Array) -> Array[String]:
-	var counts: Dictionary = {}
+func _build_resource_entries(nodes: Array) -> Array:
+	# Aggregates duplicates and keeps an icon per entry (based on skill)
+	var counts: Dictionary = {}  # label -> int
+	var icons: Dictionary = {}   # label -> Texture2D
+
 	for n_v in nodes:
 		if typeof(n_v) != TYPE_DICTIONARY:
 			continue
@@ -956,21 +1005,32 @@ func _build_resource_lines(nodes: Array) -> Array[String]:
 
 		var skill: String = String(n.get("skill", "")).strip_edges()
 		var detail: String = String(n.get("detail", "")).strip_edges()
+
 		var label: String = detail if detail != "" else skill
 		if label == "":
 			continue
 
 		counts[label] = int(counts.get(label, 0)) + 1
+		if not icons.has(label):
+			icons[label] = _resource_icon_for_skill(skill)
 
-	var lines: Array[String] = []
-	for key in counts.keys():
-		var qty: int = int(counts[key])
-		if qty > 1:
-			lines.append("%s ×%d" % [String(key), qty])
-		else:
-			lines.append(String(key))
-	lines.sort()
-	return lines
+	var labels: Array = counts.keys()
+	labels.sort()
+
+	var entries: Array = []
+	for k_v in labels:
+		var k: String = String(k_v)
+		var qty: int = int(counts[k])
+		var line: String = k if qty <= 1 else ("%s ×%d" % [k, qty])
+
+		var tex: Texture2D = null
+		if icons.has(k) and icons[k] is Texture2D:
+			tex = icons[k] as Texture2D
+
+		entries.append({"text": line, "icon": tex, "header": false})
+
+	return entries
+
 
 
 func _get_effect_lines(fragment: Node) -> Array[String]:
@@ -994,6 +1054,92 @@ func _get_effect_lines(fragment: Node) -> Array[String]:
 			return lines2
 
 	return []
+
+func _resolve_item_icon(id: StringName) -> Texture2D:
+	if _items and _items.has_method("get_icon"):
+		var t_v: Variant = _items.call("get_icon", id)
+		if t_v is Texture2D:
+			return t_v as Texture2D
+	if _items and _items.has_method("get_icon_path"):
+		var p_v: Variant = _items.call("get_icon_path", id)
+		var path: String = String(p_v)
+		if path != "" and ResourceLoader.exists(path):
+			return load(path) as Texture2D
+	return null
+
+
+func _resource_icon_for_skill(skill: String) -> Texture2D:
+	var s: String = skill.strip_edges().to_lower()
+	if s == "":
+		return null
+	var path: String = "res://assets/icons/modifiers/%s_node.png" % s
+	if ResourceLoader.exists(path):
+		return load(path) as Texture2D
+	return null
+
+func _build_list_row(text: String, icon_tex: Texture2D, header: bool = false) -> Control:
+	if text.strip_edges() == "":
+		var spacer := Control.new()
+		spacer.custom_minimum_size = Vector2(0, 8)
+		return spacer
+
+	var row := HBoxContainer.new()
+	row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_theme_constant_override("separation", list_row_sep)
+
+	var icon_holder := TextureRect.new()
+	icon_holder.custom_minimum_size = list_icon_size
+	icon_holder.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon_holder.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon_holder.texture = icon_tex
+	row.add_child(icon_holder)
+
+	# Keep alignment even if no icon
+	if icon_tex == null:
+		icon_holder.modulate = Color(1, 1, 1, 0) # invisible but keeps spacing
+
+	var label := Label.new()
+	label.text = text
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	label.clip_text = false
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	label.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	label.add_theme_color_override("font_color", Color(0.92, 0.92, 0.94))
+	label.add_theme_color_override("font_outline_color", Color(0, 0, 0, 0.35))
+	label.add_theme_constant_override("outline_size", 1)
+	label.add_theme_font_size_override("font_size", font_body if not header else font_section_title)
+	label.add_theme_constant_override("outline_size", 2)
+
+
+	row.add_child(label)
+	return row
+
+
+func _populate_entries(list_node: VBoxContainer, entries: Array, placeholder: String = "") -> void:
+	if list_node == null:
+		return
+	_clear_container(list_node)
+
+	var out: Array = entries
+	if out.is_empty() and placeholder != "":
+		out = [{"text": placeholder, "icon": null, "header": false}]
+
+	for e_v in out:
+		var text: String = ""
+		var icon_tex: Texture2D = null
+		var header: bool = false
+
+		if e_v is Dictionary:
+			var d: Dictionary = e_v as Dictionary
+			text = String(d.get("text", ""))
+			var icon_v: Variant = d.get("icon", null)
+			if icon_v is Texture2D:
+				icon_tex = icon_v as Texture2D
+			header = bool(d.get("header", false))
+		else:
+			text = String(e_v)
+
+		list_node.add_child(_build_list_row(text, icon_tex, header))
 
 
 func _populate_list(list_node: VBoxContainer, lines: Array[String], placeholder: String = "") -> void:
@@ -1050,10 +1196,10 @@ func _update_building_tab() -> void:
 	if not has_base:
 		if _building_name_label:
 			_building_name_label.text = "No Building"
-			_building_name_label.add_theme_font_size_override("font_size", 22)
+			_building_name_label.add_theme_font_size_override("font_size", 26)
 		if _building_status_label:
 			_building_status_label.text = "No building placed"
-			_building_status_label.add_theme_font_size_override("font_size", 18)
+			_building_status_label.add_theme_font_size_override("font_size", 20)
 		if _building_tier_label:
 			_building_tier_label.text = ""
 		for btn0 in _module_slots:
@@ -1065,6 +1211,10 @@ func _update_building_tab() -> void:
 			_building_io_row.visible = false
 		if _building_buttons_row:
 			_building_buttons_row.visible = false
+
+		# Clear lists safely
+		_populate_list(_building_inputs_list, [], "No inputs")
+		_populate_list(_building_outputs_list, [], "(not defined)")
 		return
 
 	# Base exists -> show module slots + IO row
@@ -1126,16 +1276,16 @@ func _update_building_tab() -> void:
 
 	if _building_status_label:
 		_building_status_label.text = "\n".join(status_lines)
-		_building_status_label.add_theme_font_size_override("font_size", 18)
+		_building_status_label.add_theme_font_size_override("font_size", 20)
 
 	if _building_tier_label:
-		_building_tier_label.text = "T%d" % b_build_tier if b_build_tier > 0 else ""
-		_building_tier_label.add_theme_font_size_override("font_size", 18)
+		_building_tier_label.text = ("T%d" % b_build_tier) if b_build_tier > 0 else ""
+		_building_tier_label.add_theme_font_size_override("font_size", 20)
 
-	# Inputs: recipe.inputs for base + (optionally) each module
-	var input_lines: Array[String] = []
-	input_lines.append("Base inputs:")
-	input_lines.append_array(_format_inputs_from_recipe(base_rec))
+	# Inputs: entries with icons
+	var input_entries: Array = []
+	input_entries.append({"text":"Base inputs:", "icon": null, "header": true})
+	input_entries.append_array(_format_input_entries_from_recipe(base_rec))
 
 	# Add module inputs
 	for m_v2 in mods:
@@ -1146,11 +1296,12 @@ func _update_building_tab() -> void:
 			continue
 		var mrec2: Dictionary = _get_construction_recipe(mid2)
 		var mlabel2: String = String(mrec2.get("label", mid2))
-		input_lines.append("") # spacer
-		input_lines.append("Module: %s" % mlabel2)
-		input_lines.append_array(_format_inputs_from_recipe(mrec2))
 
-	_populate_list(_building_inputs_list, input_lines, "No inputs")
+		input_entries.append({"text":"", "icon": null, "header": false, "spacer": true})
+		input_entries.append({"text":"Module: %s" % mlabel2, "icon": null, "header": true})
+		input_entries.append_array(_format_input_entries_from_recipe(mrec2))
+
+	_populate_entries(_building_inputs_list, input_entries, "No inputs")
 
 	# Outputs: do not fabricate (ConstructionSystem recipes don’t define outputs for buildings)
 	_populate_list(_building_outputs_list, ["(not defined)"], "(not defined)")
@@ -1198,6 +1349,41 @@ func _format_inputs_from_recipe(rec: Dictionary) -> Array[String]:
 	if lines.is_empty():
 		lines.append("(none)")
 	return lines
+
+func _format_input_entries_from_recipe(rec: Dictionary) -> Array:
+	var entries: Array = []
+	var inputs_v: Variant = rec.get("inputs", [])
+	if typeof(inputs_v) != TYPE_ARRAY:
+		return entries
+
+	var inputs: Array = inputs_v as Array
+	if inputs.is_empty():
+		entries.append({"text":"(none)", "icon": null, "header": false})
+		return entries
+
+	for inp_v in inputs:
+		if typeof(inp_v) != TYPE_DICTIONARY:
+			continue
+		var inp: Dictionary = inp_v as Dictionary
+		var qty: int = int(inp.get("qty", 0))
+		if qty <= 0:
+			continue
+
+		var item_any: Variant = inp.get("item", "")
+		var item_id: StringName = StringName("")
+		if item_any is StringName:
+			item_id = item_any as StringName
+		else:
+			item_id = StringName(String(item_any))
+
+		var item_label: String = _resolve_item_label(item_id)
+		var icon_tex: Texture2D = _resolve_item_icon(item_id)
+
+		entries.append({"text":"%d× %s" % [qty, item_label], "icon": icon_tex, "header": false})
+
+	if entries.is_empty():
+		entries.append({"text":"(none)", "icon": null, "header": false})
+	return entries
 
 
 func _resolve_item_label(id: StringName) -> String:
@@ -1632,3 +1818,18 @@ func _sync_coord_from_fragment(frag: Node) -> void:
 	var meta_ax: Variant = frag.get_meta("coord", null)
 	if meta_ax is Vector2i:
 		_current_coord = meta_ax as Vector2i
+
+func _apply_readability_pass() -> void:
+	var section_titles := [
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader/TileModifiersTitle",
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileResourcesSection/TileResourcesTitle",
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileEffectsSection/TileEffectsTitle",
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/EquippedTitle",
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs/BuildingInputsTitle",
+		"Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs/BuildingOutputsTitle",
+	]
+
+	for p in section_titles:
+		var lbl := get_node_or_null(p) as Label
+		if lbl:
+			lbl.add_theme_font_size_override("font_size", font_section_title)

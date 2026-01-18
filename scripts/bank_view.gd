@@ -107,6 +107,9 @@ class BankSlotButton:
 		if preview:
 			preview.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
+		print("DRAG START ", get_path())
+		print_stack()
+		
 		force_drag(data, preview)
 
 	func _build_drag_data() -> Variant:

@@ -276,8 +276,7 @@ layout_mode = 2
 text = "Close"
 
 [node name="SelectionHUD" type="Panel" parent="CanvasLayer"]
-custom_minimum_size = Vector2(420, 320)
-offset_left = 7.0
+custom_minimum_size = Vector2(640, 520)
 offset_top = 59.0
 offset_right = 427.0
 offset_bottom = 379.0
@@ -285,15 +284,14 @@ script = ExtResource("2_32lhk")
 debug_logging = true
 
 [node name="Margin" type="MarginContainer" parent="CanvasLayer/SelectionHUD"]
-custom_minimum_size = Vector2(540, 0)
+custom_minimum_size = Vector2(620, 0)
 layout_mode = 0
 offset_left = 10.0
-offset_right = 550.0
-offset_bottom = 81.0
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 16
+offset_right = 630.0
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 18
 
 [node name="RootVBox" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin"]
 layout_mode = 2
@@ -378,6 +376,12 @@ layout_mode = 2
 [node name="TileTierLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileTierChip"]
 layout_mode = 2
 text = "T1"
+
+[node name="TileIcon2" type="TextureRect" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow"]
+custom_minimum_size = Vector2(52, 52)
+layout_mode = 2
+expand_mode = 2
+stretch_mode = 5
 
 [node name="TileModifiersSection" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab"]
 layout_mode = 2
