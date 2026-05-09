@@ -294,7 +294,24 @@ const HERBALISM_PATCH_NAME_TO_ICON := {
 	"Caprock Cotton Tufts":                      "res://assets/icons/modifiers/herb_caprock_patch.png",
 	"Pitchcap Hemp Caps":                        "res://assets/icons/modifiers/herb_pitchcap_patch.png",
 }
-
+# ---------------------------------------------------
+# Legacy Herbalism names still emitted by World.gd
+# These stop old BIOME_MODIFIERS entries falling back to the generic herbalism icon.
+# ---------------------------------------------------
+const HERBALISM_LEGACY_NAME_TO_ICON := {
+	"Field Edge Herb Patch":        "res://assets/icons/modifiers/herb_stoneedge_patch.png",
+	"Herb-Circle Plot":            "res://assets/icons/modifiers/herb_greenveil_patch.png",
+	"Reed Bed":                    "res://assets/icons/modifiers/herb_reedrun_patch.png",
+	"Saltmarsh Reeds":             "res://assets/icons/modifiers/herb_brineback_patch.png",
+	"Dye-Mushroom Ring":           "res://assets/icons/modifiers/herb_silkshade_patch.png",
+	"Root-Hung Ledge":             "res://assets/icons/modifiers/herb_sinkbloom_patch.png",
+	"Medicinal Bush Patch":        "res://assets/icons/modifiers/herb_baobab_patch.png",
+	"Lotus Channel":               "res://assets/icons/modifiers/herb_lotusbank_patch.png",
+	"Reedbank Margin":             "res://assets/icons/modifiers/herb_lotusbank_patch.png",
+	"Fruit Canopy Grove":          "res://assets/icons/modifiers/herb_highwood_patch.png",
+	"Mist-Covered Herb Shelf":     "res://assets/icons/modifiers/herb_mistshelf_patch.png",
+	"Wadi Scrub Herbs":            "res://assets/icons/modifiers/herb_incense_patch.png",
+}
 # ===================================================
 # Lifecycle
 # ===================================================
@@ -360,7 +377,6 @@ func _resolve_resource_spawn_icon(name: String, skill: String, md: Dictionary) -
 
 func _resolve_herbalism_spawn_icon(name: String, md: Dictionary) -> String:
 	# 1) Prefer any available ID-like field.
-	# This prevents the one-frame/default-icon problem when name labels are not final yet.
 	var id_fields := [
 		"id",
 		"patch_id",
@@ -375,29 +391,30 @@ func _resolve_herbalism_spawn_icon(name: String, md: Dictionary) -> String:
 			if id_key != "" and HERBALISM_PATCH_ID_TO_ICON.has(id_key):
 				return String(HERBALISM_PATCH_ID_TO_ICON[id_key])
 
-	# 2) Exact display-name match.
+	# 2) Exact new-name match.
 	if HERBALISM_PATCH_NAME_TO_ICON.has(name):
 		return String(HERBALISM_PATCH_NAME_TO_ICON[name])
 
-	# 3) Normalized display-name match.
+	# 3) Exact old-name match from World.gd.
+	if HERBALISM_LEGACY_NAME_TO_ICON.has(name):
+		return String(HERBALISM_LEGACY_NAME_TO_ICON[name])
+
+	# 4) Normalized new-name match.
 	var normalized_name_icon: Variant = _dict_get_norm(HERBALISM_PATCH_NAME_TO_ICON, name)
 	if normalized_name_icon != null:
 		return String(normalized_name_icon)
 
-	# 4) Slugged display-name match against ID table.
+	# 5) Normalized old-name match.
+	var normalized_legacy_icon: Variant = _dict_get_norm(HERBALISM_LEGACY_NAME_TO_ICON, name)
+	if normalized_legacy_icon != null:
+		return String(normalized_legacy_icon)
+
+	# 6) Slugged display-name match against ID table.
 	var name_slug := _slug_key(name)
 	if name_slug != "" and HERBALISM_PATCH_ID_TO_ICON.has(name_slug):
 		return String(HERBALISM_PATCH_ID_TO_ICON[name_slug])
 
-	# 5) Backstop: if the name contains one of the known patch names, use that.
-	# This helps if UI text becomes "Forest Thyme Plot [herbalism]" or similar.
-	var name_norm := _norm_key(name)
-	for patch_name in HERBALISM_PATCH_NAME_TO_ICON.keys():
-		var patch_norm := _norm_key(String(patch_name))
-		if patch_norm != "" and name_norm.find(patch_norm) != -1:
-			return String(HERBALISM_PATCH_NAME_TO_ICON[patch_name])
-
-	# 6) Final fallback: generic Herbalism icon.
+	# 7) Final fallback.
 	return String(MOD_SKILL_ICON_PATHS["herbalism"])
 
 func _get_modifier_icon_scale(name: String, kind: String, icon_path: String) -> float:

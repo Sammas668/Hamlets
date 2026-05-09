@@ -174,7 +174,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Tin Vein",              "kind": "Resource Spawn",  "rarity": "Common",   "skill": "mining" },
 
 		# ✅ T1 mining-biome herb patch (tailoring fibre band)
-		{ "name": "Stoneedge Cragweave Beds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Stoneedge Flax Verge", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Deep Warrens",          "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Loose Scree Slope",     "kind": "Hazard",          "rarity": "Uncommon" },
@@ -190,7 +190,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Surface Copper Vein",   "kind": "Resource Spawn",  "rarity": "Rare",     "skill": "mining" },
 
 		# ✅ T1 woodcutting-biome herb patch (cooking herb)
-		{ "name": "Greenveil Forestglade", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Forest Thyme Plot", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Hollow Log Den",        "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Shrine of Growth",      "kind": "Structure",       "rarity": "Uncommon" },
@@ -210,7 +210,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Willow Grove",          "kind": "Resource Spawn",  "rarity": "Rare",     "skill": "woodcutting" },
 
 		# ✅ T1 fishing-biome herb patch (chemical herb)
-		{ "name": "Reedrun Riverbank Reeds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "River Marshmallow Root Reeds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Abandoned Den",         "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Waterside Shrine",      "kind": "Structure",       "rarity": "Uncommon" },
@@ -233,7 +233,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Minnow Ford Pool",      "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "fishing" }, # R1
 
 		# ✅ T2 woodcutting-biome herb patch (cooking herb)
-		{ "name": "Maplefold Vale Understory", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Maplewood Vale Sage Plot", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Old Root Cellar",       "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Wayside Shrine",        "kind": "Structure",       "rarity": "Uncommon" },
@@ -252,7 +252,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Sandstone Shelf",       "kind": "Resource Spawn",  "rarity": "Common",   "skill": "mining" },
 
 		# ✅ T2 fishing-biome herb patch (chemical herb)
-		{ "name": "Brineback Estuary Saltbeds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Rocky Estuary Sea Wormwood Reeds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Wrecked Keel",          "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Beacon Pile",           "kind": "Structure",       "rarity": "Uncommon" },
@@ -271,7 +271,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Claybank Exposure",     "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T2 mining-biome herb patch (tailoring fibre band)
-		{ "name": "Tanninbush Foothill Thicket", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Stoneedge Flax Verge", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Abandoned Adit",        "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Survey Cairn",          "kind": "Structure",       "rarity": "Uncommon" },
@@ -290,7 +290,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Thick Oakwood Grove",   "kind": "Resource Spawn",  "rarity": "Common",   "skill": "woodcutting" },
 
 		# ✅ T3 woodcutting-biome herb patch (cooking herb)
-		{ "name": "Silkshade Canopy Beds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Silkwood Fennel Ring", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Warren Hollow",         "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Charm-Strung Shrine",   "kind": "Structure",       "rarity": "Uncommon" },
@@ -307,7 +307,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Ivy Grove",             "kind": "Resource Spawn",  "rarity": "Common",   "skill": "woodcutting" },
 
 		# ✅ T3 fishing-biome herb patch (chemical herb)
-		{ "name": "Sinkbloom Cenote Bloomring", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Cenote Sinkholes Gotu Kola Ledge", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Submerged Cave Grotto", "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Cenote Offering Shrine","kind": "Structure",       "rarity": "Uncommon" },
@@ -323,7 +323,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Lesser Gem Geode",      "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T3 mining-biome herb patch (tailoring fibre band)
-		{ "name": "Ochreshelf Canyon Fibreflats", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Ochreshelf Silk Cocoon Beds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Smuggler’s Bolt-Hole",  "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Painted Marker Totems", "kind": "Structure",       "rarity": "Uncommon" },
@@ -344,7 +344,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Thick Pine Grove",      "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "woodcutting" },
 
 		# ✅ T4 woodcutting-biome herb patch (cooking herb)
-		{ "name": "Cloudpine Terrace Needlebed", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Cloudpine Terraces Rosemary Bed", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Terrace Burrow",        "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Hillside Waystone",     "kind": "Structure",       "rarity": "Uncommon" },
@@ -362,7 +362,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Lesser Gem Geode",      "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T4 fishing-biome herb patch (chemical herb)
-		{ "name": "Echofall Sprayroot Ledge", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Karst Cascade Gorge Water Hemlock Shelf", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Flooded Cavern",        "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Overlook Shrine",       "kind": "Structure",       "rarity": "Uncommon" },
@@ -378,7 +378,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Lesser Gem Geode",      "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T4 mining-biome herb patch (tailoring fibre band)
-		{ "name": "Ironmoss Talus Mats", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Ochreshelf Silk Cocoon Beds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Collapsed Drift Tunnel","kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Survey Obelisk",        "kind": "Structure",       "rarity": "Uncommon" },
@@ -398,7 +398,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Thick Maple Grove",     "kind": "Resource Spawn",  "rarity": "Common",   "skill": "woodcutting" },
 
 		# ✅ T5 woodcutting-biome herb patch (cooking herb)
-		{ "name": "Baobab Sunleaf Flats", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Baobab Savanna Lemongrass Patch", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Oxbow Bend Pool",       "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "fishing" },
 
@@ -415,7 +415,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Leviathan Channel",     "kind": "Resource Spawn",  "rarity": "Common",   "skill": "fishing" },
 
 		# ✅ T5 fishing-biome herb patch (chemical herb)
-		{ "name": "Lotusbank Floodplain Pools", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Floodplain Bittersweet Nightshade Channel", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Hidden Hippo Path",     "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "River Spirit Marker",   "kind": "Structure",       "rarity": "Uncommon" },
@@ -433,7 +433,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Opaline Seam",          "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T5 mining-biome herb patch (tailoring fibre band)
-		{ "name": "Redroot Riftvine Beds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Caprock Cotton Tufts", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Collapsed Rift Tunnel", "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Old Survey Beacon",     "kind": "Structure",       "rarity": "Uncommon" },
@@ -451,7 +451,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Thick Yew Grove",       "kind": "Resource Spawn",  "rarity": "Common",   "skill": "woodcutting" },
 
 		# ✅ T6 cooking herb
-		{ "name": "Highwood Rain-Thicket", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Rainforest Highwood Ginger Canopy", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Canopy Nest Hollow",    "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Rain-Spirit Totem",     "kind": "Structure",       "rarity": "Uncommon" },
@@ -464,7 +464,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Chasm Surge Run",       "kind": "Resource Spawn",  "rarity": "Common",   "skill": "fishing" },
 
 		# ✅ T6 chemical herb
-		{ "name": "Mistshelf Gorge Vaporgrowth", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "River Gorge Valerian Shelf", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Mithrite Seam",         "kind": "Resource Spawn",  "rarity": "Rare",     "skill": "mining" },
 
@@ -481,7 +481,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Silver Seam",           "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T6 fibre herb
-		{ "name": "Caprock Mesa Cordfields", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Caprock Cotton Tufts", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Windcleft Crevasse",    "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Sun-Table Waystone",    "kind": "Structure",       "rarity": "Uncommon" },
@@ -499,7 +499,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Thick Ironwood Grove",  "kind": "Resource Spawn",  "rarity": "Common",   "skill": "woodcutting" },
 
 		# ✅ T7 cooking herb
-		{ "name": "Incense Grove Resinwalk", "kind": "Resource Spawn", "rarity": "Common", "skill": "herbalism" },
+		{ "name": "Incense Groves Coriander Scrub", "kind": "Resource Spawn", "rarity": "Common", "skill": "herbalism" },
 
 		{ "name": "Mithrite Seam",         "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
@@ -517,7 +517,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Palm Grove",            "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "woodcutting" },
 
 		# ✅ T7 chemical herb
-		{ "name": "Skywell Oasis Dewbeds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Floating Oasis Aloe Garden", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Bandit Balcony Hideout","kind":"Dungeon / Delve",  "rarity": "Rare" },
 		{ "name": "Oasis Wayhouse",        "kind": "Structure",       "rarity": "Uncommon" },
@@ -531,7 +531,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Adamantite Seam",       "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T7 fibre herb
-		{ "name": "Saltbloom Dome Brinefields", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Pitchcap Hemp Caps", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Dome-Heart Cavern",     "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Crystal Survey Stele",  "kind": "Structure",       "rarity": "Uncommon" },
@@ -549,7 +549,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Thick Redwood Grove",   "kind": "Resource Spawn",  "rarity": "Common",   "skill": "woodcutting" },
 
 		# ✅ T8 cooking herb
-		{ "name": "Boreal Needleheath", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Boreal Ridge Juniper Bed", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Wolf-Warren Ravine",    "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Aurora Stone",          "kind": "Structure",       "rarity": "Uncommon" },
@@ -564,7 +564,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Ice Geode Outcrop",     "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T8 chemical herb
-		{ "name": "Frostlip Tarn Iceleaf Beds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Frozen Tarn Frost Kava Ledge", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Subglacial Grotto",     "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Prayer Cairn",          "kind": "Structure",       "rarity": "Uncommon" },
@@ -582,7 +582,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Adamantite Vein",       "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T8 fibre herb
-		{ "name": "Lichencrust Steppe Threadflats", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Pitchcap Hemp Caps", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Buried Relic Pit",      "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Wind-Altar Monolith",   "kind": "Structure",       "rarity": "Uncommon" },
@@ -600,7 +600,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Thick Sakura Grove",    "kind": "Resource Spawn",  "rarity": "Common",   "skill": "woodcutting" },
 
 		# ✅ T9 cooking herb
-		{ "name": "Cinderwood Ashgarden", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Ashfield Cinderwood Oregano Patch", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Brimstone Crust",       "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
@@ -619,7 +619,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Marble Shelf",          "kind": "Resource Spawn",  "rarity": "Uncommon", "skill": "mining" },
 
 		# ✅ T9 chemical herb
-		{ "name": "Steamroot Geysergarden", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Drakefire Geyser Datura Beds", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Steam Tunnel",          "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Geyser Obelisk",        "kind": "Structure",       "rarity": "Uncommon" },
@@ -636,7 +636,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Rare Gem Geode",        "kind": "Resource Spawn",  "rarity": "Rare",     "skill": "mining" },
 
 		# ✅ T9 fibre herb
-		{ "name": "Pitchcap Underforge Caps", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Pitchcap Hemp Caps", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Lava Bridge Delve",     "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "War-Forge Shrine",      "kind": "Structure",       "rarity": "Uncommon" },
@@ -654,7 +654,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Thick Elder Grove",     "kind": "Resource Spawn",  "rarity": "Common",   "skill": "woodcutting" },
 
 		# ✅ T10 cooking herb
-		{ "name": "Starbloom Skymeadow", "kind": "Resource Spawn", "rarity": "Common", "skill": "herbalism" },
+		{ "name": "Celestial Grove Star Anise Scar", "kind": "Resource Spawn", "rarity": "Common", "skill": "herbalism" },
 
 		{ "name": "Moonshadow Thicket",    "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Radiant Stone Circle",  "kind": "Structure",       "rarity": "Uncommon" },
@@ -667,7 +667,7 @@ const BIOME_MODIFIERS := {
 		{ "name": "Abyssal Star Trench",   "kind": "Resource Spawn",  "rarity": "Common",   "skill": "fishing" },
 
 		# ✅ T10 chemical herb
-		{ "name": "Starkelp Kelpfields", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
+		{ "name": "Starsea Rift Bladderwrack Kelpfield", "kind": "Resource Spawn", "rarity": "Uncommon", "skill": "herbalism" },
 
 		{ "name": "Inverted Rain Cavern",  "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Rift Anchor Monolith",  "kind": "Structure",       "rarity": "Uncommon" },
@@ -681,15 +681,14 @@ const BIOME_MODIFIERS := {
 		{ "name": "Aetheric Rift",         "kind": "Resource Spawn",  "rarity": "Rare",     "skill": "mining" },
 		{ "name": "Mythic Gem Geode",      "kind": "Resource Spawn",  "rarity": "Rare",     "skill": "mining" },
 
-		# ✅ T10 fibre herb (renamed from Voidbark Patch)
-		{ "name": "Umbralweave Voidbeds", "kind": "Resource Spawn", "rarity": "Rare", "skill": "herbalism" },
+		# ✅ T10 fibre herb
+		{ "name": "Pitchcap Hemp Caps", "kind": "Resource Spawn", "rarity": "Rare", "skill": "herbalism" },
 
 		{ "name": "Fault of Fallen Wings", "kind": "Dungeon / Delve", "rarity": "Rare" },
 		{ "name": "Chain of Light Pylon",  "kind": "Structure",       "rarity": "Uncommon" },
 		{ "name": "Null Pocket",           "kind": "Hazard",          "rarity": "Uncommon" },
 	],
 }
-
 
 # Main gathering skill per biome for resource spawns
 const BIOME_MAIN_SKILL := {
