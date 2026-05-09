@@ -1323,12 +1323,25 @@ func _rebuild_world_from_pending() -> void:
 
 	# Optionally set a sane default selection for WorldQuery
 	if typeof(WorldQuery) != TYPE_NIL and d.has("tiles"):
-		var arr: Array = d["tiles"]
-		if arr.size() > 0:
-			var t0: Dictionary = arr[0]
-			var ax0 := Vector2i(int(t0.get("q", 0)), int(t0.get("r", 0)))
-			if WorldQuery.has_method("set_selected"):
-				WorldQuery.set_selected(ax0)
+		var tiles_v: Variant = d["tiles"]
+		var ax0: Vector2i = Vector2i.ZERO
+		var has_ax: bool = false
+		if tiles_v is Array:
+			var arr: Array = tiles_v
+			if arr.size() > 0 and arr[0] is Dictionary:
+				var t0: Dictionary = arr[0]
+				ax0 = Vector2i(int(t0.get("q", 0)), int(t0.get("r", 0)))
+				has_ax = true
+		elif tiles_v is Dictionary:
+			var tiles_d: Dictionary = tiles_v
+			if not tiles_d.is_empty():
+				var key_v: Variant = tiles_d.keys()[0]
+				var ax_v: Variant = _parse_coord_key(String(key_v))
+				if ax_v is Vector2i:
+					ax0 = ax_v
+					has_ax = true
+		if has_ax and WorldQuery.has_method("set_selected"):
+			WorldQuery.set_selected(ax0)
 
 	# Close load panel, keep pause up for UX clarity
 	if is_instance_valid(load_panel): load_panel.hide()
@@ -1347,6 +1360,9 @@ func _on_pause_settings() -> void:
 		settings_panel.visible = true
 
 func _on_pause_main_menu() -> void:
+	var GS := get_node_or_null("/root/GameState")
+	if GS and GS.has_method("reset_runtime_state"):
+		GS.call("reset_runtime_state")
 	get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")
 
 func _on_pause_quit() -> void:
@@ -1354,11 +1370,14 @@ func _on_pause_quit() -> void:
 
 # ---------- WORLD SNAPSHOT / RESTORE ----------
 func get_save_dict() -> Dictionary:
-	var tiles: Array = []
+	var tiles: Dictionary = {}
 	for c in fragments_root.get_children():
 		var td := _node_to_tile_dict(c)
 		if not td.is_empty():
-			tiles.append(td)
+			var q: int = int(td.get("q", 0))
+			var r: int = int(td.get("r", 0))
+			var ax := Vector2i(q, r)
+			tiles[_coord_key(ax)] = td
 	return {
 		"tiles": tiles,
 		"early_spawn_count": _early_spawn_count,
@@ -1368,6 +1387,16 @@ func get_save_dict() -> Dictionary:
 func _node_to_tile_dict(c: Node) -> Dictionary:
 	if c is Line2D:
 		return {}
+	
+	var building_id: String = ""
+	var building_modules: Array = []
+	if c.has_meta("building_id"):
+		building_id = String(c.get_meta("building_id", ""))
+	if c.has_meta("building_modules"):
+		var mods_v: Variant = c.get_meta("building_modules", [])
+		if mods_v is Array:
+			building_modules = mods_v
+
 
 	# Explicit Fragment save payload
 	if c is Fragment:
@@ -1383,7 +1412,7 @@ func _node_to_tile_dict(c: Node) -> Dictionary:
 		if typeof(WorldData) != TYPE_NIL and WorldData.has_method("is_anchored"):
 			anchored = bool(WorldData.is_anchored(f.coord))
 
-		return {
+		var tile_dict: Dictionary = {
 			"q": f.coord.x,
 			"r": f.coord.y,
 			"biome": f.biome,
@@ -1394,6 +1423,12 @@ func _node_to_tile_dict(c: Node) -> Dictionary:
 			"anchored": anchored,                 # ← already there
 			"recruited_villager_idx": f.recruited_villager_idx,  # ← ADD THIS
 		}
+		if building_id != "" or not building_modules.is_empty():
+			tile_dict["buildings"] = {
+				"base": building_id,
+				"modules": building_modules,
+			}
+		return tile_dict
 
 	# Legacy / generic case – nodes with a `coord` property
 	var coord_v: Variant = c.get("coord")
@@ -1403,7 +1438,13 @@ func _node_to_tile_dict(c: Node) -> Dictionary:
 		if biome_v is String:
 			biome_s = String(biome_v)
 		var coord: Vector2i = coord_v as Vector2i
-		return { "q": coord.x, "r": coord.y, "biome": biome_s }
+		var tile_dict2: Dictionary = { "q": coord.x, "r": coord.y, "biome": biome_s }
+		if building_id != "" or not building_modules.is_empty():
+			tile_dict2["buildings"] = {
+				"base": building_id,
+				"modules": building_modules,
+			}
+		return tile_dict2
 
 	# Very old fallback – infer axial from position
 	if c is Node2D:
@@ -1413,9 +1454,28 @@ func _node_to_tile_dict(c: Node) -> Dictionary:
 		var biome4_s: String = ""
 		if biome4_v is String:
 			biome4_s = String(biome4_v)
-		return { "q": ax.x, "r": ax.y, "biome": biome4_s }
+		var tile_dict3: Dictionary = { "q": ax.x, "r": ax.y, "biome": biome4_s }
+		if building_id != "" or not building_modules.is_empty():
+			tile_dict3["buildings"] = {
+				"base": building_id,
+				"modules": building_modules,
+			}
+		return tile_dict3
+
 
 	return {}
+
+func _coord_key(ax: Vector2i) -> String:
+	return "%d,%d" % [ax.x, ax.y]
+
+func _parse_coord_key(key: String) -> Variant:
+	var parts: PackedStringArray = key.split(",", false)
+	if parts.size() != 2:
+		return null
+	if not parts[0].is_valid_int() or not parts[1].is_valid_int():
+		return null
+	return Vector2i(int(parts[0]), int(parts[1]))
+
 
 func _restore_from_dict(d: Dictionary) -> void:
 	# 🔹 Clear Selection map before we rebuild all tiles
@@ -1426,12 +1486,45 @@ func _restore_from_dict(d: Dictionary) -> void:
 	_early_spawn_count = int(d.get("early_spawn_count", 0))
 	_early_recruit_guaranteed = bool(d.get("early_recruit_guaranteed", false))
 
-	var tiles: Array = d.get("tiles", [])
-	for t in tiles:
-		if not (t is Dictionary):
+	var tiles_raw: Variant = d.get("tiles", {})
+	var tiles: Array[Dictionary] = []
+	var invalid_keys: Array[String] = []
+
+	if tiles_raw is Dictionary:
+		var tiles_d: Dictionary = tiles_raw as Dictionary
+		for key_v in tiles_d.keys():
+			var key_str: String = String(key_v)
+			var ax_v: Variant = _parse_coord_key(key_str)
+			if ax_v == null:
+				invalid_keys.append(key_str)
+				continue
+			var td_v: Variant = tiles_d[key_v]
+			if not (td_v is Dictionary):
+				continue
+			var td: Dictionary = (td_v as Dictionary).duplicate(true)
+			var ax: Vector2i = ax_v as Vector2i
+			td["q"] = ax.x
+			td["r"] = ax.y
+			tiles.append(td)
+	elif tiles_raw is Array:
+		for t in tiles_raw:
+			if t is Dictionary:
+				tiles.append(t as Dictionary)
+
+	for bad_key in invalid_keys:
+		push_warning("[SaveLoad] Unrecognized tile coord key: %s" % bad_key)
+
+	if typeof(WorldData) != TYPE_NIL and WorldData.has_method("reset_runtime_state"):
+		WorldData.reset_runtime_state()
+
+	var prepared_tiles: Array[Dictionary] = []
+	var missing_biome_count: int = 0
+
+	for td in tiles:
+		if not td.has("q") or not td.has("r"):
+			push_warning("[SaveLoad] Tile entry missing q/r, skipping.")
 			continue
 
-		var td: Dictionary = t as Dictionary
 		var q: int = int(td.get("q", 0))
 		var r: int = int(td.get("r", 0))
 		var ax: Vector2i = Vector2i(q, r)
@@ -1452,46 +1545,105 @@ func _restore_from_dict(d: Dictionary) -> void:
 				b = "Hamlet"
 			else:
 				b = "Forest"
+			missing_biome_count += 1
+			push_warning("[SaveLoad] Missing biome for tile %s; defaulting to %s." % [_coord_key(ax), b])
 
-		var anchored: bool = bool(td.get("anchored", false))
+		prepared_tiles.append({
+			"ax": ax,
+			"biome": b,
+			"data": td,
+		})
+
+	if typeof(WorldData) != TYPE_NIL:
+		for entry in prepared_tiles:
+			var ax_w: Vector2i = entry["ax"]
+			var b_w: String = entry["biome"]
+			var td_w: Dictionary = entry["data"]
+
+			if WorldData.has_method("set_occupied"):
+				WorldData.set_occupied(ax_w, true)
+			elif WorldData.has_method("occupy"):
+				WorldData.occupy(ax_w)
+
+			if WorldData.has_method("set_biome"):
+				WorldData.set_biome(ax_w, b_w)
+
+			if td_w.has("tier") and WorldData.has_method("set_tier"):
+				WorldData.set_tier(ax_w, int(td_w["tier"]))
+
+			var mods_w: Variant = td_w.get("modifiers", [])
+			if mods_w is Array and WorldData.has_method("set_modifiers"):
+				WorldData.set_modifiers(ax_w, _normalize_modifiers(mods_w))
+
+			var anchored_w: bool = bool(td_w.get("anchored", false))
+			if anchored_w:
+				if WorldData.has_method("set_anchored"):
+					WorldData.set_anchored(ax_w, true)
+				elif WorldData.has_method("anchor"):
+					WorldData.anchor(ax_w)
+
+	for entry in prepared_tiles:
+		var ax_p: Vector2i = entry["ax"]
+		var b_p: String = entry["biome"]
+		var td_p: Dictionary = entry["data"]
 
 		var frag: Node2D = TILE_SCENE.instantiate()
 		fragments_root.add_child(frag)
 
-		frag.position = _axial_to_pixel(ax.x, ax.y)
-		frag.set("coord", ax)
-		frag.set("biome", b)
+		frag.position = _axial_to_pixel(ax_p.x, ax_p.y)
+		frag.set("coord", ax_p)
+		frag.set("biome", b_p)
+
+		var buildings_v: Variant = td_p.get("buildings", {})
+		if buildings_v is Dictionary:
+			var b_dict: Dictionary = buildings_v as Dictionary
+			var base_id: String = String(b_dict.get("base", ""))
+			var modules: Array = []
+			var modules_v: Variant = b_dict.get("modules", [])
+			if modules_v is Array:
+				modules = modules_v
+			if base_id != "":
+				frag.set_meta("building_id", base_id)
+			if not modules.is_empty():
+				frag.set_meta("building_modules", modules)
+		else:
+			var legacy_building_id: String = String(td_p.get("building_id", ""))
+			var legacy_modules_v: Variant = td_p.get("building_modules", [])
+			if legacy_building_id != "":
+				frag.set_meta("building_id", legacy_building_id)
+			if legacy_modules_v is Array and not legacy_modules_v.is_empty():
+				frag.set_meta("building_modules", legacy_modules_v)
 
 		if frag is Fragment:
 			var f: Fragment = frag as Fragment
 
 			var meta: Dictionary = {}
-			if td.has("tier"):
-				meta["tier"] = int(td["tier"])
-			if td.has("region"):
-				meta["region"] = String(td["region"])
+			if td_p.has("tier"):
+				meta["tier"] = int(td_p["tier"])
+			if td_p.has("region"):
+				meta["region"] = String(td_p["region"])
 
-			var mods_v: Variant = td.get("modifiers", [])
+			var mods_v: Variant = td_p.get("modifiers", [])
 			if mods_v is Array:
 				meta["modifiers"] = _normalize_modifiers(mods_v)
 
 			if meta.is_empty():
-				f.setup(ax, b)
+				f.setup(ax_p, b_p)
 			else:
-				f.setup(ax, b, meta)
+				f.setup(ax_p, b_p, meta)
 
-			f.recruit_triggered = bool(td.get("recruit_triggered", false))
-			f.recruited_villager_idx = int(td.get("recruited_villager_idx", -1))
+			f.recruit_triggered = bool(td_p.get("recruit_triggered", false))
+			f.recruited_villager_idx = int(td_p.get("recruited_villager_idx", -1))
 
 			f.set_local_modifiers(f.modifiers)
 
 			if typeof(ResourceNodes) != TYPE_NIL and ResourceNodes.has_method("rebuild_nodes_for_tile"):
-				ResourceNodes.rebuild_nodes_for_tile(ax, f.modifiers, b, f.tier)
+				ResourceNodes.rebuild_nodes_for_tile(ax_p, f.modifiers, b_p, f.tier)
 
 			if not f.clicked.is_connected(_on_fragment_clicked):
 				f.clicked.connect(_on_fragment_clicked)
 		else:
-			var mods2_v: Variant = td.get("modifiers", [])
+			var mods2_v: Variant = td_p.get("modifiers", [])
 			if mods2_v is Array and frag.has_method("set_local_modifiers"):
 				frag.call("set_local_modifiers", _normalize_modifiers(mods2_v))
 			if frag.has_signal("clicked") and not frag.is_connected("clicked", Callable(self, "_on_fragment_clicked")):
@@ -1501,23 +1653,18 @@ func _restore_from_dict(d: Dictionary) -> void:
 				var mods_for_tile: Array = []
 				if mods2_v is Array:
 					mods_for_tile = _normalize_modifiers(mods2_v)
-				var tier_for_tile: int = _get_rank_for_biome(b)
-				ResourceNodes.rebuild_nodes_for_tile(ax, mods_for_tile, b, tier_for_tile)
+				var tier_for_tile: int = _get_rank_for_biome(b_p)
+				ResourceNodes.rebuild_nodes_for_tile(ax_p, mods_for_tile, b_p, tier_for_tile)
 
 		# 🔹 Register EVERY frag with Selection (inside the loop!)
 		if typeof(Selection) != TYPE_NIL and Selection.has_method("register_fragment"):
 			Selection.register_fragment(frag)
 
-		# Keep WorldData in sync
-		if typeof(WorldData) != TYPE_NIL:
-			if WorldData.has_method("occupy"):
-				WorldData.occupy(ax)
-
-			if anchored:
-				if WorldData.has_method("set_anchored"):
-					WorldData.set_anchored(ax, true)
-				elif WorldData.has_method("anchor"):
-					WorldData.anchor(ax)
+	print("[SaveLoad] Tiles loaded: %d (missing biome: %d, invalid keys: %d)" % [
+		prepared_tiles.size(),
+		missing_biome_count,
+		invalid_keys.size(),
+	])
 
 # ---------- normal world flow ----------
 func _on_summon_pressed() -> void:

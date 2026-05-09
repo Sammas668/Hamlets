@@ -239,6 +239,42 @@ var _node_state: Dictionary = {}
 func _ready() -> void:
 	randomize()
 
+# -------------------------------------------------------------------
+# Public helpers for UI / ResourceNodes
+# -------------------------------------------------------------------
+
+func get_cooldown_seconds(axial: Vector2i, node_id: StringName) -> float:
+	return _get_cooldown_seconds(axial, node_id)
+
+func get_max_charges(node_id: StringName) -> int:
+	var def := get_node_def(node_id)
+	return int(def.get("charges", 0))
+
+func _norm(s: String) -> String:
+	var t := s.to_lower()
+	t = t.replace("’", "'")
+	t = t.replace("–", "-").replace("—", "-")
+	var out := ""
+	for i in t.length():
+		var ch := t[i]
+		var code := int(ch.unicode_at(0))
+		var is_num := (code >= 48 and code <= 57)
+		var is_low := (code >= 97 and code <= 122)
+		var is_space := (ch == " ")
+		out += ch if (is_num or is_low or is_space) else " "
+	out = out.strip_edges()
+	while out.find("  ") != -1:
+		out = out.replace("  ", " ")
+	return out
+
+func infer_node_id_from_text(text: String) -> StringName:
+	var ntext := _norm(text)
+	for kw_v in MINING_KEYWORD_TO_NODE_ID.keys():
+		var nkw := _norm(String(kw_v))
+		if nkw != "" and ntext.find(nkw) != -1:
+			return MINING_KEYWORD_TO_NODE_ID[kw_v]
+	return StringName("")
+
 
 func get_node_def(node_id: StringName) -> Dictionary:
 	for table in _all_tables():

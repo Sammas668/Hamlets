@@ -153,39 +153,38 @@ const BAR_GOLD: StringName        = &"bar_gold"
 # ------------------------------------------------------------
 # Herbalism – Cooking herbs (T1–T10)
 # ------------------------------------------------------------
-const COOK_HERB_THYME_T1: StringName      = &"cook_herb_thyme_t1"
-const COOK_HERB_SAGE_T2: StringName       = &"cook_herb_sage_t2"
-const COOK_HERB_FENNEL_T3: StringName     = &"cook_herb_fennel_t3"
-const COOK_HERB_ROSEMARY_T4: StringName   = &"cook_herb_rosemary_t4"
-const COOK_HERB_LEMONGRASS_T5: StringName = &"cook_herb_lemongrass_t5"
-const COOK_HERB_GINGER_T6: StringName     = &"cook_herb_ginger_t6"
-const COOK_HERB_CORIANDER_T7: StringName  = &"cook_herb_coriander_t7"
-const COOK_HERB_JUNIPER_T8: StringName    = &"cook_herb_juniper_t8"
-const COOK_HERB_OREGANO_T9: StringName    = &"cook_herb_oregano_t9"
+const COOK_HERB_THYME_T1: StringName       = &"cook_herb_thyme_t1"
+const COOK_HERB_SAGE_T2: StringName        = &"cook_herb_sage_t2"
+const COOK_HERB_FENNEL_T3: StringName      = &"cook_herb_fennel_t3"
+const COOK_HERB_ROSEMARY_T4: StringName    = &"cook_herb_rosemary_t4"
+const COOK_HERB_LEMONGRASS_T5: StringName  = &"cook_herb_lemongrass_t5"
+const COOK_HERB_GINGER_T6: StringName      = &"cook_herb_ginger_t6"
+const COOK_HERB_CORIANDER_T7: StringName   = &"cook_herb_coriander_t7"
+const COOK_HERB_JUNIPER_T8: StringName     = &"cook_herb_juniper_t8"
+const COOK_HERB_OREGANO_T9: StringName     = &"cook_herb_oregano_t9"
 const COOK_HERB_STAR_ANISE_T10: StringName = &"cook_herb_star_anise_t10"
 
 # ------------------------------------------------------------
 # Herbalism – Chemical herbs (T1–T10)
 # ------------------------------------------------------------
-const CHEM_HERB_MARSHMALLOW_ROOT_T1: StringName = &"chem_herb_marshmallow_root_t1"
-const CHEM_HERB_SEA_WORMWOOD_T2: StringName     = &"chem_herb_sea_wormwood_t2"
-const CHEM_HERB_GOTU_KOLA_T3: StringName        = &"chem_herb_gotu_kola_t3"
-const CHEM_HERB_WATER_HEMLOCK_T4: StringName    = &"chem_herb_water_hemlock_t4"
+const CHEM_HERB_MARSHMALLOW_ROOT_T1: StringName      = &"chem_herb_marshmallow_root_t1"
+const CHEM_HERB_SEA_WORMWOOD_T2: StringName          = &"chem_herb_sea_wormwood_t2"
+const CHEM_HERB_GOTU_KOLA_T3: StringName             = &"chem_herb_gotu_kola_t3"
+const CHEM_HERB_WATER_HEMLOCK_T4: StringName         = &"chem_herb_water_hemlock_t4"
 const CHEM_HERB_BITTERSWEET_NIGHTSHADE_T5: StringName = &"chem_herb_bittersweet_nightshade_t5"
-const CHEM_HERB_VALERIAN_T6: StringName         = &"chem_herb_valerian_t6"
-const CHEM_HERB_ALOE_VERA_T7: StringName        = &"chem_herb_aloe_vera_t7"
-const CHEM_HERB_FROST_KAVA_T8: StringName       = &"chem_herb_frost_kava_t8"
-const CHEM_HERB_DATURA_T9: StringName           = &"chem_herb_datura_t9"
-const CHEM_HERB_BLADDERWRACK_T10: StringName    = &"chem_herb_bladderwrack_t10"
+const CHEM_HERB_VALERIAN_T6: StringName              = &"chem_herb_valerian_t6"
+const CHEM_HERB_ALOE_VERA_T7: StringName             = &"chem_herb_aloe_vera_t7"
+const CHEM_HERB_FROST_KAVA_T8: StringName            = &"chem_herb_frost_kava_t8"
+const CHEM_HERB_DATURA_T9: StringName                = &"chem_herb_datura_t9"
+const CHEM_HERB_BLADDERWRACK_T10: StringName         = &"chem_herb_bladderwrack_t10"
 
 # ------------------------------------------------------------
 # Tailoring fibres (dropped by Herbalism patches)
 # ------------------------------------------------------------
-const TAILOR_FIBRE_FLAX: StringName        = &"tailor_fibre_flax"
 const TAILOR_FIBRE_SILK_COCOONS: StringName = &"tailor_fibre_silk_cocoons"
-const TAILOR_FIBRE_COTTON: StringName      = &"tailor_fibre_cotton"
-const TAILOR_FIBRE_HEMP: StringName        = &"tailor_fibre_hemp"
-
+const TAILOR_FIBRE_COTTON: StringName       = &"tailor_fibre_cotton"
+const TAILOR_FIBRE_HEMP: StringName         = &"tailor_fibre_hemp"
+const TAILOR_FIBRE_JUTE: StringName         = &"tailor_fibre_jute"
 
 # -------------------------------------------------------------------
 # Smithing: auto-generated item IDs (tools, weapons, armour, hardware, fishing)
@@ -573,61 +572,61 @@ var _defs: Dictionary = {
 	ORE_COPPER: {
 		"name": "Copper Ore",
 		"stack": true,
-		"icon": "res://assets/icons/modifiers/copper_ore.png",
+		"icon": "res://assets/items/Mining/ore_copper.png",
 		"use_skill": &"mining",
 	},
 	ORE_TIN: {
 		"name": "Tin Ore",
 		"stack": true,
-		"icon": "res://assets/icons/modifiers/tin_ore.png",
+		"icon": "res://assets/items/Mining/ore_tin.png",
 		"use_skill": &"mining",
 	},
 	ORE_IRON: {
 		"name": "Iron Ore",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/ore_iron.png",
 		"use_skill": &"mining",
 	},
 	ORE_COAL: {
 		"name": "Coal",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/ore_coal.png",
 		"use_skill": &"mining",
 	},
 	ORE_SILVER: {
 		"name": "Silver Ore",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/ore_silver.png",
 		"use_skill": &"mining",
 	},
 	ORE_GOLD: {
 		"name": "Gold Ore",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/ore_gold.png",
 		"use_skill": &"mining",
 	},
 	ORE_MITHRITE: {
 		"name": "Mithrite Ore",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/ore_mithrite.png",
 		"use_skill": &"mining",
 	},
 	ORE_ADAMANTITE: {
 		"name": "Adamantite Ore",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/ore_adamantite.png",
 		"use_skill": &"mining",
 	},
 	ORE_ORICHALCUM: {
 		"name": "Orichalcum Ore",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/ore_orichalcum.png",
 		"use_skill": &"mining",
 	},
 	ORE_AETHER: {
 		"name": "Aether Ore",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/ore_aether.png",
 		"use_skill": &"mining",
 	},
 
@@ -635,55 +634,55 @@ var _defs: Dictionary = {
 	GEM_OPAL: {
 		"name": "Opal",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/gem_opal.png",
 		"use_skill": &"mining",
 	},
 	GEM_JADE: {
 		"name": "Jade",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/gem_jade.png",
 		"use_skill": &"mining",
 	},
 	GEM_BLUE_TOPAZ: {
 		"name": "Blue Topaz",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/gem_blue_topaz.png",
 		"use_skill": &"mining",
 	},
 	GEM_SAPPHIRE: {
 		"name": "Sapphire",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/gem_sapphire.png",
 		"use_skill": &"mining",
 	},
 	GEM_EMERALD: {
 		"name": "Emerald",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/gem_emerald.png",
 		"use_skill": &"mining",
 	},
 	GEM_RUBY: {
 		"name": "Ruby",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/gem_ruby.png",
 		"use_skill": &"mining",
 	},
 	GEM_DIAMOND: {
 		"name": "Diamond",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/gem_diamond.png",
 		"use_skill": &"mining",
 	},
 	GEM_DRAGONSTONE: {
 		"name": "Dragonstone",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/gem_dragonstone.png",
 		"use_skill": &"mining",
 	},
 	GEM_ONYX: {
 		"name": "Onyx",
 		"stack": true,
-		"icon": "",
+		"icon": "res://assets/items/Mining/gem_onyx.png",
 		"use_skill": &"mining",
 	},
 
@@ -1130,6 +1129,7 @@ var _defs: Dictionary = {
 		"icon": "res://assets/items/Smithing/bar_gold.png",
 		"use_skill": &"smithing",
 	},
+
 	# ------------------------------------------------------------
 	# Herbalism – Cooking herbs
 	# ------------------------------------------------------------
@@ -1260,23 +1260,18 @@ var _defs: Dictionary = {
 
 	# ------------------------------------------------------------
 	# Tailoring fibres (used by Tailoring later; dropped by Herbalism now)
+	# 4 core plant fibres: cotton / jute / hemp / silk (cocoons)
 	# ------------------------------------------------------------
-	TAILOR_FIBRE_FLAX: {
-		"name": "Flax Fibre",
-		"stack": true,
-		"icon": "res://assets/items/Tailoring/tailor_fibre_flax.png",
-		"use_skill": &"tailoring",
-	},
-	TAILOR_FIBRE_SILK_COCOONS: {
-		"name": "Silk Cocoons",
-		"stack": true,
-		"icon": "res://assets/items/Tailoring/tailor_fibre_silk_cocoons.png",
-		"use_skill": &"tailoring",
-	},
 	TAILOR_FIBRE_COTTON: {
 		"name": "Cotton Fibre",
 		"stack": true,
 		"icon": "res://assets/items/Tailoring/tailor_fibre_cotton.png",
+		"use_skill": &"tailoring",
+	},
+	TAILOR_FIBRE_JUTE: {
+		"name": "Jute Fibre",
+		"stack": true,
+		"icon": "res://assets/items/Tailoring/tailor_fibre_jute.png",
 		"use_skill": &"tailoring",
 	},
 	TAILOR_FIBRE_HEMP: {
@@ -1285,7 +1280,12 @@ var _defs: Dictionary = {
 		"icon": "res://assets/items/Tailoring/tailor_fibre_hemp.png",
 		"use_skill": &"tailoring",
 	},
-
+	TAILOR_FIBRE_SILK_COCOONS: {
+		"name": "Silk Cocoons",
+		"stack": true,
+		"icon": "res://assets/items/Tailoring/tailor_fibre_silk_cocoons.png",
+		"use_skill": &"tailoring",
+	},
 }
 
 func get_icon_path(id: StringName) -> String:
@@ -1375,8 +1375,6 @@ func get_icon(id: StringName) -> Texture2D:
 # -------------------------------------------------------------------
 # Use-skill + tier helpers (for CraftMenu filters)
 # -------------------------------------------------------------------
-
-
 
 const _METAL_TIER := {
 	"bronze": 1,
@@ -1472,7 +1470,6 @@ func get_tier(id: StringName) -> int:
 
 	return 0
 
-
 func is_tiered(id: StringName) -> bool:
 	return get_tier(id) > 0
 
@@ -1484,7 +1481,7 @@ func get_use_skill(id: StringName) -> StringName:
 	var base: String = _strip_tier_suffix(raw)
 	var p: String = base
 
-	# NEW: explicit per-item tag wins (solves "poor job" tagging for defined items)
+	# Explicit per-item tag wins
 	var d: Dictionary = _defs.get(StringName(p), {}) as Dictionary
 	if d.has("use_skill"):
 		var uv: Variant = d.get("use_skill", &"")
@@ -1499,14 +1496,14 @@ func get_use_skill(id: StringName) -> StringName:
 	if _is_construction_item(StringName(p)):
 		return &"construction"
 
-	# Construction materials / parts (your requirement)
+	# Construction materials / parts
 	if p.begins_with("cut_log_") or p.begins_with("cut_stone_") or p.begins_with("mat_"):
 		return &"construction"
 	if p.begins_with("frame") or p.begins_with("wall_") or p.begins_with("floor_") or p.begins_with("roof_") \
 	or p.begins_with("door_") or p.begins_with("window_"):
 		return &"construction"
 
-	# Raw resources → their gathering skill (useful for filtering outputs in other menus)
+	# Raw resources → their gathering skill
 	if p.begins_with("log_") or p == "twigs" or p.begins_with("bark") or p.begins_with("resin") or p.begins_with("amber_"):
 		return &"woodcutting"
 	if p.begins_with("stone_") or p.begins_with("ore_") or p.begins_with("gem_"):
@@ -1514,7 +1511,7 @@ func get_use_skill(id: StringName) -> StringName:
 	if p.begins_with("fish_") or p.begins_with("fishing_"):
 		return &"fishing"
 
-	# Smithing-generated gear: decide by FAMILY (this is the key part you want)
+	# Smithing-generated gear: decide by FAMILY
 	var info := _parse_smithing_id(StringName(p))
 	if not info.is_empty():
 		var family_key: String = String(info.get("family_key", ""))
@@ -1531,7 +1528,7 @@ func get_use_skill(id: StringName) -> StringName:
 		if family_key == "fishing_net" or family_key == "fishing_rod" or family_key == "fishing_harpoon":
 			return &"fishing"
 
-		# Construction hardware should count as Construction (your requirement)
+		# Construction hardware should count as Construction
 		if _SMITHING_FAMILY_GROUP.has(family_key) and String(_SMITHING_FAMILY_GROUP[family_key]) == "hardware":
 			return &"construction"
 

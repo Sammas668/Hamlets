@@ -748,7 +748,7 @@ func _complete_job(v_idx: int) -> void:
 
 	if job == JOB_SCRYING:
 		if typeof(ScryingSystem) != TYPE_NIL and ScryingSystem.has_method("do_scry"):
-			var r: Variant = ScryingSystem.do_scry()
+			var r: Variant = ScryingSystem.do_scry(v_idx)
 			if r is Dictionary:
 				result = r
 

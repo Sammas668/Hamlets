@@ -119,10 +119,10 @@ func _xp_for_grade(grade: int) -> int:
 	return int(round(scaled))
 
 
-func do_scry() -> Dictionary:
+func do_scry(v_idx: int = -1) -> Dictionary:
 	var lv: int = 1
-	if typeof(SkillProgress) != TYPE_NIL and SkillProgress.has_method("get_level"):
-		lv = int(SkillProgress.get_level("scrying"))
+	if v_idx >= 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_skill_level"):
+		lv = int(Villagers.get_skill_level(v_idx, "scrying"))
 
 	var grade: int = _roll_grade(lv)
 	var item_id: StringName = _item_id_for_grade(grade)
@@ -137,8 +137,6 @@ func do_scry() -> Dictionary:
 
 	# XP
 	var xp: int = _xp_for_grade(grade)
-	if typeof(SkillProgress) != TYPE_NIL and SkillProgress.has_method("add_xp"):
-		SkillProgress.add_xp("scrying", xp)
 
 	# Loot text
 	var item_name: String = "Augury A%d" % grade

@@ -1,11 +1,18 @@
+# res://autoloads/ResourceNodes.gd
 extends Node
 ## Central registry for per-tile resource nodes (mining, woodcutting, fishing,
 ## herbalism, farming, etc.), built from Fragment.modifiers (Dictionary format).
 ##
 ## Expected modifier Dictionary format (new system):
 ## { "name": String, "kind": String, "rarity": String, "skill": String }
+##
 ## Optional extra keys supported:
-## { "tier": int, "node_id": String, "chance_factor": float, "yield_factor": float }
+## { "tier": int, "node_id": String|StringName, "chance_factor": float, "yield_factor": float }
+##
+## Herbalism NEW:
+## - Modifier may include:
+##     { "id": StringName }   # patch slug, e.g. &"forest_thyme_plot"
+##   ResourceNodes will store this as node["patch_id"] and use HerbalismSystem runtime state.
 ##
 ## Back-compat: also accepts legacy String modifiers like:
 ## "Resource Spawn [woodcutting]: Pine Grove"
@@ -13,42 +20,60 @@ extends Node
 # -------------------------------------------------------------------
 # Item registry (same pattern as Mining/Woodcutting)
 # -------------------------------------------------------------------
-const ITEMS := preload("res://scripts/autoload/items.gd")  # adjust if needed
+const ITEMS := preload("res://scripts/autoload/items.gd") # adjust if needed
 
 # Map fishing "detail" strings to canonical node IDs ("N1", "R3", "H7", etc.)
 const FISHING_DETAIL_TO_NODE_ID := {
+	# -------------------------
 	# Net nodes (N1–N10)
+	# -------------------------
 	"Riverbank Shallows":      "N1",
+
+	# old + new naming variants
 	"Rocky Estuary Nets":      "N2",
+	"Rocky Estuary Bank":      "N2",
+
 	"Cenote Rim Nets":         "N3",
 	"Cascade Shelf Nets":      "N4",
+
 	"Floodplain Reed Nets":    "N5",
 	"Gorge Ledge Nets":        "N6",
+
 	"Hanging Oasis Nets":      "N7",
 	"Ice-Crack Nets":          "N8",
 	"Boiling Runoff Nets":     "N9",
+
 	"Starsea Surface Nets":    "N10",
 
+	# -------------------------
 	# Rod nodes (R1–R10)
+	# -------------------------
 	"Minnow Ford Pool":        "R1",
 	"Brackwater Channel":      "R2",
 	"Sinkhole Plunge Pool":    "R3",
 	"Echofall Basin":          "R4",
 	"Oxbow Bend Pool":         "R5",
+
+	# keep your existing extended set
 	"Mistfall Tailwater":      "R6",
 	"Mirror Spring Pool":      "R7",
 	"Black Tarn Hole":         "R8",
+
 	"Geyser Cone Pool":        "R9",
 	"Comet-Eddy Pool":         "R10",
 
+	# -------------------------
 	# Harpoon nodes (H1–H10)
+	# -------------------------
 	"Deep Crossing Run":       "H1",
 	"Tidecut Passage":         "H2",
 	"Blue Well Drop":          "H3",
 	"Thunder Gorge Throat":    "H4",
+
 	"Leviathan Channel":       "H5",
 	"Chasm Surge Run":         "H6",
 	"Skywell Sink":            "H7",
+
 	"Glacier Rift Wake":       "H8",
 	"Steamvent Pit":           "H9",
 	"Abyssal Star Trench":     "H10",
@@ -62,10 +87,113 @@ var _nodes_by_ax: Dictionary = {}
 # Optional: store raw modifiers for HUD/debug
 var _mods_by_ax: Dictionary = {}
 
+# Cached autoload refs (robust against different Autoload names)
+var _mining_sys: Node = null
+var _herb_sys: Node = null
+
 
 func _ready() -> void:
+	_mining_sys = _find_autoload(["MiningSystem", "mining_system"])
+	# support common names people use for this one
+	_herb_sys   = _find_autoload(["HerbalismSystem", "Herbalism_System", "herbalism_system"])
+
 	if debug_logging:
-		print("[ResourceNodes] Ready (empty registry).")
+		print("[ResourceNodes] Ready. Mining=", _mining_sys, " Herbalism=", _herb_sys)
+
+
+func _find_autoload(names: Array[String]) -> Node:
+	for n in names:
+		var node := get_node_or_null("/root/" + n)
+		if node != null:
+			return node
+	return null
+
+
+func _enrich_nodes_runtime(axial: Vector2i, nodes: Array) -> Array:
+	var out: Array = []
+
+	for n_v in nodes:
+		if typeof(n_v) != TYPE_DICTIONARY:
+			continue
+
+		var n: Dictionary = (n_v as Dictionary).duplicate(true)
+		var skill_l: String = String(n.get("skill", "")).to_lower()
+
+		# -------------------------
+		# Mining: real charges + respawn countdown
+		# -------------------------
+		if skill_l == "mining" and _mining_sys != null:
+			var node_id: StringName = StringName("")
+			var nid_v: Variant = n.get("node_id", StringName(""))
+			if typeof(nid_v) == TYPE_STRING_NAME:
+				node_id = nid_v
+			elif typeof(nid_v) == TYPE_STRING:
+				var s_nid := String(nid_v).strip_edges()
+				if s_nid != "":
+					node_id = StringName(s_nid)
+
+			if node_id == StringName(""):
+				var txt: String = String(n.get("detail", n.get("name", "")))
+				if _mining_sys.has_method("infer_node_id_from_text"):
+					var inferred: Variant = _mining_sys.call("infer_node_id_from_text", txt)
+					if typeof(inferred) == TYPE_STRING_NAME:
+						node_id = inferred
+					elif typeof(inferred) == TYPE_STRING:
+						var s_inf := String(inferred).strip_edges()
+						if s_inf != "":
+							node_id = StringName(s_inf)
+					n["node_id"] = node_id
+
+			if node_id != StringName(""):
+				if _mining_sys.has_method("get_node_status"):
+					var st: Dictionary = _mining_sys.call("get_node_status", axial, node_id)
+					n["charges_left"] = int(st.get("charges", 0))
+
+				if _mining_sys.has_method("get_max_charges"):
+					n["max_charges"] = int(_mining_sys.call("get_max_charges", node_id))
+
+				if _mining_sys.has_method("get_cooldown_seconds"):
+					n["cooldown_s"] = float(_mining_sys.call("get_cooldown_seconds", axial, node_id))
+
+		# -------------------------
+		# Herbalism: quick charges + regrow countdown
+		# -------------------------
+		if skill_l == "herbalism" and _herb_sys != null:
+			var patch_id: StringName = StringName("")
+			var pid_v: Variant = n.get("patch_id", StringName(""))
+			if typeof(pid_v) == TYPE_STRING_NAME:
+				patch_id = pid_v
+			elif typeof(pid_v) == TYPE_STRING:
+				var s_pid := String(pid_v).strip_edges()
+				if s_pid != "":
+					patch_id = StringName(s_pid)
+
+			if patch_id == StringName(""):
+				var txt2: String = String(n.get("detail", n.get("name", "")))
+				if _herb_sys.has_method("infer_patch_id_from_text"):
+					var inferred2: Variant = _herb_sys.call("infer_patch_id_from_text", txt2)
+					if typeof(inferred2) == TYPE_STRING_NAME:
+						patch_id = inferred2
+					elif typeof(inferred2) == TYPE_STRING:
+						var s_inf2 := String(inferred2).strip_edges()
+						if s_inf2 != "":
+							patch_id = StringName(s_inf2)
+					n["patch_id"] = patch_id
+
+			if patch_id != StringName(""):
+				if _herb_sys.has_method("get_patch_status"):
+					var ps: Dictionary = _herb_sys.call("get_patch_status", axial, patch_id)
+					n["charges_left"] = int(ps.get("charges", 0))
+
+				if _herb_sys.has_method("get_max_charges"):
+					n["max_charges"] = int(_herb_sys.call("get_max_charges", patch_id))
+
+				if _herb_sys.has_method("get_cooldown_seconds"):
+					n["cooldown_s"] = float(_herb_sys.call("get_cooldown_seconds", axial, patch_id))
+
+		out.append(n)
+
+	return out
 
 
 # =====================================================================
@@ -78,8 +206,8 @@ func rebuild_nodes_for_tile(
 	biome: String = "",
 	tier: int = 0
 ) -> void:
-	var nodes: Array[Dictionary] = []
-	var stored_mods: Array[Dictionary] = []
+	var nodes: Array = []          # Array[Dictionary] but kept untyped to avoid Variant warnings
+	var stored_mods: Array = []    # Array[Dictionary]
 
 	for m in modifiers:
 		var md: Dictionary = _modifier_to_dict(m)
@@ -108,7 +236,7 @@ func rebuild_nodes_for_tile(
 
 		# Decide yield metadata (optional)
 		var product_label: String = ""
-		var product_item: StringName = StringName()
+		var product_item: StringName = StringName("")
 
 		match skill:
 			"woodcutting":
@@ -140,10 +268,34 @@ func rebuild_nodes_for_tile(
 			var nid_str: String = String(nid_any).strip_edges()
 			if nid_str != "":
 				node["node_id"] = StringName(nid_str)
+
 		elif skill == "fishing":
 			var key_detail := detail.strip_edges()
 			if FISHING_DETAIL_TO_NODE_ID.has(key_detail):
 				node["node_id"] = StringName(String(FISHING_DETAIL_TO_NODE_ID[key_detail]))
+
+		# ✅ Herbalism NEW: prefer md["id"] slug -> node["patch_id"]
+		if skill == "herbalism":
+			var pid: StringName = StringName("")
+			var pid_any: Variant = md.get("id", null)
+			if typeof(pid_any) == TYPE_STRING_NAME:
+				pid = pid_any
+			elif typeof(pid_any) == TYPE_STRING:
+				var pid_str := String(pid_any).strip_edges()
+				if pid_str != "":
+					pid = StringName(pid_str)
+
+			if pid == StringName("") and _herb_sys != null and _herb_sys.has_method("infer_patch_id_from_text"):
+				var inferred: Variant = _herb_sys.call("infer_patch_id_from_text", detail)
+				if typeof(inferred) == TYPE_STRING_NAME:
+					pid = inferred
+				elif typeof(inferred) == TYPE_STRING:
+					var s_inf := String(inferred).strip_edges()
+					if s_inf != "":
+						pid = StringName(s_inf)
+
+			if pid != StringName(""):
+				node["patch_id"] = pid
 
 		# Optional product metadata for UI/recipes
 		if product_label != "":
@@ -181,24 +333,25 @@ func clear_all() -> void:
 		print("[ResourceNodes] Cleared ALL nodes.")
 
 
-func get_nodes(ax: Vector2i, skill: String = "") -> Array:
-	if not _nodes_by_ax.has(ax):
-		return []
+func get_nodes_for_tile(axial: Vector2i) -> Array:
+	var nodes_v: Variant = _nodes_by_ax.get(axial, [])
+	var nodes: Array = []
+	if nodes_v is Array:
+		nodes = nodes_v
+	return _enrich_nodes_runtime(axial, nodes)
 
-	var nodes_any: Variant = _nodes_by_ax[ax]
-	var nodes: Array = nodes_any as Array
-	if skill == "":
-		return nodes.duplicate(true)
 
-	var filtered: Array = []
+func get_nodes(ax: Vector2i, skill: String) -> Array:
 	var s := skill.to_lower()
+	var nodes := get_nodes_for_tile(ax)
+	var out: Array = []
 	for n_v in nodes:
 		if typeof(n_v) != TYPE_DICTIONARY:
 			continue
 		var n: Dictionary = n_v
 		if String(n.get("skill", "")).to_lower() == s:
-			filtered.append(n)
-	return filtered
+			out.append(n)
+	return out
 
 
 func get_richness(ax: Vector2i, skill: String) -> int:
@@ -281,7 +434,10 @@ func get_summary_for_tile(ax: Vector2i) -> String:
 func get_modifiers_for_tile(ax: Vector2i) -> Array:
 	if not _mods_by_ax.has(ax):
 		return []
-	return (_mods_by_ax[ax] as Array).duplicate(true)
+	var v: Variant = _mods_by_ax[ax]
+	if v is Array:
+		return (v as Array).duplicate(true)
+	return []
 
 
 # =====================================================================
@@ -295,6 +451,9 @@ func _mod_get_detail(md: Dictionary) -> String:
 	# Some callers might use "detail"
 	if md.has("detail"):
 		return String(md.get("detail", "")).strip_edges()
+	# Some systems might use "label"
+	if md.has("label"):
+		return String(md.get("label", "")).strip_edges()
 	return ""
 
 

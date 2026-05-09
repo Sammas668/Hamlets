@@ -2,12 +2,12 @@
 extends Node
 
 ## HerbalismSystem:
-## - Static patch definitions (tier, req, xp, quick_charges, regrow, drop_table 70/15/15).
+## - Patch definitions are DATA-DRIVEN via PATCH_ROWS (easy add/remove).
 ## - Per-tile quick charges + regrow timers (Mining-style).
 ## - Gather choice:
 ##     • Careful Pick: 2 actions, steady yield, DOES NOT consume charges.
 ##     • Quick Pick:   1 action, 5× yield, consumes 1 quick charge.
-## - When quick charges hit 0: patch enters long regrow; Careful is disabled until regrow completes.
+## - When quick charges hit 0: patch enters long regrow; patch is unavailable until regrow completes.
 
 const BASE_ACTION_TIME := 2.4
 
@@ -20,6 +20,7 @@ const QUICK_ACTIONS := 1
 const CAREFUL_QTY := 1
 const QUICK_YIELD_MULT := 5
 
+# Tier-based tuning (still used for cook/chem tiers and for patch tier “feel”)
 const REQ_BY_TIER := {
 	1: 1,  2: 11, 3: 21, 4: 31, 5: 41,
 	6: 51, 7: 61, 8: 71, 9: 81, 10: 91,
@@ -41,175 +42,128 @@ const REGROW_S_BY_TIER := {
 }
 
 # -------------------------------------------------------------------
-# Patch definitions (built at runtime; cannot be const because of helper calls)
+# Item IDs (cook/chem remain tiered; fibre is ONLY 4 items)
+# -------------------------------------------------------------------
+
+const COOK_HERB_BY_TIER := {
+	1: &"cook_herb_thyme_t1",
+	2: &"cook_herb_sage_t2",
+	3: &"cook_herb_fennel_t3",
+	4: &"cook_herb_rosemary_t4",
+	5: &"cook_herb_lemongrass_t5",
+	6: &"cook_herb_ginger_t6",
+	7: &"cook_herb_coriander_t7",
+	8: &"cook_herb_juniper_t8",
+	9: &"cook_herb_oregano_t9",
+	10: &"cook_herb_star_anise_t10",
+}
+
+const CHEM_HERB_BY_TIER := {
+	1: &"chem_herb_marshmallow_root_t1",
+	2: &"chem_herb_sea_wormwood_t2",
+	3: &"chem_herb_gotu_kola_t3",
+	4: &"chem_herb_water_hemlock_t4",
+	5: &"chem_herb_bittersweet_nightshade_t5",
+	6: &"chem_herb_valerian_t6",
+	7: &"chem_herb_aloe_vera_t7",
+	8: &"chem_herb_frost_kava_t8",
+	9: &"chem_herb_datura_t9",
+	10: &"chem_herb_bladderwrack_t10",
+}
+
+# ONLY 4 fibre items (renamed IDs to reflect actual names)
+const FIBRE_FLAX        : StringName = &"flax_fibre"
+const FIBRE_SILK_COCOON : StringName = &"silk_cocoons"
+const FIBRE_COTTON      : StringName = &"cotton_fibre"
+const FIBRE_HEMP        : StringName = &"hemp_fibre"
+
+# Used as the “15% fibre” in cook/chem patches (still tier-shaped, but only 4 items)
+func _fibre_for_tier(tier: int) -> StringName:
+	if tier <= 2:
+		return FIBRE_FLAX
+	if tier <= 5:
+		return FIBRE_SILK_COCOON
+	if tier <= 8:
+		return FIBRE_COTTON
+	return FIBRE_HEMP
+
+# -------------------------------------------------------------------
+# Patch definitions (easy add/remove: edit PATCH_ROWS only)
 # -------------------------------------------------------------------
 
 var PATCHES: Dictionary = {}
+var _label_to_patch_id: Dictionary = {}
 
-# -------------------------------------------------------------------
-# Keyword → patch_id mapping
-# IMPORTANT: include BOTH legacy names (Greenveil/Brineback/etc.)
-# and the NEW "patch modifier" display strings from the PDF (Herb-Circle Plot, etc.)
-# -------------------------------------------------------------------
+# Each row:
+# {
+#   "id": StringName,            # ✅ MUST match label (slug form)
+#   "group": "cook"|"chem"|"fibre",
+#   "tier": int,                 # affects xp/charges/regrow + secondary drops
+#   "req": int,                  # unlock level (explicit so you can skip tiers)
+#   "label": String,             # MUST match your modifier display string
+#   "primary": StringName?       # ONLY needed for fibre patches (explicit fibre item)
+# }
 
-const HERBALISM_KEYWORD_TO_PATCH_ID := {
+const PATCH_ROWS := [
 	# -----------------------------
-	# Cooking (woodcut biomes)
+	# Cooking band (primary cook herb)
+	# IDs now reflect the label (slug)
 	# -----------------------------
-	"greenveil": &"greenveil_patch",
-	"greenveil patch": &"greenveil_patch",
-	"greenveil forestglade": &"greenveil_patch",
-
-	"maplefold": &"maplefold_patch",
-	"maplefold patch": &"maplefold_patch",
-	"maplefold vale understory": &"maplefold_patch",
-
-	"silkshade": &"silkshade_patch",
-	"silkshade patch": &"silkshade_patch",
-	"silkshade canopy beds": &"silkshade_patch",
-
-	"cloudpine": &"cloudpine_patch",
-	"cloudpine patch": &"cloudpine_patch",
-	"cloudpine terrace needlebed": &"cloudpine_patch",
-
-	"baobab": &"baobab_patch",
-	"baobab patch": &"baobab_patch",
-	"baobab sunleaf flats": &"baobab_patch",
-
-	"highwood": &"highwood_patch",
-	"highwood patch": &"highwood_patch",
-	"highwood rain-thicket": &"highwood_patch",
-
-	"incense": &"incense_patch",
-	"incense patch": &"incense_patch",
-	"incense grove resinwalk": &"incense_patch",
-
-	"boreal": &"boreal_patch",
-	"boreal patch": &"boreal_patch",
-	"boreal needleheath": &"boreal_patch",
-
-	"cinder": &"cinder_patch",
-	"cinder patch": &"cinder_patch",
-	"cinderwood ashgarden": &"cinder_patch",
-
-	"starbloom": &"starbloom_patch",
-	"starbloom patch": &"starbloom_patch",
-	"starbloom skymeadow": &"starbloom_patch",
+	{ "id": &"forest_thyme_plot",                     "group": "cook",  "tier": 1,  "req": 1,  "label": "Forest Thyme Plot" },
+	{ "id": &"maplewood_vale_sage_plot",              "group": "cook",  "tier": 2,  "req": 11, "label": "Maplewood Vale Sage Plot" },
+	{ "id": &"silkwood_fennel_ring",                  "group": "cook",  "tier": 3,  "req": 21, "label": "Silkwood Fennel Ring" },
+	{ "id": &"cloudpine_terraces_rosemary_bed",       "group": "cook",  "tier": 4,  "req": 31, "label": "Cloudpine Terraces Rosemary Bed" },
+	{ "id": &"baobab_savanna_lemongrass_patch",       "group": "cook",  "tier": 5,  "req": 41, "label": "Baobab Savanna Lemongrass Patch" },
+	{ "id": &"rainforest_highwood_ginger_canopy",     "group": "cook",  "tier": 6,  "req": 51, "label": "Rainforest Highwood Ginger Canopy" },
+	{ "id": &"incense_groves_coriander_scrub",        "group": "cook",  "tier": 7,  "req": 61, "label": "Incense Groves Coriander Scrub" },
+	{ "id": &"boreal_ridge_juniper_bed",              "group": "cook",  "tier": 8,  "req": 71, "label": "Boreal Ridge Juniper Bed" },
+	{ "id": &"ashfield_cinderwood_oregano_patch",     "group": "cook",  "tier": 9,  "req": 81, "label": "Ashfield Cinderwood Oregano Patch" },
+	{ "id": &"celestial_grove_star_anise_scar",       "group": "cook",  "tier": 10, "req": 91, "label": "Celestial Grove Star Anise Scar" },
 
 	# -----------------------------
-	# Chemical (fish biomes)
+	# Chemical band (primary chem herb)
+	# IDs now reflect the label (slug)
 	# -----------------------------
-	"reedrun": &"reedrun_patch",
-	"reedrun patch": &"reedrun_patch",
-	"reedrun riverbank reeds": &"reedrun_patch",
-
-	"brineback": &"brineback_patch",
-	"brineback patch": &"brineback_patch",
-	"brineback estuary saltbeds": &"brineback_patch",
-
-	"sinkbloom": &"sinkbloom_patch",
-	"sinkbloom patch": &"sinkbloom_patch",
-	"sinkbloom cenote bloomring": &"sinkbloom_patch",
-
-	"echofall": &"echofall_patch",
-	"echofall patch": &"echofall_patch",
-	"echofall sprayroot ledge": &"echofall_patch",
-
-	"lotusbank": &"lotusbank_patch",
-	"lotusbank patch": &"lotusbank_patch",
-	"lotusbank floodplain pools": &"lotusbank_patch",
-
-	"mistshelf": &"mistshelf_patch",
-	"mistshelf patch": &"mistshelf_patch",
-	"mistshelf gorge vaporgrowth": &"mistshelf_patch",
-
-	"skywell": &"skywell_patch",
-	"skywell patch": &"skywell_patch",
-	"skywell oasis dewbeds": &"skywell_patch",
-
-	"frostlip": &"frostlip_patch",
-	"frostlip patch": &"frostlip_patch",
-	"frostlip tarn iceleaf beds": &"frostlip_patch",
-
-	"steamroot": &"steamroot_patch",
-	"steamroot patch": &"steamroot_patch",
-	"steamroot geysergarden": &"steamroot_patch",
-
-	"starkelp": &"starkelp_patch",
-	"starkelp patch": &"starkelp_patch",
-	"starkelp rift kelpfields": &"starkelp_patch",
+	{ "id": &"river_marshmallow_root_reeds",          "group": "chem",  "tier": 1,  "req": 1,  "label": "River Marshmallow Root Reeds" },
+	{ "id": &"rocky_estuary_sea_wormwood_reeds",      "group": "chem",  "tier": 2,  "req": 11, "label": "Rocky Estuary Sea Wormwood Reeds" },
+	{ "id": &"cenote_sinkholes_gotu_kola_ledge",      "group": "chem",  "tier": 3,  "req": 21, "label": "Cenote Sinkholes Gotu Kola Ledge" },
+	{ "id": &"karst_cascade_gorge_water_hemlock_shelf","group": "chem", "tier": 4,  "req": 31, "label": "Karst Cascade Gorge Water Hemlock Shelf" },
+	{ "id": &"floodplain_bittersweet_nightshade_channel","group":"chem","tier": 5,  "req": 41, "label": "Floodplain Bittersweet Nightshade Channel" },
+	{ "id": &"river_gorge_valerian_shelf",            "group": "chem",  "tier": 6,  "req": 51, "label": "River Gorge Valerian Shelf" },
+	{ "id": &"floating_oasis_aloe_garden",            "group": "chem",  "tier": 7,  "req": 61, "label": "Floating Oasis Aloe Garden" },
+	{ "id": &"frozen_tarn_frost_kava_ledge",          "group": "chem",  "tier": 8,  "req": 71, "label": "Frozen Tarn Frost Kava Ledge" },
+	{ "id": &"drakefire_geyser_datura_beds",          "group": "chem",  "tier": 9,  "req": 81, "label": "Drakefire Geyser Datura Beds" },
+	{ "id": &"starsea_rift_bladderwrack_kelpfield",   "group": "chem",  "tier": 10, "req": 91, "label": "Starsea Rift Bladderwrack Kelpfield" },
 
 	# -----------------------------
-	# Fibre (mining biomes)
+	# Fibre band (ONLY 4 patches, ONLY 4 fibres)
+	# IDs now reflect the label (slug)
 	# -----------------------------
-	"stoneedge": &"stoneedge_patch",
-	"stoneedge patch": &"stoneedge_patch",
-	"stoneedge cragweave beds": &"stoneedge_patch",
-
-	"tanninbush": &"tanninbush_patch",
-	"tanninbush patch": &"tanninbush_patch",
-	"tanninbush foothill thicket": &"tanninbush_patch",
-
-	"ochreshelf": &"ochreshelf_patch",
-	"ochreshelf patch": &"ochreshelf_patch",
-	"ochreshelf canyon fibreflats": &"ochreshelf_patch",
-
-	"ironmoss": &"ironmoss_patch",
-	"ironmoss patch": &"ironmoss_patch",
-	"ironmoss talus mats": &"ironmoss_patch",
-
-	"redroot": &"redroot_patch",
-	"redroot patch": &"redroot_patch",
-	"redroot riftvine beds": &"redroot_patch",
-
-	"caprock": &"caprock_patch",
-	"caprock patch": &"caprock_patch",
-	"caprock mesa cordfields": &"caprock_patch",
-
-	"saltbloom": &"saltbloom_patch",
-	"saltbloom patch": &"saltbloom_patch",
-	"saltbloom dome brinefields": &"saltbloom_patch",
-
-	"lichencrust": &"lichencrust_patch",
-	"lichencrust patch": &"lichencrust_patch",
-	"lichencrust steppe threadflats": &"lichencrust_patch",
-
-	"pitchcap": &"pitchcap_patch",
-	"pitchcap patch": &"pitchcap_patch",
-	"pitchcap underforge caps": &"pitchcap_patch",
-
-	# Renamed (legacy kept for backwards compatibility)
-	"umbralweave": &"voidbark_patch",
-	"umbralweave voidbeds": &"voidbark_patch",
-
-	# legacy terms (so old saves / old strings still resolve)
-	"voidbark": &"voidbark_patch",
-	"voidbark patch": &"voidbark_patch",
-	"void scar": &"voidbark_patch",
-}
+	{ "id": &"stoneedge_flax_verge",                  "group": "fibre", "tier": 1, "req": 1,  "primary": FIBRE_FLAX,        "label": "Stoneedge Flax Verge" },
+	{ "id": &"ochreshelf_silk_cocoon_beds",           "group": "fibre", "tier": 4, "req": 31, "primary": FIBRE_SILK_COCOON, "label": "Ochreshelf Silk Cocoon Beds" },
+	{ "id": &"caprock_cotton_tufts",                  "group": "fibre", "tier": 5, "req": 41, "primary": FIBRE_COTTON,      "label": "Caprock Cotton Tufts" },
+	{ "id": &"pitchcap_hemp_caps",                    "group": "fibre", "tier": 7, "req": 61, "primary": FIBRE_HEMP,        "label": "Pitchcap Hemp Caps" },
+]
 
 func _ready() -> void:
 	randomize()
 	_build_patches()
 
 # -------------------------------------------------------------------
-# Robust text normalization so UI strings with odd hyphens/spaces still match
+# Normalization + label → patch_id (NO legacy aliases)
 # -------------------------------------------------------------------
 
 func _norm(s: String) -> String:
 	var t := s.to_lower()
-	# normalize common unicode punctuation
 	t = t.replace("’", "'")
-	t = t.replace("–", "-").replace("—", "-").replace("-", "-")
-	# keep only letters/numbers/spaces; treat everything else as space
+	t = t.replace("–", "-").replace("—", "-")
 	var out := ""
 	for i in t.length():
-		var ch := t[i]
-		var code := int(ch.unicode_at(0))
+		var code: int = t.unicode_at(i)
 		var is_num := (code >= 48 and code <= 57)
 		var is_low := (code >= 97 and code <= 122)
-		var is_space := (ch == " ")
-		out += ch if (is_num or is_low or is_space) else " "
+		var is_space := (code == 32)
+		out += char(code) if (is_num or is_low or is_space) else " "
 	out = out.strip_edges()
 	while out.find("  ") != -1:
 		out = out.replace("  ", " ")
@@ -217,24 +171,33 @@ func _norm(s: String) -> String:
 
 func infer_patch_id_from_text(text: String) -> StringName:
 	var ntext := _norm(text)
-	for kw_v in HERBALISM_KEYWORD_TO_PATCH_ID.keys():
-		var nkw := _norm(String(kw_v))
-		if nkw != "" and ntext.find(nkw) != -1:
-			return HERBALISM_KEYWORD_TO_PATCH_ID[kw_v]
+	if ntext == "":
+		return StringName("")
+
+	if _label_to_patch_id.has(ntext):
+		return _label_to_patch_id[ntext]
+
+	# Substring match, longer labels first
+	var keys: Array = _label_to_patch_id.keys()
+	keys.sort_custom(func(a, b): return String(a).length() > String(b).length())
+	for k in keys:
+		var kk := String(k)
+		if kk != "" and ntext.find(kk) != -1:
+			return _label_to_patch_id[k]
+
 	return StringName("")
 
 # -------------------------------------------------------------------
-# Helper (runtime OK)
+# Patch builder
 # -------------------------------------------------------------------
 
-func _mk_patch(label: String, group: String, tier: int, primary: StringName, other_a: StringName, other_b: StringName) -> Dictionary:
-	var req: int = int(REQ_BY_TIER.get(tier, 1))
+func _mk_patch(label: String, group: String, tier: int, req: int, primary: StringName, other_a: StringName, other_b: StringName) -> Dictionary:
 	var xp: int = int(XP_BY_TIER.get(tier, 1))
 	var qcharges: int = int(QUICK_CHARGES_BY_TIER.get(tier, 10))
 	var regrow: float = float(REGROW_S_BY_TIER.get(tier, 240.0))
 
 	return {
-		"label": label,          # display name / patch modifier (matches PDF naming)
+		"label": label,
 		"group": group,          # "cook" | "chem" | "fibre"
 		"tier": tier,
 		"req": req,
@@ -248,92 +211,74 @@ func _mk_patch(label: String, group: String, tier: int, primary: StringName, oth
 		],
 	}
 
+func _rebuild_label_index() -> void:
+	_label_to_patch_id.clear()
+	for pid_v in PATCHES.keys():
+		var pid: StringName = pid_v
+		var def_v: Variant = PATCHES.get(pid, {})
+		if not (def_v is Dictionary):
+			continue
+		var def: Dictionary = def_v
+		var label := String(def.get("label", ""))
+		if label != "":
+			_label_to_patch_id[_norm(label)] = pid
+
 func _build_patches() -> void:
-	PATCHES = {
-		# -----------------------------
-		# Cooking herbs (Woodcutting biomes) - primary 70% cook herb
-		# Names updated to match the PDF "Patch modifier" renames
-		# -----------------------------
-		&"greenveil_patch": _mk_patch("Herb-Circle Plot", "cook", 1,
-			&"cook_herb_thyme_t1", &"chem_herb_marshmallow_root_t1", &"tailor_fibre_flax"),
-		&"maplefold_patch": _mk_patch("Maplefold Patch", "cook", 2,
-			&"cook_herb_sage_t2", &"chem_herb_sea_wormwood_t2", &"tailor_fibre_flax"),
-		&"silkshade_patch": _mk_patch("Dye-Mushroom Ring", "cook", 3,
-			&"cook_herb_fennel_t3", &"chem_herb_gotu_kola_t3", &"tailor_fibre_silk_cocoons"),
-		&"cloudpine_patch": _mk_patch("Cloudpine Patch", "cook", 4,
-			&"cook_herb_rosemary_t4", &"chem_herb_water_hemlock_t4", &"tailor_fibre_silk_cocoons"),
-		&"baobab_patch": _mk_patch("Medicinal Bush Patch", "cook", 5,
-			&"cook_herb_lemongrass_t5", &"chem_herb_bittersweet_nightshade_t5", &"tailor_fibre_silk_cocoons"),
-		&"highwood_patch": _mk_patch("Fruit Canopy Grove", "cook", 6,
-			&"cook_herb_ginger_t6", &"chem_herb_valerian_t6", &"tailor_fibre_cotton"),
-		&"incense_patch": _mk_patch("Wadi Scrub Herbs", "cook", 7,
-			&"cook_herb_coriander_t7", &"chem_herb_aloe_vera_t7", &"tailor_fibre_cotton"),
-		&"boreal_patch": _mk_patch("Underbough Moss Patch", "cook", 8,
-			&"cook_herb_juniper_t8", &"chem_herb_frost_kava_t8", &"tailor_fibre_cotton"),
-		&"cinder_patch": _mk_patch("Ash Herb Patch", "cook", 9,
-			&"cook_herb_oregano_t9", &"chem_herb_datura_t9", &"tailor_fibre_hemp"),
-		&"starbloom_patch": _mk_patch("Starlit Sap Wound", "cook", 10,
-			&"cook_herb_star_anise_t10", &"chem_herb_bladderwrack_t10", &"tailor_fibre_hemp"),
+	PATCHES.clear()
 
-		# -----------------------------
-		# Chemical herbs (Fishing biomes) - primary 70% chem herb
-		# -----------------------------
-		&"reedrun_patch": _mk_patch("Reed Bed", "chem", 1,
-			&"chem_herb_marshmallow_root_t1", &"cook_herb_thyme_t1", &"tailor_fibre_flax"),
-		&"brineback_patch": _mk_patch("Saltmarsh Reeds", "chem", 2,
-			&"chem_herb_sea_wormwood_t2", &"cook_herb_sage_t2", &"tailor_fibre_flax"),
-		&"sinkbloom_patch": _mk_patch("Root-Hung Ledge", "chem", 3,
-			&"chem_herb_gotu_kola_t3", &"cook_herb_fennel_t3", &"tailor_fibre_silk_cocoons"),
-		&"echofall_patch": _mk_patch("Echofall Patch", "chem", 4,
-			&"chem_herb_water_hemlock_t4", &"cook_herb_rosemary_t4", &"tailor_fibre_silk_cocoons"),
-		&"lotusbank_patch": _mk_patch("Lotus Channel", "chem", 5,
-			&"chem_herb_bittersweet_nightshade_t5", &"cook_herb_lemongrass_t5", &"tailor_fibre_silk_cocoons"),
-		&"mistshelf_patch": _mk_patch("Mist-Covered Herb Shelf", "chem", 6,
-			&"chem_herb_valerian_t6", &"cook_herb_ginger_t6", &"tailor_fibre_cotton"),
-		&"skywell_patch": _mk_patch("Oasis Herb Garden", "chem", 7,
-			&"chem_herb_aloe_vera_t7", &"cook_herb_coriander_t7", &"tailor_fibre_cotton"),
-		&"frostlip_patch": _mk_patch("Frost Herb Ledge", "chem", 8,
-			&"chem_herb_frost_kava_t8", &"cook_herb_juniper_t8", &"tailor_fibre_cotton"),
-		&"steamroot_patch": _mk_patch("Steamroot Patch", "chem", 9,
-			&"chem_herb_datura_t9", &"cook_herb_oregano_t9", &"tailor_fibre_hemp"),
-		&"starkelp_patch": _mk_patch("Starkelp Patch", "chem", 10,
-			&"chem_herb_bladderwrack_t10", &"cook_herb_star_anise_t10", &"tailor_fibre_hemp"),
+	for row_v in PATCH_ROWS:
+		if not (row_v is Dictionary):
+			continue
+		var row: Dictionary = row_v
 
-		# -----------------------------
-		# Tailoring fibres (Mining biomes) - primary 70% fibre
-		# -----------------------------
-		&"stoneedge_patch": _mk_patch("Field Edge Herb Patch", "fibre", 1,
-			&"tailor_fibre_flax", &"cook_herb_thyme_t1", &"chem_herb_marshmallow_root_t1"),
-		&"tanninbush_patch": _mk_patch("Tanninbush Patch", "fibre", 2,
-			&"tailor_fibre_flax", &"cook_herb_sage_t2", &"chem_herb_sea_wormwood_t2"),
-		&"ochreshelf_patch": _mk_patch("Ochreshelf Patch", "fibre", 3,
-			&"tailor_fibre_silk_cocoons", &"cook_herb_fennel_t3", &"chem_herb_gotu_kola_t3"),
-		&"ironmoss_patch": _mk_patch("Ironmoss Patch", "fibre", 4,
-			&"tailor_fibre_silk_cocoons", &"cook_herb_rosemary_t4", &"chem_herb_water_hemlock_t4"),
-		&"redroot_patch": _mk_patch("Redroot Patch", "fibre", 5,
-			&"tailor_fibre_silk_cocoons", &"cook_herb_lemongrass_t5", &"chem_herb_bittersweet_nightshade_t5"),
-		&"caprock_patch": _mk_patch("Caprock Patch", "fibre", 6,
-			&"tailor_fibre_cotton", &"cook_herb_ginger_t6", &"chem_herb_valerian_t6"),
-		&"saltbloom_patch": _mk_patch("Saltbloom Patch", "fibre", 7,
-			&"tailor_fibre_cotton", &"cook_herb_coriander_t7", &"chem_herb_aloe_vera_t7"),
-		&"lichencrust_patch": _mk_patch("Lichencrust Patch", "fibre", 8,
-			&"tailor_fibre_cotton", &"cook_herb_juniper_t8", &"chem_herb_frost_kava_t8"),
-		&"pitchcap_patch": _mk_patch("Pitchcap Patch", "fibre", 9,
-			&"tailor_fibre_hemp", &"cook_herb_oregano_t9", &"chem_herb_datura_t9"),
-		&"voidbark_patch": _mk_patch("Voidbark Patch", "fibre", 10,
-			&"tailor_fibre_hemp", &"cook_herb_star_anise_t10", &"chem_herb_bladderwrack_t10"),
-	}
+		var pid: StringName = row.get("id", StringName(""))
+		var group: String = String(row.get("group", ""))
+		var tier: int = int(row.get("tier", 1))
+		var req: int = int(row.get("req", int(REQ_BY_TIER.get(tier, 1))))
+		var label: String = String(row.get("label", ""))
+
+		if pid == StringName("") or group == "" or label == "":
+			continue
+
+		# Clamp tier to known tuning tables (still allows “missing tiers” by just not adding rows)
+		tier = clampi(tier, 1, 10)
+
+		var primary: StringName = StringName("")
+		var other_a: StringName = StringName("")
+		var other_b: StringName = StringName("")
+
+		if group == "cook":
+			primary = COOK_HERB_BY_TIER.get(tier, StringName(""))
+			other_a = CHEM_HERB_BY_TIER.get(tier, StringName(""))
+			other_b = _fibre_for_tier(tier)
+
+		elif group == "chem":
+			primary = CHEM_HERB_BY_TIER.get(tier, StringName(""))
+			other_a = COOK_HERB_BY_TIER.get(tier, StringName(""))
+			other_b = _fibre_for_tier(tier)
+
+		elif group == "fibre":
+			primary = row.get("primary", StringName(""))
+			other_a = COOK_HERB_BY_TIER.get(tier, StringName(""))
+			other_b = CHEM_HERB_BY_TIER.get(tier, StringName(""))
+
+		else:
+			continue
+
+		if primary == StringName("") or other_a == StringName("") or other_b == StringName(""):
+			continue
+
+		PATCHES[pid] = _mk_patch(label, group, tier, req, primary, other_a, other_b)
+
+	_rebuild_label_index()
 
 # -------------------------------------------------------------------
-# Per-tile patch state (charges + regrow_at)
+# Public helpers
 # -------------------------------------------------------------------
-
-var _patch_state: Dictionary = {}
 
 func get_patch_def(patch_id: StringName) -> Dictionary:
-	if PATCHES.has(patch_id):
-		return PATCHES[patch_id]
-	return {}
+	var v: Variant = PATCHES.get(patch_id, {})
+	return v if (v is Dictionary) else {}
 
 func is_patch_unlocked(patch_id: StringName, herb_lv: int) -> bool:
 	var def := get_patch_def(patch_id)
@@ -341,30 +286,36 @@ func is_patch_unlocked(patch_id: StringName, herb_lv: int) -> bool:
 		return false
 	return herb_lv >= int(def.get("req", 1))
 
+func get_max_charges(patch_id: StringName) -> int:
+	var def := get_patch_def(patch_id)
+	return int(def.get("quick_charges", 0))
+
+func get_cooldown_seconds(axial: Vector2i, patch_id: StringName) -> float:
+	return _get_cooldown_seconds(axial, patch_id)
+
+# -------------------------------------------------------------------
+# Per-tile patch state (charges + regrow_at)
+# -------------------------------------------------------------------
+
+var _patch_state: Dictionary = {}
+
+func clear_all_state() -> void:
+	_patch_state.clear()
+
 func _get_or_init_state(axial: Vector2i, patch_id: StringName) -> Dictionary:
 	var per_tile_v: Variant = _patch_state.get(axial, {})
-	var per_tile: Dictionary
-	if per_tile_v is Dictionary:
-		per_tile = per_tile_v
-	else:
-		per_tile = {}
+	var per_tile: Dictionary = per_tile_v if (per_tile_v is Dictionary) else {}
+	if not (_patch_state.get(axial, null) is Dictionary):
 		_patch_state[axial] = per_tile
 
 	var st_v: Variant = per_tile.get(patch_id, {})
-	var st: Dictionary
-	if st_v is Dictionary:
-		st = st_v
-	else:
-		st = {}
+	var st: Dictionary = st_v if (st_v is Dictionary) else {}
 
 	if st.is_empty():
 		var def := get_patch_def(patch_id)
 		if def.is_empty():
 			return {}
-		st = {
-			"charges": int(def.get("quick_charges", 0)),
-			"regrow_at": 0.0,
-		}
+		st = { "charges": int(def.get("quick_charges", 0)), "regrow_at": 0.0 }
 		per_tile[patch_id] = st
 
 	return st
@@ -400,11 +351,7 @@ func get_patch_status(axial: Vector2i, patch_id: StringName) -> Dictionary:
 	var now := Time.get_unix_time_from_system()
 
 	var available := (charges > 0) and (regrow_at <= 0.0 or now >= regrow_at)
-	return {
-		"is_available": available,
-		"charges": charges,
-		"regrow_at": regrow_at,
-	}
+	return { "is_available": available, "charges": charges, "regrow_at": regrow_at }
 
 func is_patch_available(axial: Vector2i, patch_id: StringName) -> bool:
 	return bool(get_patch_status(axial, patch_id).get("is_available", false))
@@ -430,9 +377,6 @@ func _consume_quick_charge(axial: Vector2i, patch_id: StringName) -> void:
 		if regrow_s > 0.0:
 			st["regrow_at"] = Time.get_unix_time_from_system() + regrow_s
 
-func clear_all_state() -> void:
-	_patch_state.clear()
-
 func _get_cooldown_seconds(axial: Vector2i, patch_id: StringName) -> float:
 	var per_tile_v: Variant = _patch_state.get(axial, {})
 	if not (per_tile_v is Dictionary):
@@ -442,7 +386,7 @@ func _get_cooldown_seconds(axial: Vector2i, patch_id: StringName) -> float:
 	if not per_tile.has(patch_id):
 		return 0.0
 
-	var st_v: Variant = per_tile[patch_id]
+	var st_v: Variant = per_tile.get(patch_id, {})
 	if not (st_v is Dictionary):
 		return 0.0
 	var st: Dictionary = st_v
@@ -487,21 +431,12 @@ func get_drop_preview_for_patch(patch_id: StringName, quick: bool = false) -> Ar
 			continue
 		var row: Dictionary = row_v
 		var item_id: StringName = row.get("id", StringName(""))
-		if item_id == StringName(""):
-			continue
 		var w := float(row.get("weight", 0.0))
-		if w <= 0.0:
+		if item_id == StringName("") or w <= 0.0:
 			continue
-		result.append({
-			"item_id": item_id,
-			"chance": w / total_weight,
-			"qty": qty,
-			"is_fail": false,
-		})
+		result.append({ "item_id": item_id, "chance": w / total_weight, "qty": qty, "is_fail": false })
 
-	result.sort_custom(func(a, b):
-		return float(a["chance"]) > float(b["chance"])
-	)
+	result.sort_custom(func(a, b): return float(a["chance"]) > float(b["chance"]))
 	return result
 
 # -------------------------------------------------------------------
@@ -535,35 +470,20 @@ func _roll_weighted_drop(def: Dictionary) -> StringName:
 		if r <= run:
 			return row.get("id", StringName(""))
 
-	var last: Dictionary = drops.back()
-	return last.get("id", StringName(""))
+	return (drops.back() as Dictionary).get("id", StringName(""))
 
 # -------------------------------------------------------------------
-# Core action: do_forage (Mining-style)
+# Core action: do_forage
 # -------------------------------------------------------------------
 
 func do_forage(patch_id: StringName, ax: Vector2i, quick: bool = false) -> Dictionary:
-	var def: Dictionary = get_patch_def(patch_id)
+	var def := get_patch_def(patch_id)
 	if def.is_empty():
-		return {
-			"xp": 0,
-			"loot_desc": "",
-			"empty": true,
-			"cooldown": 0.0,
-			"actions": 0,
-			"mode": "",
-		}
+		return { "xp": 0, "loot_desc": "", "empty": true, "cooldown": 0.0, "actions": 0, "mode": "" }
 
 	if not is_patch_available(ax, patch_id):
 		var cd := _get_cooldown_seconds(ax, patch_id)
-		return {
-			"xp": 0,
-			"loot_desc": "This patch is regrowing.",
-			"empty": true,
-			"cooldown": cd,
-			"actions": 0,
-			"mode": ("quick" if quick else "careful"),
-		}
+		return { "xp": 0, "loot_desc": "This patch is regrowing.", "empty": true, "cooldown": cd, "actions": 0, "mode": ("quick" if quick else "careful") }
 
 	var actions := CAREFUL_ACTIONS
 	var qty := CAREFUL_QTY
@@ -578,29 +498,16 @@ func do_forage(patch_id: StringName, ax: Vector2i, quick: bool = false) -> Dicti
 		_consume_quick_charge(ax, patch_id)
 
 	var item_id: StringName = _roll_weighted_drop(def)
-
 	if item_id != StringName("") and typeof(Bank) != TYPE_NIL and Bank.has_method("add"):
 		Bank.add(item_id, qty)
 
 	var loot_desc := "Gained herbalism loot."
-	if typeof(Items) != TYPE_NIL \
-	and Items.has_method("display_name") \
-	and Items.has_method("is_valid") \
-	and Items.is_valid(item_id):
+	if typeof(Items) != TYPE_NIL and Items.has_method("display_name") and Items.has_method("is_valid") and Items.is_valid(item_id):
 		loot_desc = "Gained %dx %s" % [qty, Items.display_name(item_id)]
 	else:
 		loot_desc = "Gained %dx %s" % [qty, String(item_id)]
 
 	var empty_now: bool = not is_patch_available(ax, patch_id)
-	var cooldown_now: float = 0.0
-	if empty_now:
-		cooldown_now = _get_cooldown_seconds(ax, patch_id)
+	var cooldown_now: float = _get_cooldown_seconds(ax, patch_id) if empty_now else 0.0
 
-	return {
-		"xp": xp,
-		"loot_desc": loot_desc,
-		"empty": empty_now,
-		"cooldown": cooldown_now,
-		"actions": actions,
-		"mode": mode,
-	}
+	return { "xp": xp, "loot_desc": loot_desc, "empty": empty_now, "cooldown": cooldown_now, "actions": actions, "mode": mode }
