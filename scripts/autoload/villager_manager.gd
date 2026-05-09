@@ -1233,7 +1233,6 @@ func _complete_job(v_idx: int) -> void:
 			world3.call("clear_villager_from_tile", v_idx)
 		job_changed.emit(v_idx, JOB_NONE)
 
-
 # -------------------------------------------------------------------
 # Save / Load
 # -------------------------------------------------------------------
@@ -1243,28 +1242,45 @@ func to_save_dict() -> Dictionary:
 
 	for k_v: Variant in _jobs.keys():
 		var v_idx: int = int(k_v)
-		var st_v: Variant = _jobs[k_v]
+		var st_v: Variant = _jobs.get(k_v, {})
+
 		if not (st_v is Dictionary):
 			continue
 
 		var st: Dictionary = st_v as Dictionary
 
 		var ax: Vector2i = Vector2i.ZERO
-		if st.has("ax") and st["ax"] is Vector2i:
-			ax = st["ax"] as Vector2i
+		var ax_v: Variant = st.get("ax", Vector2i.ZERO)
+		if ax_v is Vector2i:
+			ax = ax_v as Vector2i
 
-		jobs_save[v_idx] = {
-			"job":         StringName(st.get("job", JOB_NONE)),
-			"recipe":      StringName(st.get("recipe", StringName())),
-			"ax":          ax,
-			"elapsed":     float(st.get("elapsed", 0.0)),
-			"duration":    float(st.get("duration", 0.0)),
-			"remaining":   int(st.get("remaining", 1)),
-			"repeat":      bool(st.get("repeat", false)),
+		var job: StringName = StringName(st.get("job", JOB_NONE))
+		if job == JOB_NONE:
+			continue
+
+		var duration: float = float(st.get("duration", 0.0))
+		if duration <= 0.0:
+			duration = _job_duration(job, StringName(st.get("recipe", StringName(""))))
+
+		# IMPORTANT:
+		# Use string keys and plain JSON-safe values only.
+		jobs_save[str(v_idx)] = {
+			"job": String(job),
+			"recipe": String(StringName(st.get("recipe", StringName("")))),
+			"ax": {
+				"x": ax.x,
+				"y": ax.y,
+			},
+			"elapsed": float(st.get("elapsed", 0.0)),
+			"duration": duration,
+			"remaining": int(st.get("remaining", 1)),
+			"repeat": bool(st.get("repeat", false)),
 			"node_detail": String(st.get("node_detail", "")),
 		}
 
-	return { "jobs": jobs_save }
+	return {
+		"jobs": jobs_save,
+	}
 
 
 func from_save_dict(d: Dictionary) -> void:
@@ -1277,46 +1293,71 @@ func from_save_dict(d: Dictionary) -> void:
 	var jobs_d: Dictionary = jobs_v as Dictionary
 
 	for k_v: Variant in jobs_d.keys():
-		var v_idx: int = int(k_v)
-		var st_v: Variant = jobs_d[k_v]
+		var key_str: String = String(k_v)
+		if not key_str.is_valid_int():
+			push_warning("[VillagerManager] Bad saved villager job key: %s" % key_str)
+			continue
+
+		var v_idx: int = int(key_str)
+		if not _is_valid_index(v_idx):
+			continue
+
+		var st_v: Variant = jobs_d.get(k_v, {})
 		if not (st_v is Dictionary):
 			continue
 
 		var st: Dictionary = st_v as Dictionary
 
-		var ax: Vector2i = Vector2i.ZERO
-		if st.has("ax") and st["ax"] is Vector2i:
-			ax = st["ax"] as Vector2i
+		var job := StringName(String(st.get("job", String(JOB_NONE))))
+		if job == JOB_NONE:
+			continue
+
+		var recipe := StringName(String(st.get("recipe", "")))
+
+		var ax := Vector2i.ZERO
+		var ax_v: Variant = st.get("ax", {})
+
+		if ax_v is Dictionary:
+			var ax_d: Dictionary = ax_v as Dictionary
+			ax = Vector2i(
+				int(ax_d.get("x", 0)),
+				int(ax_d.get("y", 0))
+			)
+		elif ax_v is String:
+			# Compatibility fallback for any accidental "x,y" style saves.
+			var parts := String(ax_v).split(",", false)
+			if parts.size() == 2:
+				ax = Vector2i(int(parts[0]), int(parts[1]))
+		elif ax_v is Vector2i:
+			# Compatibility fallback for non-JSON in-memory saves.
+			ax = ax_v as Vector2i
+
+		var duration: float = float(st.get("duration", 0.0))
+		if duration <= 0.0:
+			duration = _job_duration(job, recipe)
 
 		_jobs[v_idx] = {
-			"job":         StringName(st.get("job", JOB_NONE)),
-			"recipe":      StringName(st.get("recipe", StringName())),
-			"ax":          ax,
-			"elapsed":     float(st.get("elapsed", 0.0)),
-			"duration":    float(st.get("duration", 0.0)),
-			"remaining":   int(st.get("remaining", 1)),
-			"repeat":      bool(st.get("repeat", false)),
+			"job": job,
+			"recipe": recipe,
+			"ax": ax,
+			"elapsed": clampf(float(st.get("elapsed", 0.0)), 0.0, duration),
+			"duration": max(0.1, duration),
+			"remaining": maxi(1, int(st.get("remaining", 1))),
+			"repeat": bool(st.get("repeat", false)),
 			"node_detail": String(st.get("node_detail", "")),
 		}
 
-	for k2_v: Variant in _jobs.keys():
-		var v2: int = int(k2_v)
-		var st2_v: Variant = _jobs[v2]
-		if not (st2_v is Dictionary):
-			continue
-
-		var st2: Dictionary = st2_v as Dictionary
-		var job2: StringName = StringName(st2.get("job", JOB_NONE))
-		var elapsed2: float = float(st2.get("elapsed", 0.0))
-		var duration2: float = float(st2.get("duration", 0.0))
-
-		job_changed.emit(v2, job2)
-		job_progress.emit(v2, job2, elapsed2, duration2)
+		job_changed.emit(v_idx, job)
+		job_progress.emit(
+			v_idx,
+			job,
+			float(_jobs[v_idx].get("elapsed", 0.0)),
+			float(_jobs[v_idx].get("duration", 1.0))
+		)
 
 
 func reset_runtime_state() -> void:
 	_jobs.clear()
-
 
 # -------------------------------------------------------------------
 # Helpers: build recipes for node-driven gathering jobs

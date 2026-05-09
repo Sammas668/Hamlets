@@ -1077,6 +1077,7 @@ func _apply_pending_load_if_any() -> bool:
 			Selection.set_selected(null)
 		# WorldData may not expose a reset — safe to skip
 		_restore_from_dict(d)
+		restore_worker_icons_from_jobs()
 		_refresh_ui()
 		return true
 
@@ -1317,9 +1318,9 @@ func _rebuild_world_from_pending() -> void:
 	for c in fragments_root.get_children():
 		c.queue_free()
 
-	_restore_from_dict(d)
-	_refresh_ui()
-
+		_restore_from_dict(d)
+		restore_worker_icons_from_jobs()
+		_refresh_ui()
 	# Optionally set a sane default selection for WorldQuery
 	if typeof(WorldQuery) != TYPE_NIL and d.has("tiles"):
 		var tiles_v: Variant = d["tiles"]
@@ -2345,6 +2346,62 @@ func _make_worker_icon(v_idx: int) -> Node2D:
 
 	s.z_index = 500
 	return s
+
+func restore_worker_icons_from_jobs() -> void:
+	# Clear only visual icon state. Do not touch VillagerManager jobs.
+	for icon_v: Variant in _worker_icon_by_v.values():
+		if icon_v is Node and is_instance_valid(icon_v):
+			(icon_v as Node).queue_free()
+
+	_worker_icon_by_v.clear()
+	_tile_worker_by_ax.clear()
+
+	if typeof(VillagerManager) == TYPE_NIL:
+		return
+	if typeof(Villagers) == TYPE_NIL or not Villagers.has_method("count"):
+		return
+
+	for v_idx in range(int(Villagers.count())):
+		var st: Dictionary = VillagerManager.get_job_state(v_idx)
+		if st.is_empty():
+			continue
+
+		var ax_v: Variant = st.get("ax", Vector2i.ZERO)
+		if not (ax_v is Vector2i):
+			continue
+
+		var ax: Vector2i = ax_v as Vector2i
+
+		if not _has_fragment_at(ax):
+			continue
+
+		_place_villager_icon_only(v_idx, ax)
+
+func _place_villager_icon_only(v_idx: int, ax: Vector2i) -> void:
+	# Visual restore only.
+	# Do not call VillagerManager.
+	# Do not cancel jobs.
+
+	_clear_villager_icon(v_idx)
+
+	var icon := _make_worker_icon(v_idx)
+
+	var overlay_root := get_node_or_null("WorkerOverlays")
+	if overlay_root != null:
+		overlay_root.add_child(icon)
+	else:
+		add_child(icon)
+
+	icon.position = _axial_to_pixel(ax.x, ax.y)
+
+	_worker_icon_by_v[v_idx] = icon
+	_tile_worker_by_ax[ax] = v_idx
+
+	if typeof(WorldData) != TYPE_NIL and WorldData.has_method("bind_villager_to_axial"):
+		if typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_at"):
+			var v = Villagers.get_at(v_idx)
+			if v != null:
+				WorldData.bind_villager_to_axial(ax, v.id)
 
 # ---------- villager placement helpers ----------
 
