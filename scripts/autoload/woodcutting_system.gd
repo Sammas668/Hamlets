@@ -125,8 +125,8 @@ const TARGETS := {
 	},
 
 	# T7 – Ironwood
-	&"ironwood_run": {
-		"name": "Ironwood Run",
+	&"ironwood_grove": {
+		"name": "Ironwood Grove",
 		"kind": TargetKind.TREE,
 		"tier": 7,
 		"lvl_req": 60,
@@ -142,8 +142,8 @@ const TARGETS := {
 	},
 
 	# T8 – Redwood
-	&"redwood_reach": {
-		"name": "Redwood Reach",
+	&"redwood_grove": {
+		"name": "Redwood Grove",
 		"kind": TargetKind.TREE,
 		"tier": 8,
 		"lvl_req": 75,

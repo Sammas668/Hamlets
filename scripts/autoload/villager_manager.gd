@@ -724,7 +724,10 @@ func get_jobs_for_tile(_v_idx: int, ax: Vector2i) -> Array:
 		specs.append({ "label": "Smithing",     "job": JOB_SMITHING,     "id": 3,  "disabled": false, "reason": "" })
 		specs.append({ "label": "Construction", "job": JOB_CONSTRUCTION, "id": 4,  "disabled": false, "reason": "" })
 
-		if _tile_has_resource_for_skill(mods, "mining"):
+		var has_mining: bool = _tile_has_resource_for_skill(mods, "mining")
+		if not has_mining and typeof(ResourceNodes) != TYPE_NIL and ResourceNodes.has_method("has_any"):
+			has_mining = bool(ResourceNodes.has_any(ax, "mining"))
+		if has_mining:
 			specs.append({ "label": "Mining", "job": JOB_MINING, "id": 10, "disabled": false, "reason": "" })
 
 		var has_wood: bool = _tile_has_resource_for_skill(mods, "woodcutting")
