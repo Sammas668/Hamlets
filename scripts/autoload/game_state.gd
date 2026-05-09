@@ -3,6 +3,20 @@ extends Node
 
 var _pending_world: Dictionary = {}   # consumed by World.gd
 
+func _get_herbalism_system() -> Node:
+	var herb := get_node_or_null("/root/herbalism_system")
+	if herb != null:
+		return herb
+
+	herb = get_node_or_null("/root/HerbalismSystem")
+	if herb != null:
+		return herb
+
+	herb = get_node_or_null("/root/herbalism")
+	if herb != null:
+		return herb
+
+	return null
 
 func has_pending_world() -> bool:
 	return not _pending_world.is_empty()
@@ -61,6 +75,27 @@ func from_dict(d: Dictionary) -> void:
 
 	# (later you can add: global skills, settings, etc.)
 
+	# -------------------------
+	# 5) MiningSystem runtime state
+	# -------------------------
+	if d.has("mining_system") \
+	and typeof(MiningSystem) != TYPE_NIL \
+	and MiningSystem.has_method("from_save_dict"):
+		var mining_raw: Variant = d["mining_system"]
+		if mining_raw is Dictionary:
+			MiningSystem.from_save_dict(mining_raw as Dictionary)
+
+	# -------------------------
+	# 6) HerbalismSystem runtime state
+	# -------------------------
+	var herb := _get_herbalism_system()
+	if d.has("herbalism_system") \
+	and herb != null \
+	and herb.has_method("from_save_dict"):
+		var herb_raw: Variant = d["herbalism_system"]
+		if herb_raw is Dictionary:
+			herb.from_save_dict(herb_raw as Dictionary)
+
 func reset_runtime_state() -> void:
 	_pending_world = {}
 
@@ -70,6 +105,12 @@ func reset_runtime_state() -> void:
 		Villagers.reset_runtime_state()
 	if typeof(VillagerManager) != TYPE_NIL and VillagerManager.has_method("reset_runtime_state"):
 		VillagerManager.reset_runtime_state()
+	if typeof(MiningSystem) != TYPE_NIL and MiningSystem.has_method("reset_runtime_state"):
+		MiningSystem.reset_runtime_state()
+
+	var herb := _get_herbalism_system()
+	if herb != null and herb.has_method("reset_runtime_state"):
+		herb.reset_runtime_state()
 	if typeof(Selection) != TYPE_NIL and Selection.has_method("clear"):
 		Selection.clear()
 	if typeof(WorldQuery) != TYPE_NIL and WorldQuery.has_method("set_selected"):
@@ -104,5 +145,18 @@ func to_dict() -> Dictionary:
 	# -------------------------
 	if typeof(VillagerManager) != TYPE_NIL and VillagerManager.has_method("to_save_dict"):
 		data["villager_manager"] = VillagerManager.to_save_dict()
+
+	# -------------------------
+	# 5) MiningSystem runtime state
+	# -------------------------
+	if typeof(MiningSystem) != TYPE_NIL and MiningSystem.has_method("to_save_dict"):
+		data["mining_system"] = MiningSystem.to_save_dict()
+
+	# -------------------------
+	# 6) HerbalismSystem runtime state
+	# -------------------------
+	var herb := _get_herbalism_system()
+	if herb != null and herb.has_method("to_save_dict"):
+		data["herbalism_system"] = herb.to_save_dict()
 
 	return data

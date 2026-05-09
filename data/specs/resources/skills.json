@@ -7,7 +7,7 @@
 	{ "id":"attack",        "name":"Attack",        "attr":"STR", "group":"Combat",    "icon":"res://ui/icons/skills/attack.png" },
 
 	{ "id":"fishing",       "name":"Fishing",       "attr":"DEX", "group":"Gathering", "icon":"res://ui/icons/skills/fishing.png" },
-	{ "id":"construction",  "name":"Construction",  "attr":"DEX", "group":"Artisan",   "icon":"res://ui/icons/Skills/construction.png" },
+	{ "id":"construction",  "name":"Construction",  "attr":"DEX", "group":"Artisan",   "icon":"res://ui/icons/skills/construction.png" },
 	{ "id":"runecrafting",  "name":"Runecrafting",  "attr":"DEX", "group":"Arcane",    "icon":"res://ui/icons/skills/runecrafting.png" },
 	{ "id":"ranged",        "name":"Ranged",        "attr":"DEX", "group":"Combat",    "icon":"res://ui/icons/skills/ranged.png" },
 

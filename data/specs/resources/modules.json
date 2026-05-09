@@ -420,14 +420,14 @@
 	"delta_lv": 3,
 	"req_con_lv": 33
   },
-  "carpentry_hall_blueprint_desk": {
-	"id": "carpentry_hall_blueprint_desk",
-	"building": "Carpentry Hall",
-	"skill": "carpentry",
+  "construction_hall_blueprint_desk": {
+	"id": "construction_hall_blueprint_desk",
+	"building": "Construction Hall",
+	"skill": "construction",
 	"kind": "module",
 	"part": "Blueprint Desk",
 	"role": "XP/Spl",
-	"effect": "Extra Carpentry XP; unlocks better BOM/preview UI for constructions attached to this tile.",
+	"effect": "Extra Construction XP; unlocks better BOM/preview UI for constructions attached to this tile.",
 	"struct": {
 	  "frame": 1,
 	  "floor_section": 1
@@ -441,10 +441,10 @@
 	"delta_lv": 3,
 	"req_con_lv": 23
   },
-  "carpentry_hall_clamp_wall": {
-	"id": "carpentry_hall_clamp_wall",
-	"building": "Carpentry Hall",
-	"skill": "carpentry",
+  "construction_hall_clamp_wall": {
+	"id": "construction_hall_clamp_wall",
+	"building": "Construction Hall",
+	"skill": "construction",
 	"kind": "module",
 	"part": "Clamp Wall",
 	"role": "Yield",
@@ -461,10 +461,10 @@
 	"delta_lv": 3,
 	"req_con_lv": 23
   },
-  "carpentry_hall_hoist_rail": {
-	"id": "carpentry_hall_hoist_rail",
-	"building": "Carpentry Hall",
-	"skill": "carpentry",
+  "construction_hall_hoist_rail": {
+	"id": "construction_hall_hoist_rail",
+	"building": "Construction Hall",
+	"skill": "construction",
 	"kind": "module",
 	"part": "Hoist Rail",
 	"role": "Speed/Spl",
@@ -483,10 +483,10 @@
 	"delta_lv": 5,
 	"req_con_lv": 35
   },
-  "carpentry_hall_pattern_archive": {
-	"id": "carpentry_hall_pattern_archive",
-	"building": "Carpentry Hall",
-	"skill": "carpentry",
+  "construction_hall_pattern_archive": {
+	"id": "construction_hall_pattern_archive",
+	"building": "ConstructionHall",
+	"skill": "construction",
 	"kind": "module",
 	"part": "Pattern Archive",
 	"role": "Yield/Spl",
@@ -504,14 +504,14 @@
 	"delta_lv": 5,
 	"req_con_lv": 35
   },
-  "carpentry_hall_planer_bench": {
-	"id": "carpentry_hall_planer_bench",
-	"building": "Carpentry Hall",
-	"skill": "carpentry",
+  "construction_hall_planer_bench": {
+	"id": "construction_hall_planer_bench",
+	"building": "Construction Hall",
+	"skill": "constructiony",
 	"kind": "module",
 	"part": "Planer Bench",
 	"role": "Speed",
-	"effect": "Reduced action time on small (1–2 plank) carpentry crafts on this tile.",
+	"effect": "Reduced action time on small (1–2 plank) construction crafts on this tile.",
 	"struct": {
 	  "frame": 2,
 	  "floor_section": 1

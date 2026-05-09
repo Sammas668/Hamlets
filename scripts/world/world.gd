@@ -1370,13 +1370,18 @@ func _on_pause_quit() -> void:
 # ---------- WORLD SNAPSHOT / RESTORE ----------
 func get_save_dict() -> Dictionary:
 	var tiles: Dictionary = {}
+
 	for c in fragments_root.get_children():
+		if not (c is Fragment):
+			continue
+
 		var td := _node_to_tile_dict(c)
 		if not td.is_empty():
 			var q: int = int(td.get("q", 0))
 			var r: int = int(td.get("r", 0))
 			var ax := Vector2i(q, r)
 			tiles[_coord_key(ax)] = td
+
 	return {
 		"tiles": tiles,
 		"early_spawn_count": _early_spawn_count,
@@ -1384,7 +1389,7 @@ func get_save_dict() -> Dictionary:
 	}
 
 func _node_to_tile_dict(c: Node) -> Dictionary:
-	if c is Line2D:
+	if not (c is Fragment):
 		return {}
 	
 	var building_id: String = ""
@@ -1429,37 +1434,6 @@ func _node_to_tile_dict(c: Node) -> Dictionary:
 			}
 		return tile_dict
 
-	# Legacy / generic case – nodes with a `coord` property
-	var coord_v: Variant = c.get("coord")
-	if coord_v is Vector2i:
-		var biome_v: Variant = c.get("biome")
-		var biome_s: String = ""
-		if biome_v is String:
-			biome_s = String(biome_v)
-		var coord: Vector2i = coord_v as Vector2i
-		var tile_dict2: Dictionary = { "q": coord.x, "r": coord.y, "biome": biome_s }
-		if building_id != "" or not building_modules.is_empty():
-			tile_dict2["buildings"] = {
-				"base": building_id,
-				"modules": building_modules,
-			}
-		return tile_dict2
-
-	# Very old fallback – infer axial from position
-	if c is Node2D:
-		var p: Vector2 = (c as Node2D).position
-		var ax: Vector2i = _pixel_to_axial(p)
-		var biome4_v: Variant = c.get("biome")
-		var biome4_s: String = ""
-		if biome4_v is String:
-			biome4_s = String(biome4_v)
-		var tile_dict3: Dictionary = { "q": ax.x, "r": ax.y, "biome": biome4_s }
-		if building_id != "" or not building_modules.is_empty():
-			tile_dict3["buildings"] = {
-				"base": building_id,
-				"modules": building_modules,
-			}
-		return tile_dict3
 
 
 	return {}

@@ -302,6 +302,110 @@ var _patch_state: Dictionary = {}
 func clear_all_state() -> void:
 	_patch_state.clear()
 
+# -------------------------------------------------------------------
+# Save / load runtime state
+# -------------------------------------------------------------------
+
+func to_save_dict() -> Dictionary:
+	return {
+		"patch_state": _serialize_patch_state()
+	}
+
+
+func from_save_dict(d: Dictionary) -> void:
+	var raw: Variant = d.get("patch_state", {})
+	_patch_state = _deserialize_patch_state(raw)
+
+
+func reset_runtime_state() -> void:
+	_patch_state.clear()
+
+
+func _ax_key(ax: Vector2i) -> String:
+	return "%d,%d" % [ax.x, ax.y]
+
+
+func _parse_ax_key(s: String) -> Vector2i:
+	var parts := s.split(",", false)
+	if parts.size() != 2:
+		push_warning("[HerbalismSystem] Bad axial save key: %s" % s)
+		return Vector2i.ZERO
+
+	return Vector2i(int(parts[0]), int(parts[1]))
+
+
+func _serialize_patch_state() -> Dictionary:
+	var out: Dictionary = {}
+
+	for ax_v: Variant in _patch_state.keys():
+		if typeof(ax_v) != TYPE_VECTOR2I:
+			continue
+
+		var ax: Vector2i = ax_v
+		var per_tile_v: Variant = _patch_state.get(ax, {})
+		if not (per_tile_v is Dictionary):
+			continue
+
+		var per_tile: Dictionary = per_tile_v
+		var tile_out: Dictionary = {}
+
+		for patch_id_v: Variant in per_tile.keys():
+			var st_v: Variant = per_tile.get(patch_id_v, {})
+			if not (st_v is Dictionary):
+				continue
+
+			var st: Dictionary = st_v
+			var patch_id: String = String(patch_id_v)
+
+			tile_out[patch_id] = {
+				"charges": int(st.get("charges", 0)),
+				"regrow_at": float(st.get("regrow_at", 0.0)),
+			}
+
+		if not tile_out.is_empty():
+			out[_ax_key(ax)] = tile_out
+
+	return out
+
+
+func _deserialize_patch_state(raw: Variant) -> Dictionary:
+	var out: Dictionary = {}
+
+	if not (raw is Dictionary):
+		return out
+
+	var raw_dict: Dictionary = raw
+
+	for ax_key_v: Variant in raw_dict.keys():
+		var ax_key: String = String(ax_key_v)
+		var ax: Vector2i = _parse_ax_key(ax_key)
+
+		var tile_v: Variant = raw_dict.get(ax_key_v, {})
+		if not (tile_v is Dictionary):
+			continue
+
+		var tile_dict: Dictionary = tile_v
+		var per_tile: Dictionary = {}
+
+		for patch_id_v: Variant in tile_dict.keys():
+			var patch_id := StringName(String(patch_id_v))
+			var st_v: Variant = tile_dict.get(patch_id_v, {})
+
+			if not (st_v is Dictionary):
+				continue
+
+			var st: Dictionary = st_v
+
+			per_tile[patch_id] = {
+				"charges": int(st.get("charges", 0)),
+				"regrow_at": float(st.get("regrow_at", 0.0)),
+			}
+
+		if not per_tile.is_empty():
+			out[ax] = per_tile
+
+	return out
+
 func _get_or_init_state(axial: Vector2i, patch_id: StringName) -> Dictionary:
 	var per_tile_v: Variant = _patch_state.get(axial, {})
 	var per_tile: Dictionary = per_tile_v if (per_tile_v is Dictionary) else {}

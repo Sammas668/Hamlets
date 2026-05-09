@@ -379,6 +379,110 @@ func clear_all_state() -> void:
 	_node_state.clear()
 
 # -------------------------------------------------------------------
+# Save / load runtime state
+# -------------------------------------------------------------------
+
+func to_save_dict() -> Dictionary:
+	return {
+		"node_state": _serialize_node_state()
+	}
+
+
+func from_save_dict(d: Dictionary) -> void:
+	var raw: Variant = d.get("node_state", {})
+	_node_state = _deserialize_node_state(raw)
+
+
+func reset_runtime_state() -> void:
+	_node_state.clear()
+
+
+func _ax_key(ax: Vector2i) -> String:
+	return "%d,%d" % [ax.x, ax.y]
+
+
+func _parse_ax_key(s: String) -> Vector2i:
+	var parts := s.split(",", false)
+	if parts.size() != 2:
+		push_warning("[MiningSystem] Bad axial save key: %s" % s)
+		return Vector2i.ZERO
+
+	return Vector2i(int(parts[0]), int(parts[1]))
+
+
+func _serialize_node_state() -> Dictionary:
+	var out: Dictionary = {}
+
+	for ax_v: Variant in _node_state.keys():
+		if typeof(ax_v) != TYPE_VECTOR2I:
+			continue
+
+		var ax: Vector2i = ax_v
+		var per_tile_v: Variant = _node_state.get(ax, {})
+		if not (per_tile_v is Dictionary):
+			continue
+
+		var per_tile: Dictionary = per_tile_v
+		var tile_out: Dictionary = {}
+
+		for node_id_v: Variant in per_tile.keys():
+			var st_v: Variant = per_tile.get(node_id_v, {})
+			if not (st_v is Dictionary):
+				continue
+
+			var st: Dictionary = st_v
+			var node_id: String = String(node_id_v)
+
+			tile_out[node_id] = {
+				"charges": int(st.get("charges", 0)),
+				"respawn_at": float(st.get("respawn_at", 0.0)),
+			}
+
+		if not tile_out.is_empty():
+			out[_ax_key(ax)] = tile_out
+
+	return out
+
+
+func _deserialize_node_state(raw: Variant) -> Dictionary:
+	var out: Dictionary = {}
+
+	if not (raw is Dictionary):
+		return out
+
+	var raw_dict: Dictionary = raw
+
+	for ax_key_v: Variant in raw_dict.keys():
+		var ax_key: String = String(ax_key_v)
+		var ax: Vector2i = _parse_ax_key(ax_key)
+
+		var tile_v: Variant = raw_dict.get(ax_key_v, {})
+		if not (tile_v is Dictionary):
+			continue
+
+		var tile_dict: Dictionary = tile_v
+		var per_tile: Dictionary = {}
+
+		for node_id_v: Variant in tile_dict.keys():
+			var node_id := StringName(String(node_id_v))
+			var st_v: Variant = tile_dict.get(node_id_v, {})
+
+			if not (st_v is Dictionary):
+				continue
+
+			var st: Dictionary = st_v
+
+			per_tile[node_id] = {
+				"charges": int(st.get("charges", 0)),
+				"respawn_at": float(st.get("respawn_at", 0.0)),
+			}
+
+		if not per_tile.is_empty():
+			out[ax] = per_tile
+
+	return out
+
+# -------------------------------------------------------------------
 # Drop preview for UI (used by gathering menu)
 # -------------------------------------------------------------------
 

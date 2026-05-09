@@ -5,7 +5,7 @@ signal saves_changed
 
 const SAVE_DIR  := "user://saves"
 const AUTOSAVE  := "autosave"
-const VERSION   := 2
+const VERSION   := 3
 
 func _ready() -> void:
 	_ensure_dir()
@@ -140,7 +140,14 @@ func _normalize_payload(data: Dictionary) -> Dictionary:
 	elif data.has("tiles"):
 		normalized["world"] = { "tiles": data.get("tiles", []) }
 
-	for k in ["bank", "villagers", "villager_manager", "settings"]:
+	for k in [
+		"bank",
+		"villagers",
+		"villager_manager",
+		"mining_system",
+		"herbalism_system",
+		"settings",
+	]:
 		var section_v: Variant = data.get(k, null)
 		if section_v is Dictionary:
 			normalized[k] = section_v
