@@ -280,8 +280,6 @@ func rebuild_nodes_for_tile(
 
 		# ResourceNodes identifies nodes only.
 		# Actual product/drop data belongs to the skill systems.
-		var product_label: String = ""
-		var product_item: StringName = StringName("")
 
 		var node_tier: int = int(md.get("tier", tier))
 
