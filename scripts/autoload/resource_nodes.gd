@@ -79,6 +79,50 @@ const FISHING_DETAIL_TO_NODE_ID := {
 	"Abyssal Star Trench":     "H10",
 }
 
+const MINING_KEYWORD_TO_NODE_ID := {
+	"copper":     &"copper",
+	"tin":        &"tin",
+	"iron":       &"iron",
+	"coal":       &"coal",
+	"silver":     &"silver",
+	"gold":       &"gold",
+	"mithrite":   &"mithrite",
+	"adamantite": &"adamantite",
+	"orichalcum": &"orichalcum",
+	"aether":     &"aether",
+
+	"limestone":  &"limestone",
+	"sandstone":  &"sandstone",
+	"basalt":     &"basalt",
+	"granite":    &"granite",
+	"marble":     &"marble",
+	"clay":       &"clay",
+}
+
+const WOODCUTTING_KEYWORD_TO_TARGET_ID := {
+	"pine grove":           &"pine_grove",
+	"overgrown pine grove": &"pine_grove",
+	"thick pine grove":     &"pine_grove",
+
+	"vale orchard":         &"birch_grove",
+	"hedgerow grove":       &"birch_grove",
+
+	"silkwood grove":       &"oakwood",
+	"mulberry grove":       &"oakwood",
+
+	"pine":      &"pine_grove",
+	"birch":     &"birch_grove",
+	"oak":       &"oakwood",
+	"willow":    &"willow_grove",
+	"maple":     &"maple_grove",
+	"yew":       &"yew_grove",
+	"ironwood":  &"ironwood_grove",
+	"redwood":   &"redwood_grove",
+	"sakura":    &"sakura_grove",
+	"elder":     &"elder_grove",
+	"ivy":       &"climbing_ivy",
+}
+
 @export var debug_logging: bool = false
 
 # ax: Vector2i -> Array[Dictionary] (node dicts)
@@ -181,12 +225,12 @@ func _enrich_nodes_runtime(axial: Vector2i, nodes: Array) -> Array:
 					n["patch_id"] = patch_id
 
 			if patch_id != StringName(""):
+				n["patch_id"] = patch_id
+				n["node_id"] = patch_id
+
 				if _herb_sys.has_method("get_patch_status"):
 					var ps: Dictionary = _herb_sys.call("get_patch_status", axial, patch_id)
 					n["charges_left"] = int(ps.get("charges", 0))
-
-				if _herb_sys.has_method("get_max_charges"):
-					n["max_charges"] = int(_herb_sys.call("get_max_charges", patch_id))
 
 				if _herb_sys.has_method("get_cooldown_seconds"):
 					n["cooldown_s"] = float(_herb_sys.call("get_cooldown_seconds", axial, patch_id))
@@ -262,40 +306,61 @@ func rebuild_nodes_for_tile(
 			"yield_factor":  yield_factor,
 		}
 
-		# Attach canonical node_id if present, or infer for fishing
-		if md.has("node_id"):
-			var nid_any: Variant = md.get("node_id")
-			var nid_str: String = String(nid_any).strip_edges()
-			if nid_str != "":
-				node["node_id"] = StringName(nid_str)
+		# Attach canonical IDs.
+		# Phase 1D.1 rule:
+		# mining      -> node_id
+		# woodcutting -> target_id + node_id
+		# fishing     -> node_id
+		# herbalism   -> patch_id + node_id
 
-		elif skill == "fishing":
-			var key_detail := detail.strip_edges()
-			if FISHING_DETAIL_TO_NODE_ID.has(key_detail):
-				node["node_id"] = StringName(String(FISHING_DETAIL_TO_NODE_ID[key_detail]))
+		var explicit_node_id: StringName = _string_name_from_variant(md.get("node_id", StringName("")))
+		if explicit_node_id != StringName(""):
+			node["node_id"] = explicit_node_id
 
-		# ✅ Herbalism NEW: prefer md["id"] slug -> node["patch_id"]
-		if skill == "herbalism":
-			var pid: StringName = StringName("")
-			var pid_any: Variant = md.get("id", null)
-			if typeof(pid_any) == TYPE_STRING_NAME:
-				pid = pid_any
-			elif typeof(pid_any) == TYPE_STRING:
-				var pid_str := String(pid_any).strip_edges()
-				if pid_str != "":
-					pid = StringName(pid_str)
+		match skill:
+			"mining":
+				var mining_node_id: StringName = explicit_node_id
+				if mining_node_id == StringName(""):
+					mining_node_id = _infer_mining_node_id_from_text(detail)
 
-			if pid == StringName("") and _herb_sys != null and _herb_sys.has_method("infer_patch_id_from_text"):
-				var inferred: Variant = _herb_sys.call("infer_patch_id_from_text", detail)
-				if typeof(inferred) == TYPE_STRING_NAME:
-					pid = inferred
-				elif typeof(inferred) == TYPE_STRING:
-					var s_inf := String(inferred).strip_edges()
-					if s_inf != "":
-						pid = StringName(s_inf)
+				if mining_node_id != StringName(""):
+					node["node_id"] = mining_node_id
 
-			if pid != StringName(""):
-				node["patch_id"] = pid
+			"woodcutting":
+				var target_id: StringName = _string_name_from_variant(md.get("target_id", StringName("")))
+				if target_id == StringName(""):
+					target_id = _string_name_from_variant(md.get("node_id", StringName("")))
+				if target_id == StringName(""):
+					target_id = _infer_woodcutting_target_id_from_text(detail)
+
+				if target_id != StringName(""):
+					node["target_id"] = target_id
+					node["node_id"] = target_id
+
+			"fishing":
+				var fishing_node_id: StringName = explicit_node_id
+				if fishing_node_id == StringName(""):
+					fishing_node_id = _infer_fishing_node_id_from_text(detail)
+
+				if fishing_node_id != StringName(""):
+					node["node_id"] = fishing_node_id
+
+			"herbalism":
+				var patch_id: StringName = _string_name_from_variant(md.get("patch_id", StringName("")))
+
+				# Existing biome/modifier data commonly uses "id" for the herb patch slug.
+				if patch_id == StringName(""):
+					patch_id = _string_name_from_variant(md.get("id", StringName("")))
+
+				if patch_id == StringName(""):
+					patch_id = explicit_node_id
+
+				if patch_id == StringName(""):
+					patch_id = _infer_herbal_patch_id_from_text(detail)
+
+				if patch_id != StringName(""):
+					node["patch_id"] = patch_id
+					node["node_id"] = patch_id
 
 		# Optional product metadata for UI/recipes
 		if product_label != "":
@@ -443,6 +508,67 @@ func get_modifiers_for_tile(ax: Vector2i) -> Array:
 # =====================================================================
 # Internal helpers
 # =====================================================================
+
+func _string_name_from_variant(v: Variant) -> StringName:
+	if typeof(v) == TYPE_STRING_NAME:
+		return v as StringName
+
+	if typeof(v) == TYPE_STRING:
+		var s: String = String(v).strip_edges()
+		if s != "":
+			return StringName(s)
+
+	return StringName("")
+
+
+func _infer_mining_node_id_from_text(text: String) -> StringName:
+	var lower: String = text.to_lower()
+
+	# Prefer MiningSystem if it exposes its own inference helper.
+	if _mining_sys != null and _mining_sys.has_method("infer_node_id_from_text"):
+		var inferred: Variant = _mining_sys.call("infer_node_id_from_text", text)
+		var inferred_id: StringName = _string_name_from_variant(inferred)
+		if inferred_id != StringName(""):
+			return inferred_id
+
+	for kw_v: Variant in MINING_KEYWORD_TO_NODE_ID.keys():
+		var kw: String = String(kw_v)
+		if lower.find(kw) != -1:
+			return StringName(MINING_KEYWORD_TO_NODE_ID[kw_v])
+
+	return StringName("")
+
+
+func _infer_woodcutting_target_id_from_text(text: String) -> StringName:
+	var lower: String = text.to_lower()
+
+	for kw_v: Variant in WOODCUTTING_KEYWORD_TO_TARGET_ID.keys():
+		var kw: String = String(kw_v)
+		if lower.find(kw) != -1:
+			return StringName(WOODCUTTING_KEYWORD_TO_TARGET_ID[kw_v])
+
+	return StringName("")
+
+
+func _infer_fishing_node_id_from_text(text: String) -> StringName:
+	var key_detail: String = text.strip_edges()
+	if FISHING_DETAIL_TO_NODE_ID.has(key_detail):
+		return StringName(String(FISHING_DETAIL_TO_NODE_ID[key_detail]))
+
+	return StringName("")
+
+
+func _infer_herbal_patch_id_from_text(text: String) -> StringName:
+	if _herb_sys == null:
+		return StringName("")
+
+	if _herb_sys.has_method("infer_patch_id_from_text"):
+		var inferred: Variant = _herb_sys.call("infer_patch_id_from_text", text)
+		var patch_id: StringName = _string_name_from_variant(inferred)
+		if patch_id != StringName(""):
+			return patch_id
+
+	return StringName("")
 
 func _mod_get_detail(md: Dictionary) -> String:
 	# New format: name is the human label

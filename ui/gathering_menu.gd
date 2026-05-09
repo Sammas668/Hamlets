@@ -521,13 +521,19 @@ func _can_gather_selected() -> bool:
 	var rec_v: Variant = _recipes[_selected_idx]
 	if typeof(rec_v) != TYPE_DICTIONARY:
 		return false
+
 	var rec: Dictionary = rec_v
 
-	var level_req := int(rec.get("level_req", 0))
+	if bool(rec.get("disabled", false)):
+		return false
+
+	var level_req: int = int(rec.get("level_req", 0))
 	if level_req <= 0:
 		return true
 
-	var skill_id := _skill_id_for_job()
+	# Phase 1C: recipe contract is authoritative.
+	# Prefer rec["skill"], fallback to old job-derived skill only for safety.
+	var skill_id: String = String(rec.get("skill", _skill_id_for_job()))
 
 	var lv: int = 1
 	if _v_idx >= 0 \

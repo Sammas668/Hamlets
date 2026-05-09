@@ -80,12 +80,12 @@ func setup(v_idx: int, job: StringName, ax: Vector2i, recipes: Array) -> void:
 	_job = job
 	_ax = ax
 
-	# ---- NEW: smithing fallback if TaskPicker passed nothing / wrong ----
-	if _job == &"smithing":
-		var ok := _recipes_look_valid(recipes)
-		if (not ok) and typeof(SmithingSystem) != TYPE_NIL and SmithingSystem.has_method("get_recipes_for_level"):
-			var smith_lv := _get_skill_level(&"smithing")
-			recipes = SmithingSystem.get_recipes_for_level(smith_lv)
+	#  if TaskPicker passed nothing / wrong data, ask VillagerManager
+	# so recipes still come through the normalized recipe contract.
+	if not _recipes_look_valid(recipes):
+		if typeof(VillagerManager) != TYPE_NIL \
+		and VillagerManager.has_method("get_recipes_for_job"):
+			recipes = VillagerManager.get_recipes_for_job(_v_idx, _job, _ax)
 
 	# IMPORTANT: copy so later mutations elsewhere don't affect us
 	_all_recipes = recipes.duplicate(true)
@@ -725,19 +725,54 @@ func _recipe_passes_filters(rec: Dictionary) -> bool:
 
 	return true
 
-
 func _recipe_output_item_id(rec: Dictionary) -> StringName:
-	# Try common “output item” fields first
-	var keys := ["out", "output", "result", "item", "output_item", "product", "produces", "crafted_item"]
+	# Phase 1C canonical field.
+	var outputs_v: Variant = rec.get("outputs", [])
+	if outputs_v is Array:
+		var outputs: Array = outputs_v as Array
+		for out_v in outputs:
+			if typeof(out_v) != TYPE_DICTIONARY:
+				continue
+
+			var out_d: Dictionary = out_v as Dictionary
+			var item_v: Variant = out_d.get("item", out_d.get("id", StringName("")))
+
+			if item_v is StringName:
+				if item_v != StringName():
+					return item_v
+			elif typeof(item_v) == TYPE_STRING:
+				var s := String(item_v).strip_edges()
+				if s != "":
+					return StringName(s)
+
+	# Legacy field: "output": { "item": id, "qty": n }
+	var output_v: Variant = rec.get("output", {})
+	if output_v is Dictionary:
+		var output_d: Dictionary = output_v as Dictionary
+		var item_v2: Variant = output_d.get("item", output_d.get("id", StringName("")))
+
+		if item_v2 is StringName:
+			if item_v2 != StringName():
+				return item_v2
+		elif typeof(item_v2) == TYPE_STRING:
+			var s2 := String(item_v2).strip_edges()
+			if s2 != "":
+				return StringName(s2)
+
+	# Legacy direct fields.
+	var keys := ["out", "result", "item", "output_item", "product", "produces", "crafted_item"]
 	for k in keys:
 		if rec.has(k):
 			var v: Variant = rec.get(k, null)
 			if v is StringName:
-				return v
-			if typeof(v) == TYPE_STRING and String(v).strip_edges() != "":
-				return StringName(String(v).strip_edges())
+				if v != StringName():
+					return v
+			elif typeof(v) == TYPE_STRING:
+				var s3 := String(v).strip_edges()
+				if s3 != "":
+					return StringName(s3)
 
-	# Fallback: many recipes use id == crafted item id
+	# Fallback: many recipes use id == crafted item id.
 	var idv: Variant = rec.get("id", &"")
 	if idv is StringName:
 		return idv
@@ -969,10 +1004,14 @@ func _select_recipe(idx: int) -> void:
 
 	if _detail_req:
 		var req_parts: Array[String] = []
+
 		if level_req > 0:
-			req_parts.append("Level %d required" % level_req)
+			var skill_name: String = String(rec.get("skill", _job)).capitalize()
+			req_parts.append("%s level %d required" % [skill_name, level_req])
+
 		if xp > 0:
 			req_parts.append("%d XP per cycle" % xp)
+
 		_detail_req.text = " • ".join(req_parts)
 
 	# Tier config for this recipe (if any)
@@ -1150,7 +1189,7 @@ func _change_tier(delta: int) -> void:
 	and typeof(ConstructionSystem) != TYPE_NIL \
 	and ConstructionSystem.has_method("get_recipe_by_id"):
 
-		var base_id: StringName = rec.get("base_id", rec.get("id", &""))
+		var base_id: StringName = StringName(rec.get("base_id", rec.get("id", &"")))
 		var tiered_id_str := "%s:t%d" % [String(base_id), _selected_tier]
 		var tiered_id: StringName = StringName(tiered_id_str)
 
@@ -1173,36 +1212,24 @@ func _can_craft_selected() -> bool:
 	var rec_v: Variant = _recipes[_selected_idx]
 	if typeof(rec_v) != TYPE_DICTIONARY:
 		return false
+
 	var rec: Dictionary = rec_v
 
-	var level_req := int(rec.get("level_req", 0))
+	if bool(rec.get("disabled", false)):
+		return false
 
-	# Skill level check (crafting skill)
-	if level_req > 0:
-		var skill_id := ""
-		if _job == &"scrying":
-			skill_id = "scrying"
-		elif _job == &"astromancy":
-			skill_id = "astromancy"
-		elif _job == &"smithing":
-			skill_id = "smithing"
-		elif _job == &"construction":
-			skill_id = "construction"
+	var level_req: int = int(rec.get("level_req", 0))
 
-		if skill_id != "":
-			var lv := 0
-			if _v_idx >= 0 \
-			and typeof(Villagers) != TYPE_NIL \
-			and Villagers.has_method("get_skill_level"):
-				lv = int(Villagers.get_skill_level(_v_idx, skill_id))
-			elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
-				lv = int(Skills.get_skill_level(skill_id))
+	# Phase 1C: recipe contract is authoritative.
+	# rec["skill"] is the skill used to perform/gate this recipe.
+	var skill_id: StringName = StringName(rec.get("skill", _job))
 
-			if lv < level_req:
-				return false
+	if level_req > 0 and skill_id != StringName():
+		var lv: int = _get_skill_level(skill_id)
+		if lv < level_req:
+			return false
 
 	return _max_craftable_count() > 0
-
 
 func _max_craftable_count() -> int:
 	if _selected_idx < 0 or _selected_idx >= _recipes.size():

@@ -580,46 +580,69 @@ func get_drop_preview_for_node(node_id: StringName, fishing_level: int) -> Array
 	var req_level: int = int(node.get("req_level", 1))
 	var base_junk: float = float(node.get("base_junk", 0.0))
 	var max_grade: int = int(node.get("max_grade", 1))
-	var species_by_grade: Dictionary = node.get("species_by_grade", {})
 
-	# Estimate the grade this villager will usually roll
-	var grade: int = _estimate_grade_for_level(fishing_level, max_grade)
-
-	# Find the nearest lower/equal grade that actually has a table
-	var g := grade
-	while g > 0 and not species_by_grade.has(g):
-		g -= 1
+	var species_by_grade: Dictionary = {}
+	var sbg_v: Variant = node.get("species_by_grade", {})
+	if sbg_v is Dictionary:
+		species_by_grade = sbg_v
 
 	var preview: Array = []
 
-	if g > 0:
-		var entries: Array = species_by_grade[g]
-		var total_weight := 0
-		for e_v in entries:
-			if e_v is Dictionary:
-				var e: Dictionary = e_v
-				total_weight += int(e.get("weight", 0))
+	# Policy:
+	# Fishing junk is an output, not a failure.
+	# Too-low-level fishing previews as 100% junk.
+	var junk_chance: float = 1.0
+	if fishing_level >= req_level:
+		junk_chance = _compute_junk_chance(fishing_level, req_level, base_junk)
 
-		if total_weight > 0:
-			for e_v in entries:
+	junk_chance = clampf(junk_chance, 0.0, 1.0)
+	var catch_chance: float = 1.0 - junk_chance
+
+	# Estimate the grade this villager will usually roll.
+	var grade: int = _estimate_grade_for_level(fishing_level, max_grade)
+
+	# Find the nearest lower/equal grade that actually has a table.
+	var g: int = grade
+	while g > 0 and not species_by_grade.has(g):
+		g -= 1
+
+	if g > 0 and catch_chance > 0.0:
+		var entries_v: Variant = species_by_grade.get(g, [])
+		if entries_v is Array:
+			var entries: Array = entries_v
+
+			var total_weight: int = 0
+			for e_v: Variant in entries:
 				if not (e_v is Dictionary):
 					continue
 				var e: Dictionary = e_v
-				var w: int = int(e.get("weight", 0))
-				if w <= 0:
-					continue
-				var chance: float = float(w) / float(total_weight)
-				var fish_id: StringName = e.get("fish", StringName(""))
+				total_weight += int(e.get("weight", 0))
 
-				preview.append({
-					"item_id": fish_id,
-					"qty": 1,
-					"chance": chance,
-					"is_fail": false,
-				})
+			if total_weight > 0:
+				for e_v2: Variant in entries:
+					if not (e_v2 is Dictionary):
+						continue
 
-	# Junk chance (shown as junk, not “Fail”)
-	var junk_chance: float = _compute_junk_chance(fishing_level, req_level, base_junk)
+					var e2: Dictionary = e_v2
+					var w: int = int(e2.get("weight", 0))
+					if w <= 0:
+						continue
+
+					var fish_id: StringName = StringName(e2.get("fish", StringName("")))
+					if fish_id == StringName(""):
+						continue
+
+					var conditional_chance: float = float(w) / float(total_weight)
+					var final_chance: float = catch_chance * conditional_chance
+
+					preview.append({
+						"item_id": fish_id,
+						"qty": 1,
+						"chance": final_chance,
+						"is_fail": false,
+					})
+
+	# Junk row: output, not failure.
 	if junk_chance > 0.0:
 		preview.append({
 			"item_id": ITEMS.FISHING_JUNK,
@@ -627,6 +650,10 @@ func get_drop_preview_for_node(node_id: StringName, fishing_level: int) -> Array
 			"chance": junk_chance,
 			"is_fail": false,
 		})
+
+	preview.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+		return float(a.get("chance", 0.0)) > float(b.get("chance", 0.0))
+	)
 
 	return preview
 

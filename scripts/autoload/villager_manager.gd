@@ -1318,26 +1318,105 @@ func reset_runtime_state() -> void:
 # -------------------------------------------------------------------
 # Helpers: build recipes for node-driven gathering jobs
 # -------------------------------------------------------------------
-
 func _build_mining_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) -> Array:
 	var recipes: Array = []
-	var mods: Array = _tile_modifiers(world, ax)
+	var mining_lv: int = _get_villager_skill_level(v_idx, "mining")
 
+	# ------------------------------------------------------------
+	# 1) Preferred: ResourceNodes-backed mining nodes
+	# ------------------------------------------------------------
+	if typeof(ResourceNodes) != TYPE_NIL and ResourceNodes.has_method("get_nodes"):
+		var mining_nodes_v: Variant = ResourceNodes.get_nodes(ax, "mining")
+		if mining_nodes_v is Array:
+			var mining_nodes: Array = mining_nodes_v as Array
+
+			for n_v: Variant in mining_nodes:
+				if not (n_v is Dictionary):
+					continue
+
+				var n: Dictionary = n_v as Dictionary
+
+				var node_id: StringName = StringName(n.get("node_id", StringName("")))
+				if node_id == StringName(""):
+					continue
+
+				if typeof(MiningSystem) == TYPE_NIL or not MiningSystem.has_method("get_node_def"):
+					continue
+
+				var def_v: Variant = MiningSystem.get_node_def(node_id)
+				if not (def_v is Dictionary):
+					continue
+
+				var def: Dictionary = def_v as Dictionary
+				if def.is_empty():
+					continue
+
+				var req: int = int(def.get("req", 1))
+				if mining_lv < req:
+					continue
+
+				var xp: int = int(def.get("xp", 1))
+				var item_id: StringName = StringName(def.get("item_id", StringName("")))
+
+				var icon_tex: Texture2D = null
+				if typeof(Items) != TYPE_NIL and Items.has_method("get_icon") and item_id != StringName(""):
+					icon_tex = Items.get_icon(item_id)
+
+				var item_name: String = ""
+				if typeof(Items) != TYPE_NIL \
+				and Items.has_method("is_valid") \
+				and Items.has_method("display_name") \
+				and item_id != StringName("") \
+				and Items.is_valid(item_id):
+					item_name = Items.display_name(item_id)
+
+				var drop_preview: Array = []
+				if typeof(MiningSystem) != TYPE_NIL and MiningSystem.has_method("get_drop_preview_for_node"):
+					var pv: Variant = MiningSystem.get_drop_preview_for_node(node_id)
+					if pv is Array:
+						drop_preview = pv as Array
+
+				var deposit_name: String = String(n.get("detail", n.get("name", ""))).strip_edges()
+				if deposit_name == "":
+					deposit_name = String(def.get("display_name", String(node_id))).strip_edges()
+				if deposit_name == "":
+					deposit_name = String(node_id)
+
+				recipes.append({
+					"id": node_id,
+					"label": "Mine %s" % deposit_name,
+					"skill": &"mining",
+					"level_req": req,
+					"xp": xp,
+					"duration": _job_duration(JOB_MINING, node_id),
+					"inputs": [],
+					"outputs": [],
+					"desc": "Mine this %s deposit." % deposit_name,
+					"icon": icon_tex,
+					"drop_preview": drop_preview,
+					"primary_item": item_id,
+					"primary_item_name": item_name,
+				})
+
+			if recipes.size() > 0:
+				return _normalize_recipe_list(JOB_MINING, recipes)
+
+	# ------------------------------------------------------------
+	# 2) Fallback: parse modifiers directly
+	# ------------------------------------------------------------
+	var mods: Array = _tile_modifiers(world, ax)
 	if mods.is_empty():
 		return _normalize_recipe_list(JOB_MINING, recipes)
 
-	var mining_lv: int = _get_villager_skill_level(v_idx, "mining")
-
 	for m_v: Variant in mods:
 		var info: Dictionary = _mod_get_kind_skill_detail(m_v)
-
 		if String(info.get("kind", "")) != "Resource Spawn":
 			continue
 		if String(info.get("skill", "")).to_lower() != "mining":
 			continue
 
-		var detail: String = String(info.get("detail", ""))
-		var probe: String = detail if detail != "" else String(info.get("text", ""))
+		var detail: String = String(info.get("detail", "")).strip_edges()
+		var probe: String = detail if detail != "" else String(info.get("text", "")).strip_edges()
 
 		var node_id: StringName = _infer_mining_node_id_from_text(probe)
 		if node_id == StringName(""):
@@ -1363,9 +1442,15 @@ func _build_mining_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) -> Ar
 
 		var icon_tex: Texture2D = null
 		if typeof(Items) != TYPE_NIL and Items.has_method("get_icon") and item_id != StringName(""):
-			var icon_v: Variant = Items.get_icon(item_id)
-			if icon_v is Texture2D:
-				icon_tex = icon_v as Texture2D
+			icon_tex = Items.get_icon(item_id)
+
+		var item_name: String = ""
+		if typeof(Items) != TYPE_NIL \
+		and Items.has_method("is_valid") \
+		and Items.has_method("display_name") \
+		and item_id != StringName("") \
+		and Items.is_valid(item_id):
+			item_name = Items.display_name(item_id)
 
 		var drop_preview: Array = []
 		if typeof(MiningSystem) != TYPE_NIL and MiningSystem.has_method("get_drop_preview_for_node"):
@@ -1374,18 +1459,25 @@ func _build_mining_recipes_for_tile(v_idx: int, ax: Vector2i, world: Node) -> Ar
 				drop_preview = pv as Array
 
 		var deposit_name: String = detail if detail != "" else probe
+		if deposit_name == "":
+			deposit_name = String(def.get("display_name", String(node_id))).strip_edges()
+		if deposit_name == "":
+			deposit_name = String(node_id)
 
 		recipes.append({
 			"id": node_id,
 			"label": "Mine %s" % deposit_name,
 			"skill": &"mining",
-			"icon": icon_tex,
 			"level_req": req,
 			"xp": xp,
+			"duration": _job_duration(JOB_MINING, node_id),
 			"inputs": [],
-			"output": {},
+			"outputs": [],
 			"desc": "Mine this %s deposit." % deposit_name,
+			"icon": icon_tex,
 			"drop_preview": drop_preview,
+			"primary_item": item_id,
+			"primary_item_name": item_name,
 		})
 
 	return _normalize_recipe_list(JOB_MINING, recipes)

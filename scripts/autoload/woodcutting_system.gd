@@ -501,12 +501,11 @@ func do_chop(
 	var yield_factor: float = float(node_mods.get("yield_factor", 1.0))
 	var is_thick: bool = bool(node_mods.get("is_thick", false))
 
-
 	# --- Skill-based success chance ---
 	var skill_chance: float = _success_chance(wc_lv, req_level)
 	var final_chance: float = skill_chance * chance_factor
 
-	# 🔒 Hard guarantee:
+	# Hard guarantee:
 	# - Normal groves: 100% at req + 19 levels
 	# - Thick groves: 100% at req + 29 levels
 	var guarantee_offset: int = 19
@@ -518,14 +517,12 @@ func do_chop(
 
 	final_chance = clampf(final_chance, 0.05, 1.0)
 
-
-
 	# --- Roll success / failure ---
 	var rng: RandomNumberGenerator = RandomNumberGenerator.new()
 	rng.randomize()
 
 	if rng.randf() > final_chance:
-		# 20% of success XP (minimum 1)
+		# 20% of success XP, minimum 1
 		var fail_xp: int = int(round(float(xp_per_chop) * 0.2))
 		if fail_xp < 1:
 			fail_xp = 1
@@ -541,19 +538,24 @@ func do_chop(
 	# --- Main log drop (weighted table based on level) ---
 	var item_id: StringName = _roll_tree_drop(rng, def, wc_lv)
 
-	# Fallback: if drop table is weird/missing, grab the first entry
+	# Fallback: if drop table is weird/missing, grab the first non-bonus entry
 	if item_id == StringName(""):
 		if def.has("drops"):
 			var table_any: Variant = def.get("drops")
 			if table_any is Array:
 				var table: Array = table_any
-				if table.size() > 0:
-					var first_any: Variant = table[0]
-					if first_any is Dictionary:
-						var first_row: Dictionary = first_any
-						item_id = first_row.get("item", StringName(""))
+				for row_v: Variant in table:
+					if not (row_v is Dictionary):
+						continue
+					var row: Dictionary = row_v
+					var fallback_item: StringName = StringName(row.get("item", StringName("")))
+					if fallback_item != StringName("") and not _is_bonus_drop(fallback_item):
+						item_id = fallback_item
+						break
 
+	var loot_lines: Array = []
 	var log_name: String = "logs"
+
 	if item_id != StringName(""):
 		_add_item(item_id, final_yield)
 
@@ -563,11 +565,14 @@ func do_chop(
 		and Items.is_valid(item_id):
 			log_name = Items.display_name(item_id)
 
-	var loot_lines: Array = []
-	loot_lines.append("Gained %d× %s" % [final_yield, log_name])
+		loot_lines.append("Gained %d× %s" % [final_yield, log_name])
+
+	# Bonus drops shown in preview: twigs, bark, bark scrap, resin.
+	# These are extra drops, not replacements for the main log.
+	_roll_bonus_drops(rng, def, wc_lv, final_yield, loot_lines)
 
 	# ----------------------------------------------------------------
-	# 6) Global rare drops: Bird Nest + Amber Sap (level-scaled)
+	# Global rare drops: Bird Nest + Amber Sap (level-scaled)
 	# ----------------------------------------------------------------
 	var target_kind: int = TargetKind.TREE
 	if def.has("kind"):
@@ -591,9 +596,11 @@ func do_chop(
 
 	if rng.randf() < nest_rate:
 		_add_item(ITEMS.BIRD_NEST, 1)
+
 		var nest_name: String = "Bird Nest"
 		if typeof(Items) != TYPE_NIL and Items.has_method("display_name"):
 			nest_name = Items.display_name(ITEMS.BIRD_NEST)
+
 		loot_lines.append("A %s falls from the branches" % nest_name)
 
 	var amber_rate: float = AMBER_RATE
@@ -602,16 +609,22 @@ func do_chop(
 
 	if rng.randf() < amber_rate:
 		_add_item(ITEMS.AMBER_SAP, 1)
+
 		var amber_name: String = "Amber Sap"
 		if typeof(Items) != TYPE_NIL and Items.has_method("display_name"):
 			amber_name = Items.display_name(ITEMS.AMBER_SAP)
+
 		loot_lines.append("You chip off a glint of %s" % amber_name)
 
 	# ----------------------------------------------------------------
-	# 7) Final XP + description
+	# Final XP + description
 	# ----------------------------------------------------------------
 	result["xp"] = xp_per_chop
-	result["loot_desc"] = ". ".join(loot_lines) + "."
+
+	if loot_lines.is_empty():
+		result["loot_desc"] = "You work the growth cleanly."
+	else:
+		result["loot_desc"] = ". ".join(loot_lines) + "."
 
 	return result
 
@@ -723,15 +736,15 @@ func _roll_bonus_drops(
 
 		_add_item(item_id, qty)
 
+		var item_name: String = "bonus item"
+
 		if typeof(Items) != TYPE_NIL \
 		and Items.has_method("is_valid") \
 		and Items.has_method("display_name") \
 		and Items.is_valid(item_id):
-			name = Items.display_name(item_id)
-		else:
-			name = "bonus item"
+			item_name = Items.display_name(item_id)
 
-		loot_lines.append("You also gain %d× %s" % [qty, name])
+		loot_lines.append("You also gain %d× %s" % [qty, item_name])
 
 
 func _check_woodcut_success(level: int, req_level: int, rng: RandomNumberGenerator) -> bool:
