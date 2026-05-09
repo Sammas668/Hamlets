@@ -422,15 +422,15 @@
 	  }
 	}
   },
-  "carpentry_hall_base": {
+  "construction_hall_base": {
 	"kind": "base",
 	"attr": "dex",
-	"building": "Carpentry Hall",
+	"building": "Construction Hall",
 	"skill": "fletching",
-	"label": "Carpentry Hall",
+	"label": "construction Hall",
 	"tiers": {
 	  "1": {
-		"label": "Carpentry Hall (Fletching)",
+		"label": "Construction Hall (Construction)",
 		"desc": "Tier I: 1 module slot.",
 		"level_req": 20,
 		"inputs": {
@@ -452,7 +452,7 @@
 		}
 	  },
 	  "2": {
-		"label": "Carpentry Hall (Fletching)",
+		"label": "Construction Hall (Construction)",
 		"desc": "Tier II: 2 module slots.",
 		"level_req": 30,
 		"inputs": {
@@ -474,7 +474,7 @@
 		}
 	  },
 	  "3": {
-		"label": "Carpentry Hall (Fletching)",
+		"label": "Construction Hall (Construction)",
 		"desc": "Tier III: 3 module slots.",
 		"level_req": 40,
 		"inputs": {
