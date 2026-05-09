@@ -529,13 +529,11 @@ func _can_gather_selected() -> bool:
 
 	var skill_id := _skill_id_for_job()
 
-	var lv := 0
+	var lv: int = 1
 	if _v_idx >= 0 \
 	and typeof(Villagers) != TYPE_NIL \
 	and Villagers.has_method("get_skill_level"):
 		lv = int(Villagers.get_skill_level(_v_idx, skill_id))
-	elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
-		lv = int(Skills.get_skill_level(skill_id))
 
 	return lv >= level_req
 

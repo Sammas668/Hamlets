@@ -227,8 +227,11 @@ func _build_skill_tooltip(
 	var xp_to_next: int = -1
 
 	if typeof(Villagers) != TYPE_NIL:
-		if Villagers.has_method("get_skill_xp"):
+		if Villagers.has_method("get_skill_xp_into_level"):
+			cur_xp = int(Villagers.get_skill_xp_into_level(_villager_index, skill_id))
+		elif Villagers.has_method("get_skill_xp"):
 			cur_xp = int(Villagers.get_skill_xp(_villager_index, skill_id))
+
 		if Villagers.has_method("get_skill_xp_to_next"):
 			xp_to_next = int(Villagers.get_skill_xp_to_next(_villager_index, skill_id))
 

@@ -1112,13 +1112,14 @@ func _clear_detail() -> void:
 
 
 func _get_skill_level(skill_id: StringName) -> int:
-	var lv := 0
-	if _v_idx >= 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_skill_level"):
+	var lv: int = 1
+
+	if _v_idx >= 0 \
+	and typeof(Villagers) != TYPE_NIL \
+	and Villagers.has_method("get_skill_level"):
 		lv = int(Villagers.get_skill_level(_v_idx, String(skill_id)))
-	elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
-		lv = int(Skills.get_skill_level(String(skill_id)))
-	# IMPORTANT: treat 0 as "level 1" for unlock-gated skills
-	return maxi(1, lv)
+
+	return lv
 
 
 func _recipes_look_valid(arr: Array) -> bool:

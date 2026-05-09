@@ -1719,7 +1719,6 @@ func _roll_modifiers_for_biome(_biome: String) -> Array[String]:
 	# TODO: hook this into the full modifier tables (Resources / Dungeons / Hazards)
 	return []
 
-
 func _spawn_fragment(biome_name: String, ax: Vector2i) -> Node2D:
 	var frag: Node2D = TILE_SCENE.instantiate()
 	fragments_root.add_child(frag)
@@ -1731,39 +1730,38 @@ func _spawn_fragment(biome_name: String, ax: Vector2i) -> Node2D:
 	frag.set("coord", ax)
 	frag.set("biome", biome_name)
 
-	# 🔹 NEW: register this fragment with Selection so WorldQuery can see it
+	# Register this fragment with Selection so WorldQuery can see it
 	if typeof(Selection) != TYPE_NIL and Selection.has_method("register_fragment"):
 		Selection.register_fragment(frag)
 
 	# Determine tier / region from the biome
-	var tier := _get_rank_for_biome(biome_name)  # 0 if Hamlet / unknown
-	var region_str := ""
+	var tier: int = _get_rank_for_biome(biome_name)  # 0 if Hamlet / unknown
+	var region_str: String = ""
 	if tier > 0:
 		region_str = "R%d" % tier
 
 	# --- EARLY RECRUIT GUARANTEE TRACKING ---
-	# Only count *player-spawned* tiles, not the starting Hamlet.
+	# Only count player-spawned tiles, not the starting Hamlet.
 	var is_player_tile: bool = (biome_name != "Hamlet")
 	if is_player_tile and not _early_recruit_guaranteed and _early_spawn_count < 5:
 		_early_spawn_count += 1
 	# ---------------------------------------
 
-	# Roll Astromancy-based modifiers, using the villager on this tile if present
-	var astro_level := 0
+	# Roll Astromancy-based modifiers using the villager on this tile if present.
+	# No global Skills fallback: villagers are the canonical skill owners.
+	var astro_level: int = 0
+	var v_idx: int = villager_on_tile(ax)
 
-	# 1) Try per-villager Astromancy based on whoever is groveing on this hex
-	var v_idx := villager_on_tile(ax)
-	if v_idx >= 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_skill_level"):
+	if v_idx >= 0 \
+	and typeof(Villagers) != TYPE_NIL \
+	and Villagers.has_method("get_skill_level"):
 		astro_level = int(Villagers.get_skill_level(v_idx, "astromancy"))
-	# 2) Fallback: use global Skills autoload (if you still track a player-wide level)
-	elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
-		astro_level = int(Skills.get_skill_level("astromancy"))
 
-	var mods := roll_biome_modifiers(biome_name, astro_level, rng)
+	var mods: Array = roll_biome_modifiers(biome_name, astro_level, rng)
 
 	# --- EARLY RECRUIT GUARANTEE ENFORCEMENT ---
 	# If this is one of the first 5 player tiles AND no recruit has appeared yet,
-	# then on the *5th* tile we force a recruit modifier if RNG didn't roll one.
+	# then on the 5th tile we force a recruit modifier if RNG didn't roll one.
 	if is_player_tile and not _early_recruit_guaranteed and _early_spawn_count == 5:
 		var has_recruit: bool = false
 		for m in mods:
@@ -1788,10 +1786,9 @@ func _spawn_fragment(biome_name: String, ax: Vector2i) -> Node2D:
 				})
 	# ---------------------------------------------------
 
-
 	# If this is our Fragment class, use setup + local modifiers
 	if frag is Fragment:
-		var f := frag as Fragment
+		var f: Fragment = frag as Fragment
 		f.setup(ax, biome_name, {
 			"tier": tier,
 			"region": region_str,
@@ -1802,7 +1799,7 @@ func _spawn_fragment(biome_name: String, ax: Vector2i) -> Node2D:
 		if is_player_tile and _early_spawn_count <= 5 and f.has_recruit_modifier():
 			_early_recruit_guaranteed = true
 
-		# NEW: auto-recruit if this tile rolled a recruit modifier
+		# Auto-recruit if this tile rolled a recruit modifier
 		if f.has_recruit_modifier():
 			f.try_trigger_recruit()
 
@@ -1816,16 +1813,16 @@ func _spawn_fragment(biome_name: String, ax: Vector2i) -> Node2D:
 			frag.call("set_local_modifiers", mods)
 		elif frag.has_meta("local_modifiers"):
 			frag.set("local_modifiers", mods)
+
 		# Try to connect a generic "clicked" signal if present
 		if frag.has_signal("clicked") and not frag.is_connected("clicked", Callable(self, "_on_fragment_clicked")):
 			frag.connect("clicked", Callable(self, "_on_fragment_clicked"))
 
-	# 🔹 NEW: update ResourceNodes for this tile
+	# Update ResourceNodes for this tile
 	if typeof(ResourceNodes) != TYPE_NIL and ResourceNodes.has_method("rebuild_nodes_for_tile"):
 		ResourceNodes.rebuild_nodes_for_tile(ax, mods, biome_name, tier)
 
 	return frag
-
 
 func _on_settingspanel_closed() -> void:
 	if is_instance_valid(settings_panel): settings_panel.hide()

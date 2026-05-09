@@ -486,8 +486,6 @@ func get_recipes_for_job(v_idx: int, job: StringName, ax: Vector2i) -> Array:
 		var astro_lv: int = 1
 		if v_idx >= 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_skill_level"):
 			astro_lv = maxi(1, int(Villagers.get_skill_level(v_idx, "astromancy")))
-		elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
-			astro_lv = maxi(1, int(Skills.get_skill_level("astromancy")))
 
 		var max_rank: int = 10
 		if typeof(AstromancySystem) != TYPE_NIL and AstromancySystem.has_method("get_max_rank_for_level"):
@@ -606,8 +604,6 @@ func get_recipes_for_job(v_idx: int, job: StringName, ax: Vector2i) -> Array:
 		var smith_lv: int = 1
 		if v_idx >= 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_skill_level"):
 			smith_lv = int(Villagers.get_skill_level(v_idx, "smithing"))
-		elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
-			smith_lv = int(Skills.get_skill_level("smithing"))
 
 		if typeof(SmithingSystem) == TYPE_NIL or not SmithingSystem.has_method("get_recipes_for_level"):
 			return recipes
@@ -618,8 +614,6 @@ func get_recipes_for_job(v_idx: int, job: StringName, ax: Vector2i) -> Array:
 		var con_lv: int = 1
 		if v_idx >= 0 and typeof(Villagers) != TYPE_NIL and Villagers.has_method("get_skill_level"):
 			con_lv = int(Villagers.get_skill_level(v_idx, "construction"))
-		elif typeof(Skills) != TYPE_NIL and Skills.has_method("get_skill_level"):
-			con_lv = int(Skills.get_skill_level("construction"))
 
 		if typeof(ConstructionSystem) == TYPE_NIL:
 			return recipes

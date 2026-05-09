@@ -159,7 +159,7 @@ class Villager:
 	var race: String = "human"
 	var gender: String = ""          # "male", "female", etc.
 	var icon: String = ""
-	var skills: Dictionary = {}      # skill_id -> { "level": int, "xp": int }
+	var skills: Dictionary = {}      # skill_id -> { "xp_total": int }
 
 	func _init(_id: int, _name: String, _race: String = "human", _gender: String = "") -> void:
 		id = _id
@@ -187,16 +187,12 @@ var _founder_id: int = -1             # id of the founder villager (if any)
 # Each villager-level requires (level * xp_per_level) XP
 @export var xp_per_level: int = 100
 
-# Each skill level requires (level * skill_xp_per_level) XP.
-@export var skill_xp_per_level: int = 50
-
 
 func _init_skills_for(v: Villager) -> void:
 	v.skills = {}
 	for sid in SKILL_IDS:
 		v.skills[sid] = {
-			"level": 1,
-			"xp": 0,
+			"xp_total": 0,
 		}
 
 
@@ -237,44 +233,55 @@ func as_list() -> Array[Dictionary]:
 		})
 	return out
 
+
 func count() -> int:
 	return _villagers.size()
+
 
 func get_selected_index() -> int:
 	return _selected_idx
 
+
 func has_selected() -> bool:
 	return _selected_idx >= 0 and _selected_idx < _villagers.size()
+
 
 func get_selected() -> Villager:
 	assert(has_selected())
 	return _villagers[_selected_idx]
+
 
 func get_selected_or_null() -> Variant:
 	if has_selected():
 		return _villagers[_selected_idx]
 	return null
 
+
 func get_at(i: int) -> Villager:
 	assert(i >= 0 and i < _villagers.size())
 	return _villagers[i]
 
+
 func index_from_id(id: int) -> int:
 	return int(_id_to_index.get(id, -1))
+
 
 # Founder helpers
 func get_founder_id() -> int:
 	return _founder_id
+
 
 func get_founder_index() -> int:
 	if _founder_id < 0:
 		return -1
 	return index_from_id(_founder_id)
 
+
 func is_founder(index: int) -> bool:
 	if index < 0 or index >= _villagers.size():
 		return false
 	return _villagers[index].id == _founder_id
+
 
 # Returns numbers for UI bars: { "cur": current_xp_in_level, "need": xp_needed_for_this_level }
 func xp_progress(index: int) -> Dictionary:
@@ -284,6 +291,7 @@ func xp_progress(index: int) -> Dictionary:
 	var need: int = max(1, v.level * xp_per_level)
 	var cur: int = int(clamp(v.xp, 0, need))
 	return {"cur": cur, "need": need}
+
 
 func ensure_seed_one() -> void:
 	if _villagers.is_empty():
@@ -354,6 +362,7 @@ func remove_at(idx: int) -> void:
 	list_changed.emit()
 	selected_changed.emit(_selected_idx)
 
+
 func remove_villager(v_idx: int) -> void:
 	# Convenience wrapper so other systems can remove a villager by index.
 	# Used by Astromancy when collapsing a fragment that has a villager on it.
@@ -365,8 +374,10 @@ func set_selected(idx: int) -> void:
 		_selected_idx = idx
 		selected_changed.emit(idx)
 
+
 func select(idx: int) -> void:
 	set_selected(idx)
+
 
 # Add XP to a specific villager (by index), with level-ups
 func add_xp(index: int, amount: int) -> void:
@@ -379,13 +390,14 @@ func add_xp(index: int, amount: int) -> void:
 		v.level += 1
 	xp_changed.emit(index, v.xp, v.level)
 
+
 func grant_xp_to_selected(amount: int) -> void:
 	if has_selected():
 		add_xp(_selected_idx, amount)
 
 
 # --- Save/Load -----------------------------------------------------
-# --- Save/Load -----------------------------------------------------
+
 func to_save_dict() -> Dictionary:
 	var arr: Array[Dictionary] = []
 	for v: Villager in _villagers:
@@ -397,7 +409,7 @@ func to_save_dict() -> Dictionary:
 			"race": v.race,
 			"gender": v.gender,
 			"icon": v.icon,
-			"skills": v.skills,  # full per-skill dictionary
+			"skills": v.skills,  # skill_id -> { "xp_total": int }
 		})
 
 	return {
@@ -432,29 +444,38 @@ func from_save_dict(d: Dictionary) -> void:
 		v.xp    = int(e.get("xp", 0))
 		v.icon  = String(e.get("icon", ""))
 
-		# --- Skills (per-skill XP/levels) ---
+		# --- Skills (per-skill total XP) ---
 		var skills_v: Variant = e.get("skills", {})
 		if skills_v is Dictionary:
 			var saved_skills: Dictionary = skills_v as Dictionary
 			v.skills = {}
 
-			# Copy saved skills
+			# Copy saved skills, migrating old { "level", "xp" } records into { "xp_total" }.
 			for key in saved_skills.keys():
 				var sid: String = String(key)
-				var sk: Dictionary = saved_skills[key] as Dictionary
-				var slv: int = int(sk.get("level", 1))
-				var sxp: int = int(sk.get("xp", 0))
+				var sk_v: Variant = saved_skills[key]
+
+				var xp_total: int = 0
+
+				if sk_v is Dictionary:
+					var sk: Dictionary = sk_v as Dictionary
+
+					if sk.has("xp_total"):
+						xp_total = int(sk.get("xp_total", 0))
+					else:
+						var saved_level: int = int(sk.get("level", 1))
+						var saved_xp: int = int(sk.get("xp", 0))
+						xp_total = int(SkillProgress.get_xp_for_level(saved_level)) + saved_xp
+
 				v.skills[sid] = {
-					"level": slv,
-					"xp": sxp,
+					"xp_total": max(0, xp_total),
 				}
 
 			# Make sure any NEW skills in SKILL_IDS exist
 			for sid2 in SKILL_IDS:
 				if not v.skills.has(sid2):
 					v.skills[sid2] = {
-						"level": 1,
-						"xp": 0,
+						"xp_total": 0,
 					}
 		else:
 			# Older saves: no skills key → initialize all skills
@@ -489,6 +510,7 @@ func from_save_dict(d: Dictionary) -> void:
 	list_changed.emit()
 	selected_changed.emit(_selected_idx)
 
+
 func reset_runtime_state() -> void:
 	_villagers.clear()
 	_id_to_index.clear()
@@ -510,12 +532,14 @@ func get_attribute_base(index: int, attr: String) -> int:
 		return 10
 	return int(v.attributes[attr].get("base", 10))
 
+
 func get_attribute_effective(index: int, attr: String) -> int:
 	var base := get_attribute_base(index, attr)
 	var delta := 0
 	if has_method("get_attribute_temp_delta"):
 		delta = int(call("get_attribute_temp_delta", index, attr))
 	return base + delta
+
 
 # --- Skill temp delta (used by menu to show +/- on the tile) ---
 
@@ -524,14 +548,70 @@ func get_skill_temp_delta(_index: int, _skill_id: String) -> int:
 
 # ---------- Per-skill level / XP API -------------------------------
 
-func get_skill_level(v_idx: int, skill_id: String) -> int:
+func _ensure_skill_record(v: Villager, skill_id: String) -> Dictionary:
+	if not (v.skills is Dictionary):
+		v.skills = {}
+
+	if not v.skills.has(skill_id):
+		v.skills[skill_id] = {
+			"xp_total": 0,
+		}
+
+	var s_v: Variant = v.skills[skill_id]
+	var s: Dictionary = {}
+
+	if s_v is Dictionary:
+		s = s_v as Dictionary
+
+	# Migration safety:
+	# Old format: { "level": 12, "xp": 34 }
+	# New format: { "xp_total": 4890 }
+	if not s.has("xp_total"):
+		var old_level: int = int(s.get("level", 1))
+		var old_xp: int = int(s.get("xp", 0))
+		var total: int = int(SkillProgress.get_xp_for_level(old_level)) + old_xp
+		s = {
+			"xp_total": max(0, total),
+		}
+
+	v.skills[skill_id] = s
+	return s
+
+
+func get_skill_xp_total(v_idx: int, skill_id: String) -> int:
 	var v: Villager = _get_villager_or_null(v_idx)
 	if v == null:
-		return 1
-	if not (v.skills is Dictionary) or not v.skills.has(skill_id):
-		return 1
-	var s: Dictionary = v.skills[skill_id] as Dictionary
-	return int(s.get("level", 1))
+		return 0
+
+	var s: Dictionary = _ensure_skill_record(v, skill_id)
+	return max(0, int(s.get("xp_total", 0)))
+
+
+func get_skill_level(v_idx: int, skill_id: String) -> int:
+	var total_xp: int = get_skill_xp_total(v_idx, skill_id)
+	return int(SkillProgress.get_level_for_xp(total_xp))
+
+
+func get_skill_xp_into_level(v_idx: int, skill_id: String) -> int:
+	var total_xp: int = get_skill_xp_total(v_idx, skill_id)
+	return int(SkillProgress.get_xp_into_level(total_xp))
+
+
+# Compatibility alias for existing UI.
+# Prefer get_skill_xp_total() or get_skill_xp_into_level() in new code.
+func get_skill_xp(v_idx: int, skill_id: String) -> int:
+	return get_skill_xp_into_level(v_idx, skill_id)
+
+
+func get_skill_xp_to_next(v_idx: int, skill_id: String) -> int:
+	var total_xp: int = get_skill_xp_total(v_idx, skill_id)
+	return int(SkillProgress.get_xp_to_next(total_xp))
+
+
+func get_skill_xp_fraction(v_idx: int, skill_id: String) -> float:
+	var total_xp: int = get_skill_xp_total(v_idx, skill_id)
+	return float(SkillProgress.get_level_progress(total_xp))
+
 
 func add_skill_xp(v_idx: int, skill_id: String, amount: int) -> void:
 	if amount <= 0:
@@ -541,95 +621,29 @@ func add_skill_xp(v_idx: int, skill_id: String, amount: int) -> void:
 	if v == null:
 		return
 
-	# Ensure skills dictionary exists and has this skill
-	if not (v.skills is Dictionary):
-		_init_skills_for(v)
-	if not v.skills.has(skill_id):
-		v.skills[skill_id] = {
-			"level": 1,
-			"xp": 0,
-		}
+	var s: Dictionary = _ensure_skill_record(v, skill_id)
 
-	var s: Dictionary = v.skills[skill_id] as Dictionary
-	var lv: int = int(s.get("level", 1))
-	var xp_cur: int = int(s.get("xp", 0))
+	var old_total: int = int(s.get("xp_total", 0))
+	var new_total: int = max(0, old_total + amount)
 
-	var remaining: int = amount
-
-	while remaining > 0:
-		var need: int = _skill_xp_to_next_level(lv)
-
-		# Safety: avoid infinite loops if need <= 0
-		if need <= 0:
-			lv += 1
-			xp_cur = 0
-			continue
-
-		var room: int = need - xp_cur
-		if remaining < room:
-			xp_cur += remaining
-			remaining = 0
-		else:
-			remaining -= room
-			lv += 1
-			xp_cur = 0
-
-	s["level"] = lv
-	s["xp"] = xp_cur
+	s["xp_total"] = new_total
 	v.skills[skill_id] = s
 
-	# Reuse xp_changed to notify UIs (CharacterMenu only cares about index).
-	xp_changed.emit(v_idx, xp_cur, lv)
+	var new_level: int = int(SkillProgress.get_level_for_xp(new_total))
+	var xp_into_level: int = int(SkillProgress.get_xp_into_level(new_total))
 
-
-func get_skill_xp(v_idx: int, skill_id: String) -> int:
-	var v: Villager = _get_villager_or_null(v_idx)
-	if v == null:
-		return 0
-	if not (v.skills is Dictionary) or not v.skills.has(skill_id):
-		return 0
-	var s: Dictionary = v.skills[skill_id] as Dictionary
-	return int(s.get("xp", 0))
-
-
-func get_skill_xp_to_next(v_idx: int, skill_id: String) -> int:
-	var v: Villager = _get_villager_or_null(v_idx)
-	if v == null:
-		return 0
-	if not (v.skills is Dictionary) or not v.skills.has(skill_id):
-		# If this skill wasn't initialized somehow, treat as level 1 with 0 XP.
-		var need0: int = _skill_xp_to_next_level(1)
-		return need0
-
-	var s: Dictionary = v.skills[skill_id] as Dictionary
-	var lv: int = int(s.get("level", 1))
-	var xp_cur: int = int(s.get("xp", 0))
-	var need: int = _skill_xp_to_next_level(lv)
-	return max(0, need - xp_cur)
-
-
-func get_skill_xp_fraction(v_idx: int, skill_id: String) -> float:
-	var v: Villager = _get_villager_or_null(v_idx)
-	if v == null:
-		return 0.0
-	if not (v.skills is Dictionary) or not v.skills.has(skill_id):
-		return 0.0
-
-	var s: Dictionary = v.skills[skill_id] as Dictionary
-	var lv: int = int(s.get("level", 1))
-	var xp_cur: int = int(s.get("xp", 0))
-	var need: int = max(1, _skill_xp_to_next_level(lv))
-
-	return clampf(float(xp_cur) / float(need), 0.0, 1.0)
-
+	# Reuse xp_changed to notify UIs for now.
+	xp_changed.emit(v_idx, xp_into_level, new_level)
 
 # --- Equipment surface API (for Equipment tab) ---------------------
 
 func get_equipped_item_name(_index: int, _slot: String) -> String:
 	return ""
 
+
 func get_equipped_item_stats(_index: int, _slot: String) -> Dictionary:
 	return {}
+
 
 # --- Derived stats for Stats tab (stringified for simple UI) -------
 
@@ -651,10 +665,6 @@ func _get_villager_or_null(index: int) -> Villager:
 	if index < 0 or index >= _villagers.size():
 		return null
 	return _villagers[index]
-
-func _skill_xp_to_next_level(level: int) -> int:
-	var lv: int = max(1, level)
-	return max(1, lv * skill_xp_per_level)
 
 
 # --- Portrait + gender logic ---------------------------------------
