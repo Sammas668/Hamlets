@@ -274,24 +274,14 @@ func rebuild_nodes_for_tile(
 		var yield_factor: float  = float(md.get("yield_factor",  1.0))
 
 		# Special cases
-		if skill == "woodcutting" and detail == "Thick Pine Grove":
+		if skill == "woodcutting" and detail.to_lower().find("thick") != -1:
 			chance_factor = 0.5
-			yield_factor  = 2.0
+			yield_factor = 2.0
 
-		# Decide yield metadata (optional)
+		# ResourceNodes identifies nodes only.
+		# Actual product/drop data belongs to the skill systems.
 		var product_label: String = ""
 		var product_item: StringName = StringName("")
-
-		match skill:
-			"woodcutting":
-				if detail == "Pine Grove" or detail == "Thick Pine Grove":
-					product_label = "Pine logs"
-					product_item  = ITEMS.LOG_PINE
-				else:
-					product_label = "Twigs"
-					product_item  = ITEMS.TWIGS
-			_:
-				pass
 
 		var node_tier: int = int(md.get("tier", tier))
 
@@ -362,11 +352,6 @@ func rebuild_nodes_for_tile(
 					node["patch_id"] = patch_id
 					node["node_id"] = patch_id
 
-		# Optional product metadata for UI/recipes
-		if product_label != "":
-			node["product_label"] = product_label
-		if String(product_item) != "":
-			node["product_item_id"] = product_item
 
 		nodes.append(node)
 
