@@ -46,7 +46,7 @@ const BIOME_ICON_PATHS := {
 	"Rocky Estuary": "res://assets/icons/biomes/Rocky Estuary.png",
 	"Foothill Valleys": "res://assets/icons/biomes/Foothill Valleys.png",
 
-	"Silkwood": "res://assets/icons/biomes/Silkwood.png",
+	"Silkwood": "res://assets/icons/biomes/silkwood.png",
 	"Cenote Sinkholes": "res://assets/icons/biomes/Cenote Sinkholes.png",
 	"Painted Canyon": "res://assets/icons/biomes/Painted Canyon.png",
 

@@ -878,7 +878,7 @@ RAW_GEM_VOIDSTONE: {
 	FISH_GLACIER_HERRING: {
 		"name": "Glacier Herring",
 		"stack": true,
-		"icon": "res://assets/items/Fishing/Glacier Herring.png",
+		"icon": "res://assets/items/Fishing/Galcier Herring.png",
 		"use_skill": &"fishing",
 	},
 	FISH_RIVER_BLEAK: {
@@ -896,13 +896,13 @@ RAW_GEM_VOIDSTONE: {
 	FISH_SHELF_COD: {
 		"name": "Shelf Cod",
 		"stack": true,
-		"icon": "res://assets/items/Fishing/Shelf Cod.png",
+		"icon": "res://assets/items/Fishing/Shef Cod.png",
 		"use_skill": &"fishing",
 	},
 	FISH_STRIPED_MACKEREL: {
 		"name": "Striped Mackerel",
 		"stack": true,
-		"icon": "res://assets/items/Fishing/Striped Mackerel.png",
+		"icon": "res://assets/items/Fishing/Striped Mackeral.png",
 		"use_skill": &"fishing",
 	},
 	FISH_SKIPJACK_TUNA: {
@@ -914,7 +914,7 @@ RAW_GEM_VOIDSTONE: {
 	FISH_SUNFIN_TUNA: {
 		"name": "Sunfin Tuna",
 		"stack": true,
-		"icon": "res://assets/items/Fishing/Sunfin Tuna.png",
+		"icon": "res://assets/items/Fishing/Sunfish Tuna.png",
 		"use_skill": &"fishing",
 	},
 	FISH_NIGHT_EEL: {
@@ -926,7 +926,7 @@ RAW_GEM_VOIDSTONE: {
 	FISH_ABYSSAL_FIN: {
 		"name": "Abyssal Fin",
 		"stack": true,
-		"icon": "res://assets/items/Fishing/Abyssal Fin.png",
+		"icon": "res://assets/items/Fishing/Abyssal_Fin.png",
 		"use_skill": &"fishing",
 	},
 
@@ -1000,7 +1000,7 @@ RAW_GEM_VOIDSTONE: {
 	FISH_MOONFANG_EEL: {
 		"name": "Moonfang Eel",
 		"stack": true,
-		"icon": "res://assets/items/Fishing/Moonfang Eel.png",
+		"icon": "res://assets/items/Fishing/Moonfang.png",
 		"use_skill": &"fishing",
 	},
 	FISH_RIFTFIN: {
@@ -1062,7 +1062,7 @@ RAW_GEM_VOIDSTONE: {
 	FISH_WHALEFIN_GIANT: {
 		"name": "Whalefin Giant",
 		"stack": true,
-		"icon": "res://assets/items/Fishing/Whalefin Giant.png",
+		"icon": "res://assets/items/Fishing/Walefin Giant.png",
 		"use_skill": &"fishing",
 	},
 	FISH_LEVIATHAN_WHALE: {
