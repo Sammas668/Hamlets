@@ -187,7 +187,7 @@ const CHEM_HERB_BLADDERWRACK_T10: StringName         = &"chem_herb_bladderwrack_
 const TAILOR_FIBRE_SILK_COCOONS: StringName = &"tailor_fibre_silk_cocoons"
 const TAILOR_FIBRE_COTTON: StringName       = &"tailor_fibre_cotton"
 const TAILOR_FIBRE_HEMP: StringName         = &"tailor_fibre_hemp"
-const TAILOR_FIBRE_JUTE: StringName         = &"tailor_fibre_jute"
+const TAILOR_FIBRE_FLAX: StringName         = &"tailor_fibre_flax"
 
 # -------------------------------------------------------------------
 # Smithing: auto-generated item IDs (tools, weapons, armour, hardware, fishing)
@@ -1264,7 +1264,7 @@ RAW_GEM_VOIDSTONE: {
 
 	# ------------------------------------------------------------
 	# Tailoring fibres (used by Tailoring later; dropped by Herbalism now)
-	# 4 core plant fibres: cotton / jute / hemp / silk (cocoons)
+	# 4 core plant fibres: cotton / flax / hemp / silk (cocoons)
 	# ------------------------------------------------------------
 	TAILOR_FIBRE_COTTON: {
 		"name": "Cotton Fibre",
@@ -1272,10 +1272,10 @@ RAW_GEM_VOIDSTONE: {
 		"icon": "res://assets/items/Tailoring/tailor_fibre_cotton.png",
 		"use_skill": &"tailoring",
 	},
-	TAILOR_FIBRE_JUTE: {
-		"name": "Jute Fibre",
+	TAILOR_FIBRE_FLAX: {
+		"name": "Flax Fibre",
 		"stack": true,
-		"icon": "res://assets/items/Tailoring/tailor_fibre_jute.png",
+		"icon": "res://assets/items/Tailoring/tailor_fibre_flax.png",
 		"use_skill": &"tailoring",
 	},
 	TAILOR_FIBRE_HEMP: {

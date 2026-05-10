@@ -169,7 +169,6 @@ const GEM_NODES := {
 		"charges": 5,
 		"respawn_s": 188.0,
 		"drops": [
-			# Sapphire / Emerald are intentionally swapped from the old table.
 			{ "id": ITEMS.RAW_GEM_EMERALD,  "weight": 34.0 },
 			{ "id": ITEMS.RAW_GEM_SAPPHIRE, "weight": 34.0 },
 			{ "id": ITEMS.RAW_GEM_RUBY,     "weight": 28.0 },
