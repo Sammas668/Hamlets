@@ -632,7 +632,7 @@ var _defs: Dictionary = {
 RAW_GEM_QUARTZ: {
 	"name": "Raw Quartz",
 	"stack": true,
-	"icon": "res://assets/items/Mining/raw_quatz_gem.png",
+	"icon": "res://assets/items/Mining/raw_quartz_gem.png",
 	"use_skill": &"mining",
 },
 RAW_GEM_CITRINE: {
