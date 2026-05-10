@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://574ssiigd8en"
-path="res://.godot/imported/Sunfish Tuna.png-f9bfca797ffd229fc8052cf9ef2b8e33.ctex"
+uid="uid://b3tcgxau6nsa"
+path="res://.godot/imported/Glacier Herring.png-0caf1d9a103d7ff746c444ac2e8d68ef.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/Fishing/Sunfish Tuna.png"
-dest_files=["res://.godot/imported/Sunfish Tuna.png-f9bfca797ffd229fc8052cf9ef2b8e33.ctex"]
+source_file="res://assets/items/Fishing/Glacier Herring.png"
+dest_files=["res://.godot/imported/Glacier Herring.png-0caf1d9a103d7ff746c444ac2e8d68ef.ctex"]
 
 [params]
 

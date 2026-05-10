@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://blbnidwpog2vl"
-path="res://.godot/imported/Galcier Herring.png-346316b922704202e65ba87656e11540.ctex"
+uid="uid://cfkqrgonb2jr"
+path="res://.godot/imported/Striped Mackerel.png-f73761be2eb9fd4a52ee27342bfca9aa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/Fishing/Galcier Herring.png"
-dest_files=["res://.godot/imported/Galcier Herring.png-346316b922704202e65ba87656e11540.ctex"]
+source_file="res://assets/items/Fishing/Striped Mackerel.png"
+dest_files=["res://.godot/imported/Striped Mackerel.png-f73761be2eb9fd4a52ee27342bfca9aa.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://curnpmgsw07qw"
-path="res://.godot/imported/Moonfang.png-1e30c67fa862a4ce521f2480a061d5bc.ctex"
+uid="uid://cglcj8vn2rrmr"
+path="res://.godot/imported/Sunfin Tuna.png-4608b615b3ce64b924e8eb39245463ad.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/Fishing/Moonfang.png"
-dest_files=["res://.godot/imported/Moonfang.png-1e30c67fa862a4ce521f2480a061d5bc.ctex"]
+source_file="res://assets/items/Fishing/Sunfin Tuna.png"
+dest_files=["res://.godot/imported/Sunfin Tuna.png-4608b615b3ce64b924e8eb39245463ad.ctex"]
 
 [params]
 
