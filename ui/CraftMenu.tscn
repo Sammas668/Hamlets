@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://dvs3kdn1pcmsf"]
+[gd_scene format=3 uid="uid://dvs3kdn1pcmsf"]
 
-[ext_resource type="Script" path="res://ui/Craft_Menu.gd" id="1_6u1r7"]
+[ext_resource type="Script" uid="uid://du7vrveatht2" path="res://ui/craft_menu.gd" id="1_6u1r7"]
 
-[node name="CraftMenu" type="Control"]
+[node name="CraftMenu" type="Control" unique_id=219112954]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0

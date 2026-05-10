@@ -203,29 +203,29 @@ const FISHING_SPAWN_NAME_TO_ICON := {
 	"Riverbank Shallows":     "res://assets/icons/modifiers/fishing_n1_riverbank_shallows.png",
 	"Minnow Ford Pool":       "res://assets/icons/modifiers/fishing_r1_minnow_ford_pool.png",
 
-	"Rocky Estuary Bank":     "res://assets/items/Fishing/fishing_n2_rocky_estuary_nets.png",
-	"Brackwater Channel":     "res://assets/items/Fishing/fishing_r2_brackwater_channel.png",
+	"Rocky Estuary Bank":     "res://assets/icons/modifiers/fishing_n2_rocky_estuary_nets.png",
+	"Brackwater Channel":     "res://assets/icons/Fishing/fishing_r2_brackwater_channel.png",
 
-	"Sinkhole Plunge Pool":   "res://assets/items/Fishing/fishing_r3_sinkhole_plunge_pool.png",
+	"Sinkhole Plunge Pool":   "res://assets/icons/Fishing/fishing_r3_sinkhole_plunge_pool.png",
 
-	"Cascade Shelf Nets":     "res://assets/items/Fishing/fishing_n4_cascade_shelf_nets.png",
-	"Echofall Basin":         "res://assets/items/Fishing/fishing_r4_echofall_basin.png",
+	"Cascade Shelf Nets":     "res://assets/icons/Fishing/fishing_n4_cascade_shelf_nets.png",
+	"Echofall Basin":         "res://assets/icons/Fishing/fishing_r4_echofall_basin.png",
 
-	"Oxbow Bend Pool":        "res://assets/items/Fishing/fishing_r5_oxbow_bend_pool.png",
-	"Leviathan Channel":      "res://assets/items/Fishing/fishing_h5_leviathan_channel.png",
+	"Oxbow Bend Pool":        "res://assets/icons/Fishing/fishing_r5_oxbow_bend_pool.png",
+	"Leviathan Channel":      "res://assets/icons/Fishing/fishing_h5_leviathan_channel.png",
 
-	"Chasm Surge Run":        "res://assets/items/Fishing/fishing_h6_chasm_surge_run.png",
+	"Chasm Surge Run":        "res://assets/icons/Fishing/fishing_h6_chasm_surge_run.png",
 
-	"Hanging Oasis Nets":     "res://assets/items/Fishing/fishing_n7_hanging_oasis_nets.png",
-	"Skywell Sink":           "res://assets/items/Fishing/fishing_h7_skywell_sink.png",
+	"Hanging Oasis Nets":     "res://assets/icons/Fishing/fishing_n7_hanging_oasis_nets.png",
+	"Skywell Sink":           "res://assets/icons/Fishing/fishing_h7_skywell_sink.png",
 
-	"Ice-Crack Nets":         "res://assets/items/Fishing/fishing_n8_ice_crack_nets.png",
+	"Ice-Crack Nets":         "res://assets/icons/Fishing/fishing_n8_ice_crack_nets.png",
 
-	"Boiling Runoff Nets":    "res://assets/items/Fishing/fishing_n9_boiling_runoff_nets.png",
-	"Geyser Cone Pool":       "res://assets/items/Fishing/fishing_r9_geyser_cone_pool.png",
-	"Steamvent Pit":          "res://assets/items/Fishing/fishing_h9_steamvent_pit.png",
+	"Boiling Runoff Nets":    "res://assets/icons/Fishing/fishing_n9_boiling_runoff_nets.png",
+	"Geyser Cone Pool":       "res://assets/icons/Fishing/fishing_r9_geyser_cone_pool.png",
+	"Steamvent Pit":          "res://assets/icons/Fishing/fishing_h9_steamvent_pit.png",
 
-	"Abyssal Star Trench":    "res://assets/items/Fishing/fishing_h10_abyssal_star_trench.png",
+	"Abyssal Star Trench":    "res://assets/icons/Fishing/fishing_h10_abyssal_star_trench.png",
 }
 
 # Herbalism patches by PATCH ID.
