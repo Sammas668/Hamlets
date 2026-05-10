@@ -156,11 +156,12 @@ const GEM_NODES := {
 		"charges": 6,
 		"respawn_s": 166.0,
 		"drops": [
-			{ "id": ITEMS.GEM_OPAL,      "weight": 45.0 },
-			{ "id": ITEMS.GEM_JADE,      "weight": 35.0 },
-			{ "id": ITEMS.GEM_BLUE_TOPAZ, "weight": 20.0 },
+			{ "id": ITEMS.RAW_GEM_QUARTZ,   "weight": 45.0 },
+			{ "id": ITEMS.RAW_GEM_CITRINE, "weight": 35.0 },
+			{ "id": ITEMS.RAW_GEM_TOPAZ,   "weight": 20.0 },
 		],
 	},
+
 	&"gem_precious": {
 		"kind": "gem",
 		"req": 45,
@@ -168,12 +169,14 @@ const GEM_NODES := {
 		"charges": 5,
 		"respawn_s": 188.0,
 		"drops": [
-			{ "id": ITEMS.GEM_SAPPHIRE, "weight": 34.0 },
-			{ "id": ITEMS.GEM_EMERALD,  "weight": 34.0 },
-			{ "id": ITEMS.GEM_RUBY,     "weight": 28.0 },
-			{ "id": ITEMS.GEM_DIAMOND,  "weight": 4.0  },
+			# Sapphire / Emerald are intentionally swapped from the old table.
+			{ "id": ITEMS.RAW_GEM_EMERALD,  "weight": 34.0 },
+			{ "id": ITEMS.RAW_GEM_SAPPHIRE, "weight": 34.0 },
+			{ "id": ITEMS.RAW_GEM_RUBY,     "weight": 28.0 },
+			{ "id": ITEMS.RAW_GEM_DIAMOND,  "weight": 4.0  },
 		],
 	},
+
 	&"gem_rare": {
 		"kind": "gem",
 		"req": 70,
@@ -181,10 +184,11 @@ const GEM_NODES := {
 		"charges": 4,
 		"respawn_s": 230.0,
 		"drops": [
-			{ "id": ITEMS.GEM_DIAMOND,     "weight": 70.0 },
-			{ "id": ITEMS.GEM_DRAGONSTONE, "weight": 30.0 },
+			{ "id": ITEMS.RAW_GEM_DIAMOND,     "weight": 70.0 },
+			{ "id": ITEMS.RAW_GEM_DRAGONSTONE, "weight": 30.0 },
 		],
 	},
+
 	&"gem_mythic": {
 		"kind": "gem",
 		"req": 90,
@@ -192,11 +196,11 @@ const GEM_NODES := {
 		"charges": 3,
 		"respawn_s": 263.0,
 		"drops": [
-			{ "id": ITEMS.GEM_DIAMOND,     "weight": 50.0 },
-			{ "id": ITEMS.GEM_DRAGONSTONE, "weight": 50.0 },
+			{ "id": ITEMS.RAW_GEM_DIAMOND,     "weight": 50.0 },
+			{ "id": ITEMS.RAW_GEM_DRAGONSTONE, "weight": 50.0 },
 		],
 		"override_chance": 0.003,
-		"override_item_id": ITEMS.GEM_ONYX,
+		"override_item_id": ITEMS.RAW_GEM_VOIDSTONE,
 	},
 }
 

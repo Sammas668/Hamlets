@@ -50,16 +50,19 @@ const ORE_ADAMANTITE: StringName  = &"ore_adamantite"
 const ORE_ORICHALCUM: StringName  = &"ore_orichalcum"
 const ORE_AETHER: StringName      = &"ore_aether"
 
-# Mining – Gems
-const GEM_OPAL: StringName         = &"gem_opal"
-const GEM_JADE: StringName         = &"gem_jade"
-const GEM_BLUE_TOPAZ: StringName   = &"gem_blue_topaz"
-const GEM_SAPPHIRE: StringName     = &"gem_sapphire"
-const GEM_EMERALD: StringName      = &"gem_emerald"
-const GEM_RUBY: StringName         = &"gem_ruby"
-const GEM_DIAMOND: StringName      = &"gem_diamond"
-const GEM_DRAGONSTONE: StringName  = &"gem_dragonstone"
-const GEM_ONYX: StringName         = &"gem_onyx"
+# Mining – Raw Gems
+# Canonical item IDs match PNG filenames in assets/items/Mining/
+const RAW_GEM_QUARTZ: StringName       = &"raw_quartz_gem"
+const RAW_GEM_CITRINE: StringName     = &"raw_citrine_gem"
+const RAW_GEM_TOPAZ: StringName       = &"raw_topaz_gem"
+const RAW_GEM_AMETHYST: StringName    = &"raw_amethyst_gem"
+const RAW_GEM_SAPPHIRE: StringName    = &"raw_sapphire_gem"
+const RAW_GEM_EMERALD: StringName     = &"raw_emerald_gem"
+const RAW_GEM_RUBY: StringName        = &"raw_ruby_gem"
+const RAW_GEM_DIAMOND: StringName     = &"raw_diamond_gem"
+const RAW_GEM_DRAGONSTONE: StringName = &"raw_dragonstone_gem"
+const RAW_GEM_VOIDSTONE: StringName   = &"raw_voidstone_gem"
+
 
 # Woodcutting – Logs (T1–T10)
 const LOG_PINE: StringName     = &"log_pine"      # T1
@@ -235,7 +238,6 @@ const _SMITHING_FAMILY_LABELS := {
 	"dagger": "Dagger",
 	"mace": "Mace",
 	"shortsword": "Shortsword",
-	"sword": "Sword",
 	"scimitar": "Scimitar",
 	"longsword": "Longsword",
 	"warhammer": "Warhammer",
@@ -280,7 +282,7 @@ const _SMITHING_FAMILY_GROUP := {
 	"straps": "hardware",
 	"hinges": "hardware",
 	"brackets": "hardware",
-	"chains": "hardware",
+	"chain": "hardware",
 	"reinforcement_rod": "hardware",
 	"flat_plate": "hardware",
 	"beam_shoe": "hardware",
@@ -292,7 +294,6 @@ const _SMITHING_FAMILY_GROUP := {
 	"dagger": "weapon",
 	"mace": "weapon",
 	"shortsword": "weapon",
-	"sword": "weapon",
 	"scimitar": "weapon",
 	"longsword": "weapon",
 	"warhammer": "weapon",
@@ -627,62 +628,67 @@ var _defs: Dictionary = {
 		"icon": "res://assets/items/Mining/ore_aether.png",
 		"use_skill": &"mining",
 	},
-
-	# --- Mining: Gems ---
-	GEM_OPAL: {
-		"name": "Opal",
-		"stack": true,
-		"icon": "res://assets/items/Mining/gem_opal.png",
-		"use_skill": &"mining",
-	},
-	GEM_JADE: {
-		"name": "Jade",
-		"stack": true,
-		"icon": "res://assets/items/Mining/gem_jade.png",
-		"use_skill": &"mining",
-	},
-	GEM_BLUE_TOPAZ: {
-		"name": "Blue Topaz",
-		"stack": true,
-		"icon": "res://assets/items/Mining/gem_blue_topaz.png",
-		"use_skill": &"mining",
-	},
-	GEM_SAPPHIRE: {
-		"name": "Sapphire",
-		"stack": true,
-		"icon": "res://assets/items/Mining/gem_sapphire.png",
-		"use_skill": &"mining",
-	},
-	GEM_EMERALD: {
-		"name": "Emerald",
-		"stack": true,
-		"icon": "res://assets/items/Mining/gem_emerald.png",
-		"use_skill": &"mining",
-	},
-	GEM_RUBY: {
-		"name": "Ruby",
-		"stack": true,
-		"icon": "res://assets/items/Mining/gem_ruby.png",
-		"use_skill": &"mining",
-	},
-	GEM_DIAMOND: {
-		"name": "Diamond",
-		"stack": true,
-		"icon": "res://assets/items/Mining/gem_diamond.png",
-		"use_skill": &"mining",
-	},
-	GEM_DRAGONSTONE: {
-		"name": "Dragonstone",
-		"stack": true,
-		"icon": "res://assets/items/Mining/gem_dragonstone.png",
-		"use_skill": &"mining",
-	},
-	GEM_ONYX: {
-		"name": "Onyx",
-		"stack": true,
-		"icon": "res://assets/items/Mining/gem_onyx.png",
-		"use_skill": &"mining",
-	},
+# --- Mining: Raw Gems ---
+RAW_GEM_QUARTZ: {
+	"name": "Raw Quartz",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_quatz_gem.png",
+	"use_skill": &"mining",
+},
+RAW_GEM_CITRINE: {
+	"name": "Raw Citrine",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_citrine_gem.png",
+	"use_skill": &"mining",
+},
+RAW_GEM_TOPAZ: {
+	"name": "Raw Topaz",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_topaz_gem.png",
+	"use_skill": &"mining",
+},
+RAW_GEM_AMETHYST: {
+	"name": "Raw Amethyst",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_amethyst_gem.png",
+	"use_skill": &"mining",
+},
+RAW_GEM_SAPPHIRE: {
+	"name": "Raw Sapphire",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_sapphire_gem.png",
+	"use_skill": &"mining",
+},
+RAW_GEM_EMERALD: {
+	"name": "Raw Emerald",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_emerald_gem.png",
+	"use_skill": &"mining",
+},
+RAW_GEM_RUBY: {
+	"name": "Raw Ruby",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_ruby_gem.png",
+	"use_skill": &"mining",
+},
+RAW_GEM_DIAMOND: {
+	"name": "Raw Diamond",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_diamond_gem.png",
+	"use_skill": &"mining",
+},
+RAW_GEM_DRAGONSTONE: {
+	"name": "Raw Dragonstone",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_dragonstone_gem.png",
+	"use_skill": &"mining",
+},
+RAW_GEM_VOIDSTONE: {
+	"name": "Raw Voidstone",
+	"stack": true,
+	"icon": "res://assets/items/Mining/raw_voidstone_gem.png",
+	"use_skill": &"mining",
+},
 
 	# --- Woodcutting: Logs ---
 	LOG_PINE: {

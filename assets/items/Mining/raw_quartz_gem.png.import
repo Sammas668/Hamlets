@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://clx3pjh0061pl"
-path="res://.godot/imported/raw_quatz_gem.png-05998e8a268ac667f77ddb17939e7bed.ctex"
+uid="uid://wvfqbjfgnnya"
+path="res://.godot/imported/raw_quartz_gem.png-4edbe43e900af9d51109b6a2d720bc85.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/Mining/raw_quatz_gem.png"
-dest_files=["res://.godot/imported/raw_quatz_gem.png-05998e8a268ac667f77ddb17939e7bed.ctex"]
+source_file="res://assets/items/Mining/raw_quartz_gem.png"
+dest_files=["res://.godot/imported/raw_quartz_gem.png-4edbe43e900af9d51109b6a2d720bc85.ctex"]
 
 [params]
 
