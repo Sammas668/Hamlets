@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dvq541e230j0t"
-path="res://.godot/imported/bar_oricalcum.png-110c9880b6f3a091ebbee55b8da7ba65.ctex"
+uid="uid://ciskduxmw54ma"
+path="res://.godot/imported/bar_orichalcum.png-532d7585e37fac18cf943b81693ba871.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/Smithing/bar_oricalcum.png"
-dest_files=["res://.godot/imported/bar_oricalcum.png-110c9880b6f3a091ebbee55b8da7ba65.ctex"]
+source_file="res://assets/items/Smithing/bar_orichalcum.png"
+dest_files=["res://.godot/imported/bar_orichalcum.png-532d7585e37fac18cf943b81693ba871.ctex"]
 
 [params]
 

@@ -198,8 +198,6 @@ const _SMITHING_METAL_LABELS := {
 	"adamantite": "Adamantite",
 	"orichalcum": "Orichalcum",
 	"aether": "Aether",
-	"silver": "Silver",
-	"gold": "Gold",
 }
 
 const _SMITHING_FAMILY_LABELS := {
@@ -225,7 +223,7 @@ const _SMITHING_FAMILY_LABELS := {
 	"straps": "Straps",
 	"hinges": "Hinges",
 	"brackets": "Brackets",
-	"chains": "Chains",
+	"chain": "Chain",
 	"reinforcement_rod": "Reinforcement Rod",
 	"flat_plate": "Flat Plate",
 	"beam_shoe": "Beam Shoe",

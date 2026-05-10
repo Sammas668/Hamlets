@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qvar0i4et6r"
-path="res://.godot/imported/stone_samdstone.png-5ce3f8252a5f492e30050d61ab1782fe.ctex"
+uid="uid://cp3xewwhuwwx3"
+path="res://.godot/imported/stone_basalt.png-af91282c6ca06054daf1d3da4d6f1765.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/Mining/stone_samdstone.png"
-dest_files=["res://.godot/imported/stone_samdstone.png-5ce3f8252a5f492e30050d61ab1782fe.ctex"]
+source_file="res://assets/items/Mining/stone_basalt.png"
+dest_files=["res://.godot/imported/stone_basalt.png-af91282c6ca06054daf1d3da4d6f1765.ctex"]
 
 [params]
 

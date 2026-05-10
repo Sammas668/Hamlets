@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ct4jwcqblyymx"
-path="res://.godot/imported/stone_basakt.png-4e3c85fe23919ca3e94176758cd3d3fc.ctex"
+uid="uid://dhjx0ptwb1yks"
+path="res://.godot/imported/stone_sandstone.png-057548ee16bda7effdbf0441540fb635.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/Mining/stone_basakt.png"
-dest_files=["res://.godot/imported/stone_basakt.png-4e3c85fe23919ca3e94176758cd3d3fc.ctex"]
+source_file="res://assets/items/Mining/stone_sandstone.png"
+dest_files=["res://.godot/imported/stone_sandstone.png-057548ee16bda7effdbf0441540fb635.ctex"]
 
 [params]
 
