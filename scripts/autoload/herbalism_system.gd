@@ -72,10 +72,10 @@ const CHEM_HERB_BY_TIER := {
 }
 
 # ONLY 4 fibre items (renamed IDs to reflect actual names)
-const FIBRE_FLAX        : StringName = &"flax_fibre"
-const FIBRE_SILK_COCOON : StringName = &"silk_cocoons"
-const FIBRE_COTTON      : StringName = &"cotton_fibre"
-const FIBRE_HEMP        : StringName = &"hemp_fibre"
+const FIBRE_FLAX        : StringName = &"tailor_fibre_flax"
+const FIBRE_SILK_COCOON : StringName = &"tailor_fibre_silk_cocoons"
+const FIBRE_COTTON      : StringName = &"tailor_fibre_cotton"
+const FIBRE_HEMP        : StringName = &"tailor_fibre_hemp"
 
 # Used as the “15% fibre” in cook/chem patches (still tier-shaped, but only 4 items)
 func _fibre_for_tier(tier: int) -> StringName:

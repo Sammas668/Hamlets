@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tsthdb3w1iw1"
-path="res://.godot/imported/herb_lotusbank_patch..png-2a96a272264161ac26e21774f4b0c808.ctex"
+uid="uid://c1dwbmiratg4a"
+path="res://.godot/imported/herb_lotusbank_patch.png-f902fc82c4081db70aede760a3fee0b0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/icons/modifiers/herb_lotusbank_patch..png"
-dest_files=["res://.godot/imported/herb_lotusbank_patch..png-2a96a272264161ac26e21774f4b0c808.ctex"]
+source_file="res://assets/icons/modifiers/herb_lotusbank_patch.png"
+dest_files=["res://.godot/imported/herb_lotusbank_patch.png-f902fc82c4081db70aede760a3fee0b0.ctex"]
 
 [params]
 
