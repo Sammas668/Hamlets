@@ -896,7 +896,7 @@ RAW_GEM_VOIDSTONE: {
 	FISH_SHELF_COD: {
 		"name": "Shelf Cod",
 		"stack": true,
-		"icon": "res://assets/items/Fishing/Shef Cod.png",
+		"icon": "res://assets/items/Fishing/Shelf Cod.png",
 		"use_skill": &"fishing",
 	},
 	FISH_STRIPED_MACKEREL: {

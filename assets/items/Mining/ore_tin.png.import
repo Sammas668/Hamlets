@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://curnpmgsw07qw"
-path="res://.godot/imported/Moonfang.png-1e30c67fa862a4ce521f2480a061d5bc.ctex"
+uid="uid://c6fnqajhl0pvg"
+path="res://.godot/imported/ore_tin.png-7d973db8667dc41482a39a1e86876294.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/items/Fishing/Moonfang.png"
-dest_files=["res://.godot/imported/Moonfang.png-1e30c67fa862a4ce521f2480a061d5bc.ctex"]
+source_file="res://assets/items/Mining/ore_tin.png"
+dest_files=["res://.godot/imported/ore_tin.png-7d973db8667dc41482a39a1e86876294.ctex"]
 
 [params]
 
