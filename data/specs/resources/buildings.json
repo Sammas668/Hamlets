@@ -12,19 +12,24 @@
 		"level_req": 10,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 10 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_trussed", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 2 }
+			{
+			  "item": "wall_kit_limestone",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_limestone",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 140 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 8 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t1",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t1",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -34,19 +39,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 10 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_trussed", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 140 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 8 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 7 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -56,19 +66,28 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 10 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_trussed", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 12
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 140 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 8 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 8 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 4
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "reinforcement_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -87,17 +106,24 @@
 		"level_req": 10,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 10 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_basic", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "palisade_segment", "qty": 6 }
+			{
+			  "item": "wall_kit_limestone",
+			  "qty": 4
+			},
+			{
+			  "item": "floor_kit_limestone",
+			  "qty": 4
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 120 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t1",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t1",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -107,17 +133,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 10 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_basic", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "palisade_segment", "qty": 8 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 5
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 5
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 120 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -127,17 +160,28 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 10 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_basic", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "palisade_segment", "qty": 10 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 120 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -156,19 +200,24 @@
 		"level_req": 10,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 8 },
-			{ "item": "roof_kit_basic", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 2 }
+			{
+			  "item": "wall_kit_limestone",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_limestone",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t1",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t1",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -178,19 +227,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 8 },
-			{ "item": "roof_kit_basic", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -200,19 +254,28 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 8 },
-			{ "item": "roof_kit_basic", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "reinforcement_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -231,17 +294,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 2 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_basic", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "palisade_segment", "qty": 4 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 2
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 4
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 100 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 2 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -251,17 +321,24 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 2 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_basic", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "palisade_segment", "qty": 6 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 3
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 5
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 100 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 3 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -271,17 +348,28 @@
 		"level_req": 40,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 2 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_basic", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "palisade_segment", "qty": 8 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 4
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 100 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -300,17 +388,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 2 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 2
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 120 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 3 },
-			{ "item": "chains", "qty": 2 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -320,17 +415,28 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 2 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 3
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 120 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 4 },
-			{ "item": "chains", "qty": 3 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -340,17 +446,32 @@
 		"level_req": 40,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 2 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 4
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 120 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 5 },
-			{ "item": "chains", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -369,16 +490,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 4
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 4
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 110 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 3 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -388,16 +517,24 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 5
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 5
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 110 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -407,16 +544,28 @@
 		"level_req": 40,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 110 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -426,8 +575,8 @@
 	"kind": "base",
 	"attr": "dex",
 	"building": "Construction Hall",
-	"skill": "fletching",
-	"label": "construction Hall",
+	"skill": "construction",
+	"label": "Construction Hall",
 	"tiers": {
 	  "1": {
 		"label": "Construction Hall (Construction)",
@@ -435,19 +584,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 2 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -457,19 +611,32 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 9
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -479,19 +646,32 @@
 		"level_req": 40,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 4
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "reinforcement_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -510,19 +690,24 @@
 		"level_req": 10,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 2 }
+			{
+			  "item": "wall_kit_clay",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_clay",
+			  "qty": 4
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 110 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "flat_plate", "qty": 2 },
-			{ "item": "rivets", "qty": 3 }
+			{
+			  "item": "fastener_kit_t1",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t1",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -532,19 +717,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 5
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 110 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "flat_plate", "qty": 2 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -554,19 +744,28 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 7
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 110 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "flat_plate", "qty": 2 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -585,18 +784,24 @@
 		"level_req": 10,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 4 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 1 }
+			{
+			  "item": "wall_kit_clay",
+			  "qty": 4
+			},
+			{
+			  "item": "floor_kit_clay",
+			  "qty": 4
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 100 },
-			{ "item": "hinges", "qty": 2 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 2 }
+			{
+			  "item": "fastener_kit_t1",
+			  "qty": 1
+			},
+			{
+			  "item": "fittings_kit_t1",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -606,18 +811,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 4 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 2 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 4
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 4
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 100 },
-			{ "item": "hinges", "qty": 2 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 3 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 1
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -627,18 +838,24 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 4 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 5
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 5
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 100 },
-			{ "item": "hinges", "qty": 2 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -657,20 +874,28 @@
 		"level_req": 40,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_trussed", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "rivets", "qty": 4 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "chains", "qty": 2 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -680,20 +905,32 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_trussed", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 },
-			{ "item": "stairs_kit", "qty": 1 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 7
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "rivets", "qty": 4 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "chains", "qty": 2 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -703,20 +940,36 @@
 		"level_req": 60,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_trussed", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 },
-			{ "item": "stairs_kit", "qty": 1 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "rivets", "qty": 4 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "chains", "qty": 2 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -735,19 +988,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 4 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_trussed", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "ladder", "qty": 1 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 4
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 4
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 110 },
-			{ "item": "hinges", "qty": 2 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 3 },
-			{ "item": "spikes", "qty": 2 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -757,19 +1015,28 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 4 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_trussed", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "ladder", "qty": 2 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 5
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 5
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 110 },
-			{ "item": "hinges", "qty": 2 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 4 },
-			{ "item": "spikes", "qty": 3 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -779,19 +1046,32 @@
 		"level_req": 40,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 4 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_kit_trussed", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "ladder", "qty": 3 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 110 },
-			{ "item": "hinges", "qty": 2 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "rivets", "qty": 5 },
-			{ "item": "spikes", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -810,19 +1090,24 @@
 		"level_req": 20,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 2 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 120 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "flat_plate", "qty": 2 },
-			{ "item": "rivets", "qty": 3 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -832,19 +1117,24 @@
 		"level_req": 30,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 7
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 120 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "flat_plate", "qty": 2 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -854,19 +1144,28 @@
 		"level_req": 40,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 120 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 4 },
-			{ "item": "flat_plate", "qty": 2 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -885,19 +1184,24 @@
 		"level_req": 5,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 10 },
-			{ "item": "floor_section", "qty": 8 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_clay",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_clay",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 140 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t1",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t1",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -907,19 +1211,24 @@
 		"level_req": 25,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 10 },
-			{ "item": "floor_section", "qty": 8 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 5 }
+			{
+			  "item": "wall_kit_sandstone",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_sandstone",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 140 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t2",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t2",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -929,19 +1238,28 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 8 },
-			{ "item": "wall_section", "qty": 10 },
-			{ "item": "floor_section", "qty": 8 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 6 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 12
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 10
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 140 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 7 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -960,19 +1278,28 @@
 		"level_req": 40,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 2 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -982,19 +1309,32 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 7
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1004,19 +1344,32 @@
 		"level_req": 60,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -1035,21 +1388,32 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 8 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "stairs_kit", "qty": 1 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 6 },
-			{ "item": "lockwork", "qty": 2 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1059,21 +1423,32 @@
 		"level_req": 60,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 8 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "stairs_kit", "qty": 1 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 7
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 9
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 7 },
-			{ "item": "lockwork", "qty": 2 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1083,21 +1458,32 @@
 		"level_req": 70,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 8 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "stairs_kit", "qty": 1 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 10
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 8 },
-			{ "item": "lockwork", "qty": 2 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 4
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 2
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 2
+			}
 		  ]
 		}
 	  }
@@ -1116,21 +1502,32 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 10 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "lockwork", "qty": 2 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1140,21 +1537,36 @@
 		"level_req": 60,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 10 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 11
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "lockwork", "qty": 2 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1164,21 +1576,36 @@
 		"level_req": 70,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 10 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 5 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 12
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "lockwork", "qty": 2 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 4
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 2
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 2
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -1197,21 +1624,32 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "lockwork", "qty": 2 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1221,21 +1659,36 @@
 		"level_req": 60,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 5 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 9
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "lockwork", "qty": 2 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1245,21 +1698,36 @@
 		"level_req": 70,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 6 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "lockwork", "qty": 2 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 4
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 2
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -1278,21 +1746,28 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "lockwork", "qty": 2 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1302,21 +1777,32 @@
 		"level_req": 60,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 9
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "lockwork", "qty": 2 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1326,21 +1812,36 @@
 		"level_req": 70,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 5 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "lockwork", "qty": 2 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 4
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 2
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -1359,21 +1860,28 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "reinforcement_rod", "qty": 4 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1383,21 +1891,32 @@
 		"level_req": 60,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 9
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "reinforcement_rod", "qty": 5 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1407,21 +1926,36 @@
 		"level_req": 70,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 8 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "stairs_kit", "qty": 1 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 5 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 10
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 150 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "bolts", "qty": 4 },
-			{ "item": "reinforcement_rod", "qty": 6 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 4
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 2
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 2
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
@@ -1440,20 +1974,32 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 4 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "gate_leaf", "qty": 1 },
-			{ "item": "stairs_kit", "qty": 1 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 4
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 4
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 140 },
-			{ "item": "reinforcement_rod", "qty": 4 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "lockwork", "qty": 2 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1463,20 +2009,32 @@
 		"level_req": 60,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 4 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "gate_leaf", "qty": 1 },
-			{ "item": "stairs_kit", "qty": 1 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 5
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 5
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 140 },
-			{ "item": "reinforcement_rod", "qty": 5 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "lockwork", "qty": 2 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 1
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1486,20 +2044,32 @@
 		"level_req": 70,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame_reinforced", "qty": 2 },
-			{ "item": "frame", "qty": 4 },
-			{ "item": "wall_section", "qty": 4 },
-			{ "item": "floor_section", "qty": 4 },
-			{ "item": "roof_truss", "qty": 2 },
-			{ "item": "gate_leaf", "qty": 1 },
-			{ "item": "stairs_kit", "qty": 1 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 140 },
-			{ "item": "reinforcement_rod", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "lockwork", "qty": 2 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 4
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 2
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t6",
+			  "qty": 2
+			}
 		  ]
 		}
 	  }
@@ -1518,19 +2088,24 @@
 		"level_req": 40,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 3 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 6
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 6
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 4 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1540,19 +2115,28 @@
 		"level_req": 50,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 4 }
+			{
+			  "item": "wall_kit_basalt",
+			  "qty": 7
+			},
+			{
+			  "item": "floor_kit_basalt",
+			  "qty": 7
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 5 }
+			{
+			  "item": "fastener_kit_t3",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t3",
+			  "qty": 2
+			},
+			{
+			  "item": "security_kit_t5",
+			  "qty": 1
+			}
 		  ]
 		}
 	  },
@@ -1562,19 +2146,28 @@
 		"level_req": 60,
 		"inputs": {
 		  "struct": [
-			{ "item": "frame", "qty": 6 },
-			{ "item": "wall_section", "qty": 6 },
-			{ "item": "floor_section", "qty": 6 },
-			{ "item": "roof_kit_thatch", "qty": 2 },
-			{ "item": "door_frame_mod", "qty": 1 },
-			{ "item": "window_frame_mod", "qty": 5 }
+			{
+			  "item": "wall_kit_granite",
+			  "qty": 8
+			},
+			{
+			  "item": "floor_kit_granite",
+			  "qty": 8
+			}
 		  ],
 		  "hardware": [
-			{ "item": "nails", "qty": 130 },
-			{ "item": "hinges", "qty": 4 },
-			{ "item": "brackets", "qty": 6 },
-			{ "item": "flat_plate", "qty": 4 },
-			{ "item": "rivets", "qty": 6 }
+			{
+			  "item": "fastener_kit_t7",
+			  "qty": 3
+			},
+			{
+			  "item": "fittings_kit_t7",
+			  "qty": 1
+			},
+			{
+			  "item": "mechanism_kit_t4",
+			  "qty": 1
+			}
 		  ]
 		}
 	  }
