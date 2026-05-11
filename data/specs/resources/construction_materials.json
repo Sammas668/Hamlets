@@ -6,7 +6,7 @@
 	"kind": "material",
 	"part": "Fastener Kit (T1)",
 	"role": "Hardware Kit",
-	"effect": "Bundles low-tier smithing fasteners into a boxed construction kit for building use or sale.",
+	"effect": "Bundles bronze smithing fasteners into a boxed construction kit for building use or sale.",
 	"mat_tier": 1,
 	"min_building_tier": 1,
 	"req_con_lv": 1,
@@ -15,11 +15,10 @@
 	  "log_pine": 1
 	},
 	"hardware": {
-	  "nails": 40,
-	  "rivets": 8
+	  "nails_bronze": 40,
+	  "rivets_bronze": 8
 	}
   },
-
   "fittings_kit_t1": {
 	"id": "fittings_kit_t1",
 	"building": "Construction Materials",
@@ -27,7 +26,7 @@
 	"kind": "material",
 	"part": "Fittings Kit (T1)",
 	"role": "Hardware Kit",
-	"effect": "Bundles simple hinges, brackets, and straps into a boxed construction kit for building use or sale.",
+	"effect": "Bundles bronze hinges, brackets, and straps into a boxed construction kit for building use or sale.",
 	"mat_tier": 1,
 	"min_building_tier": 1,
 	"req_con_lv": 1,
@@ -36,12 +35,11 @@
 	  "log_pine": 1
 	},
 	"hardware": {
-	  "hinges": 2,
-	  "brackets": 4,
-	  "straps": 2
+	  "hinges_bronze": 2,
+	  "brackets_bronze": 4,
+	  "straps_bronze": 2
 	}
   },
-
   "fastener_kit_t2": {
 	"id": "fastener_kit_t2",
 	"building": "Construction Materials",
@@ -49,7 +47,7 @@
 	"kind": "material",
 	"part": "Fastener Kit (T2)",
 	"role": "Hardware Kit",
-	"effect": "Bundles improved smithing fasteners into a boxed construction kit for building use or sale.",
+	"effect": "Bundles iron smithing fasteners into a boxed construction kit for building use or sale.",
 	"mat_tier": 2,
 	"min_building_tier": 1,
 	"req_con_lv": 10,
@@ -58,12 +56,11 @@
 	  "log_birch": 1
 	},
 	"hardware": {
-	  "nails": 50,
-	  "rivets": 10,
-	  "bolts": 4
+	  "nails_iron": 50,
+	  "rivets_iron": 10,
+	  "bolts_iron": 4
 	}
   },
-
   "fittings_kit_t2": {
 	"id": "fittings_kit_t2",
 	"building": "Construction Materials",
@@ -71,7 +68,7 @@
 	"kind": "material",
 	"part": "Fittings Kit (T2)",
 	"role": "Hardware Kit",
-	"effect": "Bundles improved fittings into a boxed construction kit for building use or sale.",
+	"effect": "Bundles iron fittings into a boxed construction kit for building use or sale.",
 	"mat_tier": 2,
 	"min_building_tier": 1,
 	"req_con_lv": 10,
@@ -80,13 +77,12 @@
 	  "log_birch": 1
 	},
 	"hardware": {
-	  "hinges": 3,
-	  "brackets": 6,
-	  "straps": 3,
-	  "flat_plate": 2
+	  "hinges_iron": 3,
+	  "brackets_iron": 6,
+	  "straps_iron": 3,
+	  "flat_plate_iron": 2
 	}
   },
-
   "fastener_kit_t3": {
 	"id": "fastener_kit_t3",
 	"building": "Construction Materials",
@@ -94,7 +90,7 @@
 	"kind": "material",
 	"part": "Fastener Kit (T3)",
 	"role": "Hardware Kit",
-	"effect": "Bundles sturdy smithing fasteners into a boxed construction kit for building use or sale.",
+	"effect": "Bundles steel smithing fasteners into a boxed construction kit for building use or sale.",
 	"mat_tier": 3,
 	"min_building_tier": 1,
 	"req_con_lv": 20,
@@ -103,13 +99,12 @@
 	  "log_oak": 1
 	},
 	"hardware": {
-	  "nails": 60,
-	  "rivets": 12,
-	  "bolts": 6,
-	  "spikes": 4
+	  "nails_steel": 60,
+	  "rivets_steel": 12,
+	  "bolts_steel": 6,
+	  "spikes_steel": 4
 	}
   },
-
   "fittings_kit_t3": {
 	"id": "fittings_kit_t3",
 	"building": "Construction Materials",
@@ -117,7 +112,7 @@
 	"kind": "material",
 	"part": "Fittings Kit (T3)",
 	"role": "Hardware Kit",
-	"effect": "Bundles sturdy fittings into a boxed construction kit for building use or sale.",
+	"effect": "Bundles steel fittings into a boxed construction kit for building use or sale.",
 	"mat_tier": 3,
 	"min_building_tier": 1,
 	"req_con_lv": 20,
@@ -126,13 +121,12 @@
 	  "log_oak": 1
 	},
 	"hardware": {
-	  "hinges": 4,
-	  "brackets": 8,
-	  "straps": 4,
-	  "flat_plate": 3
+	  "hinges_steel": 4,
+	  "brackets_steel": 8,
+	  "straps_steel": 4,
+	  "flat_plate_steel": 3
 	}
   },
-
   "reinforcement_kit_t3": {
 	"id": "reinforcement_kit_t3",
 	"building": "Construction Materials",
@@ -140,7 +134,7 @@
 	"kind": "material",
 	"part": "Reinforcement Kit (T3)",
 	"role": "Hardware Kit",
-	"effect": "Bundles rods, plates, and beam shoes into a boxed reinforcement kit for stronger construction pieces.",
+	"effect": "Bundles steel rods, plates, and beam shoes into a boxed reinforcement kit for stronger construction pieces.",
 	"mat_tier": 3,
 	"min_building_tier": 1,
 	"req_con_lv": 20,
@@ -149,12 +143,11 @@
 	  "log_oak": 1
 	},
 	"hardware": {
-	  "reinforcement_rod": 4,
-	  "flat_plate": 4,
-	  "beam_shoe": 2
+	  "reinforcement_rod_steel": 4,
+	  "flat_plate_steel": 4,
+	  "beam_shoe_steel": 2
 	}
   },
-
   "mechanism_kit_t4": {
 	"id": "mechanism_kit_t4",
 	"building": "Construction Materials",
@@ -162,7 +155,7 @@
 	"kind": "material",
 	"part": "Mechanism Kit (T4)",
 	"role": "Hardware Kit",
-	"effect": "Bundles chains, gears, and counterweights into a boxed mechanism kit for moving construction parts.",
+	"effect": "Bundles mithrite chains, gears, and counterweights into a boxed mechanism kit for moving construction parts.",
 	"mat_tier": 4,
 	"min_building_tier": 1,
 	"req_con_lv": 30,
@@ -171,12 +164,11 @@
 	  "log_willow": 1
 	},
 	"hardware": {
-	  "chains": 4,
-	  "gear": 2,
-	  "counterweight": 1
+	  "chains_mithrite": 4,
+	  "gear_mithrite": 2,
+	  "counterweight_mithrite": 1
 	}
   },
-
   "security_kit_t5": {
 	"id": "security_kit_t5",
 	"building": "Construction Materials",
@@ -184,7 +176,7 @@
 	"kind": "material",
 	"part": "Security Kit (T5)",
 	"role": "Hardware Kit",
-	"effect": "Bundles lockwork and reinforced fittings into a boxed security kit for secure rooms, vaults, and specialist modules.",
+	"effect": "Bundles adamantite lockwork and reinforced fittings into a boxed security kit for secure rooms, vaults, and specialist modules.",
 	"mat_tier": 5,
 	"min_building_tier": 1,
 	"req_con_lv": 40,
@@ -193,12 +185,11 @@
 	  "log_maple": 1
 	},
 	"hardware": {
-	  "lockwork": 1,
-	  "hinges": 4,
-	  "flat_plate": 4
+	  "lockwork_adamantite": 1,
+	  "hinges_adamantite": 4,
+	  "flat_plate_adamantite": 4
 	}
   },
-
   "reinforcement_kit_t6": {
 	"id": "reinforcement_kit_t6",
 	"building": "Construction Materials",
@@ -206,7 +197,7 @@
 	"kind": "material",
 	"part": "Reinforcement Kit (T6)",
 	"role": "Hardware Kit",
-	"effect": "Bundles advanced rods, plates, and beam shoes into a yew boxed reinforcement kit.",
+	"effect": "Bundles orichalcum rods, plates, and beam shoes into a yew boxed reinforcement kit.",
 	"mat_tier": 6,
 	"min_building_tier": 1,
 	"req_con_lv": 50,
@@ -215,12 +206,11 @@
 	  "log_yew": 1
 	},
 	"hardware": {
-	  "reinforcement_rod": 8,
-	  "flat_plate": 8,
-	  "beam_shoe": 4
+	  "reinforcement_rod_orichalcum": 8,
+	  "flat_plate_orichalcum": 8,
+	  "beam_shoe_orichalcum": 4
 	}
   },
-
   "fastener_kit_t7": {
 	"id": "fastener_kit_t7",
 	"building": "Construction Materials",
@@ -228,7 +218,7 @@
 	"kind": "material",
 	"part": "Fastener Kit (T7)",
 	"role": "Hardware Kit",
-	"effect": "Bundles high-grade smithing fasteners into an ironwood boxed construction kit for advanced building use or sale.",
+	"effect": "Bundles aether smithing fasteners into an ironwood boxed construction kit for advanced building use or sale.",
 	"mat_tier": 7,
 	"min_building_tier": 1,
 	"req_con_lv": 60,
@@ -237,13 +227,12 @@
 	  "log_ironwood": 1
 	},
 	"hardware": {
-	  "nails": 80,
-	  "rivets": 20,
-	  "bolts": 12,
-	  "spikes": 10
+	  "nails_aether": 80,
+	  "rivets_aether": 20,
+	  "bolts_aether": 12,
+	  "spikes_aether": 10
 	}
   },
-
   "fittings_kit_t7": {
 	"id": "fittings_kit_t7",
 	"building": "Construction Materials",
@@ -251,7 +240,7 @@
 	"kind": "material",
 	"part": "Fittings Kit (T7)",
 	"role": "Hardware Kit",
-	"effect": "Bundles high-grade fittings into an ironwood boxed construction kit for advanced building use or sale.",
+	"effect": "Bundles aether fittings into an ironwood boxed construction kit for advanced building use or sale.",
 	"mat_tier": 7,
 	"min_building_tier": 1,
 	"req_con_lv": 60,
@@ -260,14 +249,13 @@
 	  "log_ironwood": 1
 	},
 	"hardware": {
-	  "hinges": 6,
-	  "brackets": 12,
-	  "straps": 8,
-	  "flat_plate": 6,
-	  "beam_shoe": 4
+	  "hinges_aether": 6,
+	  "brackets_aether": 12,
+	  "straps_aether": 8,
+	  "flat_plate_aether": 6,
+	  "beam_shoe_aether": 4
 	}
   },
-
   "mechanism_kit_t8": {
 	"id": "mechanism_kit_t8",
 	"building": "Construction Materials",
@@ -275,7 +263,7 @@
 	"kind": "material",
 	"part": "Mechanism Kit (T8)",
 	"role": "Hardware Kit",
-	"effect": "Bundles high-grade chains, gears, and counterweights into a redwood boxed mechanism kit.",
+	"effect": "Bundles aether chains, gears, and counterweights into a redwood boxed mechanism kit.",
 	"mat_tier": 8,
 	"min_building_tier": 1,
 	"req_con_lv": 75,
@@ -284,13 +272,12 @@
 	  "log_redwood": 1
 	},
 	"hardware": {
-	  "chains": 8,
-	  "gear": 4,
-	  "counterweight": 2,
-	  "beam_shoe": 2
+	  "chains_aether": 8,
+	  "gear_aether": 4,
+	  "counterweight_aether": 2,
+	  "beam_shoe_aether": 2
 	}
   },
-
   "security_kit_t9": {
 	"id": "security_kit_t9",
 	"building": "Construction Materials",
@@ -298,7 +285,7 @@
 	"kind": "material",
 	"part": "Security Kit (T9)",
 	"role": "Hardware Kit",
-	"effect": "Bundles high-end lockwork and reinforced fittings into a sakura boxed security kit for elite magical and vault modules.",
+	"effect": "Bundles aether lockwork and reinforced fittings into a sakura boxed security kit for elite magical and vault modules.",
 	"mat_tier": 9,
 	"min_building_tier": 1,
 	"req_con_lv": 90,
@@ -307,13 +294,12 @@
 	  "log_sakura": 1
 	},
 	"hardware": {
-	  "lockwork": 2,
-	  "hinges": 6,
-	  "flat_plate": 6,
-	  "reinforcement_rod": 4
+	  "lockwork_aether": 2,
+	  "hinges_aether": 6,
+	  "flat_plate_aether": 6,
+	  "reinforcement_rod_aether": 4
 	}
   },
-
   "floor_kit_limestone": {
 	"id": "floor_kit_limestone",
 	"building": "Construction Materials",
@@ -330,10 +316,9 @@
 	  "stone_limestone": 8
 	},
 	"hardware": {
-	  "nails": 20
+	  "nails_bronze": 20
 	}
   },
-
   "wall_kit_limestone": {
 	"id": "wall_kit_limestone",
 	"building": "Construction Materials",
@@ -350,11 +335,10 @@
 	  "stone_limestone": 12
 	},
 	"hardware": {
-	  "nails": 24,
-	  "brackets": 2
+	  "nails_bronze": 24,
+	  "brackets_bronze": 2
 	}
   },
-
   "floor_kit_clay": {
 	"id": "floor_kit_clay",
 	"building": "Construction Materials",
@@ -371,10 +355,9 @@
 	  "stone_clay": 8
 	},
 	"hardware": {
-	  "nails": 16
+	  "nails_bronze": 16
 	}
   },
-
   "wall_kit_clay": {
 	"id": "wall_kit_clay",
 	"building": "Construction Materials",
@@ -391,11 +374,10 @@
 	  "stone_clay": 12
 	},
 	"hardware": {
-	  "nails": 20,
-	  "brackets": 2
+	  "nails_bronze": 20,
+	  "brackets_bronze": 2
 	}
   },
-
   "floor_kit_sandstone": {
 	"id": "floor_kit_sandstone",
 	"building": "Construction Materials",
@@ -412,11 +394,10 @@
 	  "stone_sandstone": 10
 	},
 	"hardware": {
-	  "nails": 24,
-	  "rivets": 4
+	  "nails_iron": 24,
+	  "rivets_iron": 4
 	}
   },
-
   "wall_kit_sandstone": {
 	"id": "wall_kit_sandstone",
 	"building": "Construction Materials",
@@ -433,12 +414,11 @@
 	  "stone_sandstone": 14
 	},
 	"hardware": {
-	  "nails": 28,
-	  "rivets": 4,
-	  "brackets": 3
+	  "nails_iron": 28,
+	  "rivets_iron": 4,
+	  "brackets_iron": 3
 	}
   },
-
   "floor_kit_basalt": {
 	"id": "floor_kit_basalt",
 	"building": "Construction Materials",
@@ -455,12 +435,11 @@
 	  "stone_basalt": 10
 	},
 	"hardware": {
-	  "nails": 28,
-	  "rivets": 6,
-	  "flat_plate": 1
+	  "nails_mithrite": 28,
+	  "rivets_mithrite": 6,
+	  "flat_plate_mithrite": 1
 	}
   },
-
   "wall_kit_basalt": {
 	"id": "wall_kit_basalt",
 	"building": "Construction Materials",
@@ -477,14 +456,13 @@
 	  "stone_basalt": 16
 	},
 	"hardware": {
-	  "nails": 32,
-	  "rivets": 6,
-	  "brackets": 4,
-	  "flat_plate": 2,
-	  "reinforcement_rod": 1
+	  "nails_mithrite": 32,
+	  "rivets_mithrite": 6,
+	  "brackets_mithrite": 4,
+	  "flat_plate_mithrite": 2,
+	  "reinforcement_rod_mithrite": 1
 	}
   },
-
   "floor_kit_granite": {
 	"id": "floor_kit_granite",
 	"building": "Construction Materials",
@@ -501,12 +479,11 @@
 	  "stone_granite": 12
 	},
 	"hardware": {
-	  "rivets": 8,
-	  "bolts": 4,
-	  "flat_plate": 2
+	  "rivets_orichalcum": 8,
+	  "bolts_orichalcum": 4,
+	  "flat_plate_orichalcum": 2
 	}
   },
-
   "wall_kit_granite": {
 	"id": "wall_kit_granite",
 	"building": "Construction Materials",
@@ -523,13 +500,12 @@
 	  "stone_granite": 18
 	},
 	"hardware": {
-	  "rivets": 10,
-	  "bolts": 6,
-	  "flat_plate": 3,
-	  "reinforcement_rod": 2
+	  "rivets_orichalcum": 10,
+	  "bolts_orichalcum": 6,
+	  "flat_plate_orichalcum": 3,
+	  "reinforcement_rod_orichalcum": 2
 	}
   },
-
   "floor_kit_marble": {
 	"id": "floor_kit_marble",
 	"building": "Construction Materials",
@@ -546,12 +522,11 @@
 	  "stone_marble": 12
 	},
 	"hardware": {
-	  "bolts": 6,
-	  "brackets": 4,
-	  "flat_plate": 3
+	  "bolts_aether": 6,
+	  "brackets_aether": 4,
+	  "flat_plate_aether": 3
 	}
   },
-
   "wall_kit_marble": {
 	"id": "wall_kit_marble",
 	"building": "Construction Materials",
@@ -568,10 +543,10 @@
 	  "stone_marble": 18
 	},
 	"hardware": {
-	  "bolts": 8,
-	  "flat_plate": 4,
-	  "reinforcement_rod": 3,
-	  "beam_shoe": 2
+	  "bolts_aether": 8,
+	  "flat_plate_aether": 4,
+	  "reinforcement_rod_aether": 3,
+	  "beam_shoe_aether": 2
 	}
   }
 }

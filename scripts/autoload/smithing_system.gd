@@ -115,7 +115,7 @@ const FAMILY_STATS := {
 	&"straps":            { "bars": 1, "delta_lv": 5,  "xp_mult": 1.0, "output_qty": 3 },
 	&"hinges":            { "bars": 2, "delta_lv": 4,  "xp_mult": 2.0, "output_qty": 4 },
 	&"brackets":          { "bars": 2, "delta_lv": 6,  "xp_mult": 2.0, "output_qty": 2 },
-	&"chains":            { "bars": 2, "delta_lv": 8,  "xp_mult": 2.0, "output_qty": 1 },
+	&"chain":            { "bars": 2, "delta_lv": 8,  "xp_mult": 2.0, "output_qty": 1 },
 	&"reinforcement_rod": { "bars": 2, "delta_lv": 8,  "xp_mult": 2.0, "output_qty": 1 },
 	&"flat_plate":        { "bars": 3, "delta_lv": 10, "xp_mult": 3.0, "output_qty": 1 },
 	&"beam_shoe":         { "bars": 2, "delta_lv": 10, "xp_mult": 2.0, "output_qty": 2 },
