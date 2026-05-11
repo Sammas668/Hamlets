@@ -155,7 +155,7 @@
 	"kind": "material",
 	"part": "Mechanism Kit (T4)",
 	"role": "Hardware Kit",
-	"effect": "Bundles mithrite chains, gears, and counterweights into a boxed mechanism kit for moving construction parts.",
+	"effect": "Bundles mithrite chain, gears, and counterweights into a boxed mechanism kit for moving construction parts.",
 	"mat_tier": 4,
 	"min_building_tier": 1,
 	"req_con_lv": 30,
@@ -164,7 +164,7 @@
 	  "log_willow": 1
 	},
 	"hardware": {
-	  "chains_mithrite": 4,
+	  "chain_mithrite": 4,
 	  "gear_mithrite": 2,
 	  "counterweight_mithrite": 1
 	}
@@ -263,7 +263,7 @@
 	"kind": "material",
 	"part": "Mechanism Kit (T8)",
 	"role": "Hardware Kit",
-	"effect": "Bundles aether chains, gears, and counterweights into a redwood boxed mechanism kit.",
+	"effect": "Bundles aether chain, gears, and counterweights into a redwood boxed mechanism kit.",
 	"mat_tier": 8,
 	"min_building_tier": 1,
 	"req_con_lv": 75,
@@ -272,7 +272,7 @@
 	  "log_redwood": 1
 	},
 	"hardware": {
-	  "chains_aether": 8,
+	  "chain_aether": 8,
 	  "gear_aether": 4,
 	  "counterweight_aether": 2,
 	  "beam_shoe_aether": 2
