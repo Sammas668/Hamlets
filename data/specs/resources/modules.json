@@ -8,7 +8,7 @@
 	"role": "Special",
 	"effect": "Chance the catalyst for a transmutation is not consumed.",
 	"struct": {
-	  "wall_kit_granite": 2,
+	  "wall_kit_basalt": 2,
 	  "floor_kit_granite": 2
 	},
 	"hardware": {
@@ -128,12 +128,12 @@
 	"role": "Special/XP",
 	"effect": "Familiars linked to this tile gain a small stat buff; Magic and Leadership XP from joint use here get a tiny bonus.",
 	"struct": {
-	  "wall_kit_granite": 2,
+	  "wall_kit_basalt": 2,
 	  "floor_kit_granite": 2
 	},
 	"hardware": {
 	  "fittings_kit_t7": 2,
-	  "mechanism_kit_t8": 1,
+	  "mechanism_kit_t4": 1,
 	  "security_kit_t5": 1
 	},
 	"min_building_tier": 3,
@@ -189,7 +189,7 @@
 	"role": "Special",
 	"effect": "Slightly reduced incoming damage for villagers performing Magic training here.",
 	"struct": {
-	  "wall_kit_granite": 3
+	  "wall_kit_basalt": 3
 	},
 	"hardware": {
 	  "fastener_kit_t7": 2,
@@ -687,7 +687,7 @@
 	"role": "Special",
 	"effect": "Slightly higher chance to produce “perfect” +quality gems used for high-end enchants.",
 	"struct": {
-	  "wall_kit_granite": 2
+	  "wall_kit_basalt": 2
 	},
 	"hardware": {
 	  "fittings_kit_t7": 2,
@@ -725,7 +725,7 @@
 	"role": "Yield/Special",
 	"effect": "Extra gem dust/shard outputs when cutting gems on this fragment.",
 	"struct": {
-	  "floor_kit_granite": 2
+	  "floor_kit_basalt": 2
 	},
 	"hardware": {
 	  "fastener_kit_t7": 1,
@@ -765,7 +765,7 @@
 	"role": "Special/XP",
 	"effect": "Small extra Enchanting XP on high-tier crafts and tiny chance to prevent material loss on failed attempts.",
 	"struct": {
-	  "wall_kit_granite": 3,
+	  "wall_kit_basalt": 3,
 	  "floor_kit_granite": 1
 	},
 	"hardware": {
@@ -1190,7 +1190,7 @@
 	"role": "Yield",
 	"effect": "Increased catch amount/rolls for Net nodes linked to this tile.",
 	"struct": {
-	  "wall_kit_sandstone": 1,
+	  "wall_kit_clay": 1,
 	  "floor_kit_sandstone": 1
 	},
 	"hardware": {
@@ -1286,7 +1286,7 @@
 	"role": "Speed",
 	"effect": "Reduced Mining action time on this tile.",
 	"struct": {
-	  "wall_kit_sandstone": 1
+	  "wall_kit_clay": 1
 	},
 	"hardware": {
 	  "fastener_kit_t2": 1,
@@ -1324,7 +1324,7 @@
 	"role": "Yield",
 	"effect": "Small chance to gain +1 extra ore/stone per successful Mining action on this tile.",
 	"struct": {
-	  "wall_kit_sandstone": 1,
+	  "wall_kit_clay": 1,
 	  "floor_kit_sandstone": 1
 	},
 	"hardware": {
@@ -1402,7 +1402,7 @@
 	"role": "Special",
 	"effect": "Grants each worker on this tile a tiny extra capacity / effectiveness when handling bound spirits/familiars.",
 	"struct": {
-	  "wall_kit_granite": 2,
+	  "wall_kit_basalt": 2,
 	  "floor_kit_granite": 2
 	},
 	"hardware": {
@@ -1462,7 +1462,7 @@
 	"role": "Special/XP",
 	"effect": "Completing a Chart here grants a small extra Astromancy XP bonus and a tiny chance of bonus Stardust.",
 	"struct": {
-	  "wall_kit_granite": 2
+	  "wall_kit_basalt": 2
 	},
 	"hardware": {
 	  "fittings_kit_t7": 2,
@@ -1500,7 +1500,7 @@
 	"role": "Special",
 	"effect": "Astromancy actions here have a small chance to also grant a permanent micro-buff to a random skill associated with this tile (within clamp).",
 	"struct": {
-	  "wall_kit_granite": 2,
+	  "wall_kit_basalt": 2,
 	  "floor_kit_granite": 2
 	},
 	"hardware": {
@@ -1522,7 +1522,7 @@
 	"role": "Speed",
 	"effect": "−Observe/Calibrate action time on this tile (respects global Tempo clamp).",
 	"struct": {
-	  "floor_kit_granite": 2
+	  "floor_kit_basalt": 2
 	},
 	"hardware": {
 	  "mechanism_kit_t4": 2,
@@ -1584,8 +1584,8 @@
 	"role": "XP",
 	"effect": "Extra Faithcraft XP on this fragment, especially for high-tier Shard recipes.",
 	"struct": {
-	  "wall_kit_granite": 2,
-	  "floor_kit_granite": 1
+	  "wall_kit_basalt": 2,
+	  "floor_kit_basalt": 1
 	},
 	"hardware": {
 	  "fittings_kit_t7": 2,
@@ -1608,7 +1608,7 @@
 	  "floor_kit_granite": 3
 	},
 	"hardware": {
-	  "mechanism_kit_t8": 2,
+	  "mechanism_kit_t4": 2,
 	  "reinforcement_kit_t6": 2
 	},
 	"min_building_tier": 2,
@@ -1625,13 +1625,13 @@
 	"role": "Special",
 	"effect": "Slightly higher chance to create potent/dual-infused shards from crafts on this tile.",
 	"struct": {
-	  "wall_kit_granite": 2,
+	  "wall_kit_basalt": 2,
 	  "floor_kit_granite": 2
 	},
 	"hardware": {
 	  "reinforcement_kit_t6": 2,
 	  "security_kit_t5": 1,
-	  "mechanism_kit_t8": 1
+	  "mechanism_kit_t4": 1
 	},
 	"min_building_tier": 2,
 	"delta_lv": 6,
@@ -1647,7 +1647,7 @@
 	"role": "Yield",
 	"effect": "Slightly increased shard output / success on Faithcraft crafts on this tile.",
 	"struct": {
-	  "floor_kit_granite": 2
+	  "floor_kit_basalt": 2
 	},
 	"hardware": {
 	  "mechanism_kit_t4": 1,
@@ -1668,7 +1668,7 @@
 	"role": "Special",
 	"effect": "Reduced mishap / backlash chance for high-tier Leadership summons here.",
 	"struct": {
-	  "wall_kit_granite": 2,
+	  "wall_kit_basalt": 2,
 	  "floor_kit_granite": 2
 	},
 	"hardware": {
@@ -1689,7 +1689,7 @@
 	"role": "Special",
 	"effect": "Familiars anchored to this tile gain a small HP/damage bonus.",
 	"struct": {
-	  "wall_kit_granite": 1,
+	  "wall_kit_basalt": 1,
 	  "floor_kit_granite": 3
 	},
 	"hardware": {
@@ -1711,7 +1711,7 @@
 	"role": "Speed",
 	"effect": "−Leadership ritual time on this fragment (within clamp).",
 	"struct": {
-	  "floor_kit_granite": 2
+	  "floor_kit_basalt": 2
 	},
 	"hardware": {
 	  "fastener_kit_t7": 1,
@@ -1754,7 +1754,7 @@
 	"role": "XP",
 	"effect": "+Leadership XP for rituals performed at this circle.",
 	"struct": {
-	  "floor_kit_granite": 2
+	  "floor_kit_basalt": 2
 	},
 	"hardware": {
 	  "fastener_kit_t7": 1,
@@ -1967,11 +1967,11 @@
 	"role": "Special/XP",
 	"effect": "When ≥2 villagers are training combat skills on this tile, everyone gains a trickle of Prayer XP.",
 	"struct": {
-	  "wall_kit_granite": 3,
+	  "wall_kit_basalt": 3,
 	  "floor_kit_granite": 2
 	},
 	"hardware": {
-	  "mechanism_kit_t8": 2,
+	  "mechanism_kit_t4": 2,
 	  "reinforcement_kit_t6": 2,
 	  "fittings_kit_t7": 1
 	},
@@ -2045,7 +2045,7 @@
 	"role": "Special",
 	"effect": "Small chance for combat on this fragment to reroll low-value loot into devotional/Prayer-tagged drops.",
 	"struct": {
-	  "wall_kit_granite": 2
+	  "wall_kit_basalt": 2
 	},
 	"hardware": {
 	  "fittings_kit_t7": 2,

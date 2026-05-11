@@ -42,7 +42,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 5
 			},
 			{
@@ -139,7 +139,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 3
 			},
 			{
@@ -236,7 +236,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 4
 			},
 			{
@@ -305,7 +305,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 2
 			},
 			{
@@ -402,7 +402,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 2
 			},
 			{
@@ -507,7 +507,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 4
 			},
 			{
@@ -604,7 +604,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 8
 			},
 			{
@@ -741,7 +741,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 3
 			},
 			{
@@ -838,7 +838,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 2
 			},
 			{
@@ -969,17 +969,17 @@
 	  },
 	  "3": {
 		"label": "Alembic Workshop (Transmutation)",
-		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
+		"desc": "Tier III basalt reinforced upgrade with orichalcum fittings.",
 		"level_req": 60,
 		"xp": 4550,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 5
 			},
 			{
-			  "item": "floor_kit_granite",
+			  "item": "floor_kit_basalt",
 			  "qty": 5
 			}
 		  ],
@@ -1024,7 +1024,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 4
 			},
 			{
@@ -1129,7 +1129,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_sandstone",
+			  "item": "wall_kit_clay",
 			  "qty": 6
 			},
 			{
@@ -1226,7 +1226,7 @@
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_clay",
+			  "item": "wall_kit_limestone",
 			  "qty": 10
 			},
 			{
@@ -1385,17 +1385,17 @@
 	  },
 	  "3": {
 		"label": "Spirit Lodge (Diplomacy)",
-		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
+		"desc": "Tier III basalt reinforced upgrade with orichalcum fittings.",
 		"level_req": 60,
 		"xp": 4900,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 5
 			},
 			{
-			  "item": "floor_kit_granite",
+			  "item": "floor_kit_basalt",
 			  "qty": 5
 			}
 		  ],
@@ -1466,17 +1466,17 @@
 	  },
 	  "2": {
 		"label": "Summoner’s Circle (Leadership)",
-		"desc": "Tier II granite partial upgrade: 2 module slots.",
+		"desc": "Tier II basalt partial upgrade with orichalcum fittings.",
 		"level_req": 60,
 		"xp": 4500,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 5
 			},
 			{
-			  "item": "floor_kit_granite",
+			  "item": "floor_kit_basalt",
 			  "qty": 6
 			}
 		  ],
@@ -1502,13 +1502,13 @@
 	  },
 	  "3": {
 		"label": "Summoner’s Circle (Leadership)",
-		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
+		"desc": "Tier III granite floor and basalt wall reinforced upgrade: 3 module slots.",
 		"level_req": 70,
 		"xp": 6300,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 6
 			},
 			{
@@ -1583,17 +1583,17 @@
 	  },
 	  "2": {
 		"label": "Arcanist’s Tower (Magic)",
-		"desc": "Tier II granite partial upgrade: 2 module slots.",
+		"desc": "Tier II basalt partial upgrade with orichalcum fittings: 2 module slots.",
 		"level_req": 60,
 		"xp": 5000,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 6
 			},
 			{
-			  "item": "floor_kit_granite",
+			  "item": "floor_kit_basalt",
 			  "qty": 4
 			}
 		  ],
@@ -1623,13 +1623,13 @@
 	  },
 	  "3": {
 		"label": "Arcanist’s Tower (Magic)",
-		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
+		"desc": "Tier III granite floor and basalt wall reinforced upgrade: 3 module slots.",
 		"level_req": 70,
 		"xp": 7000,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 8
 			},
 			{
@@ -1708,17 +1708,17 @@
 	  },
 	  "2": {
 		"label": "Star Observatory (Astromancy)",
-		"desc": "Tier II granite partial upgrade: 2 module slots.",
+		"desc": "Tier II basalt partial upgrade with orichalcum fittings: 2 module slots.",
 		"level_req": 60,
 		"xp": 4750,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 5
 			},
 			{
-			  "item": "floor_kit_granite",
+			  "item": "floor_kit_basalt",
 			  "qty": 4
 			}
 		  ],
@@ -1748,13 +1748,13 @@
 	  },
 	  "3": {
 		"label": "Star Observatory (Astromancy)",
-		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
+		"desc": "Tier III granite floor and basalt wall reinforced upgrade: 3 module slots.",
 		"level_req": 70,
 		"xp": 6650,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 7
 			},
 			{
@@ -1829,17 +1829,17 @@
 	  },
 	  "2": {
 		"label": "Gemcutter’s Studio (Enchanting)",
-		"desc": "Tier II granite partial upgrade: 2 module slots.",
+		"desc": "Tier II basalt partial upgrade with orichalcum fittings: 2 module slots.",
 		"level_req": 60,
 		"xp": 4500,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 5
 			},
 			{
-			  "item": "floor_kit_granite",
+			  "item": "floor_kit_basalt",
 			  "qty": 4
 			}
 		  ],
@@ -1865,13 +1865,13 @@
 	  },
 	  "3": {
 		"label": "Gemcutter’s Studio (Enchanting)",
-		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
+		"desc": "Tier III granite floor and basalt wall reinforced upgrade: 3 module slots.",
 		"level_req": 70,
 		"xp": 6300,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 7
 			},
 			{
@@ -1946,17 +1946,17 @@
 	  },
 	  "2": {
 		"label": "Starforge (Faithcraft)",
-		"desc": "Tier II granite partial upgrade: 2 module slots.",
+		"desc": "Tier II basalt partial upgrade with orichalcum fittings: 2 module slots.",
 		"level_req": 60,
 		"xp": 4750,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 5
 			},
 			{
-			  "item": "floor_kit_granite",
+			  "item": "floor_kit_basalt",
 			  "qty": 4
 			}
 		  ],
@@ -1982,13 +1982,13 @@
 	  },
 	  "3": {
 		"label": "Starforge (Faithcraft)",
-		"desc": "Tier III granite secure/reinforced upgrade: 3 module slots.",
+		"desc": "Tier III granite floor and basalt wall secure/reinforced upgrade: 3 module slots.",
 		"level_req": 70,
 		"xp": 6650,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 7
 			},
 			{
@@ -2067,17 +2067,17 @@
 	  },
 	  "2": {
 		"label": "Wayshrine (Prayer)",
-		"desc": "Tier II granite partial upgrade: 2 module slots.",
+		"desc": "Tier II basalt partial upgrade with orichalcum fittings: 2 module slots.",
 		"level_req": 60,
 		"xp": 3750,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 3
 			},
 			{
-			  "item": "floor_kit_granite",
+			  "item": "floor_kit_basalt",
 			  "qty": 3
 			}
 		  ],
@@ -2103,13 +2103,13 @@
 	  },
 	  "3": {
 		"label": "Wayshrine (Prayer)",
-		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
+		"desc": "Tier III granite floor and basalt wall reinforced upgrade: 3 module slots.",
 		"level_req": 70,
 		"xp": 5250,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 4
 			},
 			{
@@ -2208,17 +2208,17 @@
 	  },
 	  "3": {
 		"label": "Loom House (Weaving)",
-		"desc": "Tier III granite/mechanical upgrade: 3 module slots.",
+		"desc": "Tier III basalt/mechanical upgrade with orichalcum fittings: 3 module slots.",
 		"level_req": 60,
 		"xp": 4550,
 		"inputs": {
 		  "struct": [
 			{
-			  "item": "wall_kit_granite",
+			  "item": "wall_kit_basalt",
 			  "qty": 5
 			},
 			{
-			  "item": "floor_kit_granite",
+			  "item": "floor_kit_basalt",
 			  "qty": 5
 			}
 		  ],

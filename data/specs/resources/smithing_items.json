@@ -34,7 +34,7 @@
 	"straps":           { "label": "Straps",           "group": "hardware", "use_skill": "construction" },
 	"hinges":           { "label": "Hinges",           "group": "hardware", "use_skill": "construction" },
 	"brackets":         { "label": "Brackets",         "group": "hardware", "use_skill": "construction" },
-	"chains":           { "label": "Chains",           "group": "hardware", "use_skill": "construction" },
+	"chain":           { "label": "Chain",           "group": "hardware", "use_skill": "construction" },
 	"reinforcement_rod":{ "label": "Reinforcement Rod","group": "hardware", "use_skill": "construction" },
 	"flat_plate":       { "label": "Flat Plate",       "group": "hardware", "use_skill": "construction" },
 	"beam_shoe":        { "label": "Beam Shoe",        "group": "hardware", "use_skill": "construction" },

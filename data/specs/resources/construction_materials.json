@@ -4,7 +4,7 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Fastener Kit (T1)",
+	"part": "Pine Fastener Kit",
 	"role": "Hardware Kit",
 	"effect": "Bundles bronze smithing fasteners into a boxed construction kit for building use or sale.",
 	"mat_tier": 1,
@@ -25,7 +25,7 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Fittings Kit (T1)",
+	"part": "Pine Fittings Kit",
 	"role": "Hardware Kit",
 	"effect": "Bundles bronze hinges, brackets, and straps into a boxed construction kit for building use or sale.",
 	"mat_tier": 1,
@@ -48,7 +48,7 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Fastener Kit (T2)",
+	"part": "Birch Fastener Kit",
 	"role": "Hardware Kit",
 	"effect": "Bundles iron smithing fasteners into a boxed construction kit for building use or sale.",
 	"mat_tier": 2,
@@ -70,7 +70,7 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Fittings Kit (T2)",
+	"part": "Birch Fittings Kit",
 	"role": "Hardware Kit",
 	"effect": "Bundles iron fittings into a boxed construction kit for building use or sale.",
 	"mat_tier": 2,
@@ -94,7 +94,7 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Fastener Kit (T3)",
+	"part": "Oak Fastener Kit",
 	"role": "Hardware Kit",
 	"effect": "Bundles steel smithing fasteners into a boxed construction kit for building use or sale.",
 	"mat_tier": 3,
@@ -117,7 +117,7 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Fittings Kit (T3)",
+	"part": "Oak Fittings Kit",
 	"role": "Hardware Kit",
 	"effect": "Bundles steel fittings into a boxed construction kit for building use or sale.",
 	"mat_tier": 3,
@@ -141,7 +141,7 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Reinforcement Kit (T3)",
+	"part": "Oak Reinforcement Kit",
 	"role": "Hardware Kit",
 	"effect": "Bundles steel rods, plates, and beam shoes into a boxed reinforcement kit for stronger construction pieces.",
 	"mat_tier": 3,
@@ -165,9 +165,9 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Mechanism Kit (T4)",
+	"part": "Willow Mechanism Kit",
 	"role": "Hardware Kit",
-	"effect": "Bundles mithrite chain, gears, brackets, bolts, and counterweights into a boxed mechanism kit for moving construction parts.",
+	"effect": "Bundles steel chains, gears, brackets, bolts, and counterweights into a boxed mechanism kit for advanced normal construction.",
 	"mat_tier": 4,
 	"min_building_tier": 1,
 	"req_con_lv": 30,
@@ -177,11 +177,11 @@
 	  "log_willow": 2
 	},
 	"hardware": {
-	  "chain_mithrite": 5,
-	  "gear_mithrite": 3,
-	  "counterweight_mithrite": 1,
-	  "brackets_mithrite": 4,
-	  "bolts_mithrite": 8
+	  "chain_steel": 5,
+	  "gear_steel": 3,
+	  "counterweight_steel": 1,
+	  "brackets_steel": 4,
+	  "bolts_steel": 8
 	}
   },
   "security_kit_t5": {
@@ -189,9 +189,9 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Security Kit (T5)",
+	"part": "Maple Security Kit",
 	"role": "Hardware Kit",
-	"effect": "Bundles adamantite lockwork, chains, plates, hinges, and rivets into a boxed security kit for secure rooms, vaults, and specialist modules.",
+	"effect": "Bundles steel security hardware with adamantite lockwork for secure rooms, vaults, and specialist modules.",
 	"mat_tier": 5,
 	"min_building_tier": 1,
 	"req_con_lv": 40,
@@ -202,10 +202,10 @@
 	},
 	"hardware": {
 	  "lockwork_adamantite": 1,
-	  "hinges_adamantite": 5,
-	  "flat_plate_adamantite": 5,
-	  "chain_adamantite": 2,
-	  "rivets_adamantite": 12
+	  "hinges_steel": 5,
+	  "flat_plate_steel": 5,
+	  "chain_steel": 2,
+	  "rivets_steel": 12
 	}
   },
   "reinforcement_kit_t6": {
@@ -213,9 +213,9 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Reinforcement Kit (T6)",
+	"part": "Yew Reinforcement Kit",
 	"role": "Hardware Kit",
-	"effect": "Bundles orichalcum rods, plates, beam shoes, rivets, and bolts into a yew boxed reinforcement kit.",
+	"effect": "Bundles mithrite and adamantite structural hardware with some orichalcum fasteners into a yew boxed reinforcement kit.",
 	"mat_tier": 6,
 	"min_building_tier": 1,
 	"req_con_lv": 50,
@@ -225,10 +225,10 @@
 	  "log_yew": 2
 	},
 	"hardware": {
-	  "reinforcement_rod_orichalcum": 10,
-	  "flat_plate_orichalcum": 10,
-	  "beam_shoe_orichalcum": 5,
-	  "rivets_orichalcum": 16,
+	  "reinforcement_rod_mithrite": 6,
+	  "flat_plate_mithrite": 8,
+	  "beam_shoe_adamantite": 3,
+	  "rivets_mithrite": 16,
 	  "bolts_orichalcum": 8
 	}
   },
@@ -237,9 +237,9 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Fastener Kit (T7)",
+	"part": "Ironwood Fastener Kit",
 	"role": "Hardware Kit",
-	"effect": "Bundles aether smithing fasteners into an ironwood boxed construction kit for advanced building use or sale.",
+	"effect": "Bundles orichalcum smithing fasteners into an ironwood boxed construction kit for advanced building use or sale.",
 	"mat_tier": 7,
 	"min_building_tier": 1,
 	"req_con_lv": 60,
@@ -249,10 +249,10 @@
 	  "log_ironwood": 2
 	},
 	"hardware": {
-	  "nails_aether": 100,
-	  "rivets_aether": 28,
-	  "bolts_aether": 18,
-	  "spikes_aether": 14
+	  "nails_orichalcum": 100,
+	  "rivets_orichalcum": 28,
+	  "bolts_orichalcum": 18,
+	  "spikes_orichalcum": 14
 	}
   },
   "fittings_kit_t7": {
@@ -260,9 +260,9 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Fittings Kit (T7)",
+	"part": "Ironwood Fittings Kit",
 	"role": "Hardware Kit",
-	"effect": "Bundles aether fittings into an ironwood boxed construction kit for advanced building use or sale.",
+	"effect": "Bundles orichalcum fittings into an ironwood boxed construction kit for advanced building use or sale.",
 	"mat_tier": 7,
 	"min_building_tier": 1,
 	"req_con_lv": 60,
@@ -272,12 +272,12 @@
 	  "log_ironwood": 2
 	},
 	"hardware": {
-	  "hinges_aether": 8,
-	  "brackets_aether": 16,
-	  "straps_aether": 10,
-	  "flat_plate_aether": 8,
-	  "beam_shoe_aether": 5,
-	  "nails_aether": 40
+	  "hinges_orichalcum": 8,
+	  "brackets_orichalcum": 16,
+	  "straps_orichalcum": 10,
+	  "flat_plate_orichalcum": 8,
+	  "beam_shoe_orichalcum": 5,
+	  "nails_orichalcum": 40
 	}
   },
   "mechanism_kit_t8": {
@@ -285,24 +285,24 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Mechanism Kit (T8)",
+	"part": "Redwood Mechanism Kit",
 	"role": "Hardware Kit",
-	"effect": "Bundles aether chain, gears, brackets, bolts, beam shoes, and counterweights into a redwood boxed mechanism kit.",
+	"effect": "Bundles orichalcum chains, gears, brackets, beam shoes, and counterweights with aether bolts into a redwood boxed transition mechanism kit.",
 	"mat_tier": 8,
 	"min_building_tier": 1,
-	"req_con_lv": 75,
+	"req_con_lv": 80,
 	"delta_lv": 0,
 	"xp": 2800,
 	"struct": {
 	  "log_redwood": 3
 	},
 	"hardware": {
-	  "chain_aether": 10,
-	  "gear_aether": 6,
-	  "counterweight_aether": 3,
-	  "brackets_aether": 8,
+	  "chain_orichalcum": 10,
+	  "gear_orichalcum": 6,
+	  "counterweight_orichalcum": 3,
+	  "brackets_orichalcum": 8,
 	  "bolts_aether": 16,
-	  "beam_shoe_aether": 4
+	  "beam_shoe_orichalcum": 4
 	}
   },
   "security_kit_t9": {
@@ -310,9 +310,9 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Security Kit (T9)",
+	"part": "Sakura Security Kit",
 	"role": "Hardware Kit",
-	"effect": "Bundles aether lockwork, chains, plates, hinges, rivets, and rods into a sakura boxed security kit for elite magical and vault modules.",
+	"effect": "Bundles aether lockwork, chains, plates, hinges, rivets, and rods into a sakura boxed elite security kit for magical vaults, secure rooms, and endgame modules.",
 	"mat_tier": 9,
 	"min_building_tier": 1,
 	"req_con_lv": 90,
@@ -337,17 +337,19 @@
 	"kind": "material",
 	"part": "Limestone Floor Kit",
 	"role": "Stone Floor Kit",
-	"effect": "A boxed limestone floor kit used by buildings, upgrades, and module installs.",
+	"effect": "A pine-crated limestone floor kit with bronze nails and rivets for basic floor laying, joining, and transport.",
 	"mat_tier": 1,
 	"min_building_tier": 1,
 	"req_con_lv": 1,
 	"delta_lv": 0,
-	"xp": 45,
+	"xp": 55,
 	"struct": {
-	  "stone_limestone": 8
+	  "stone_limestone": 8,
+	  "log_pine": 1
 	},
 	"hardware": {
-	  "nails_bronze": 20
+	  "nails_bronze": 12,
+	  "rivets_bronze": 6
 	}
   },
   "wall_kit_limestone": {
@@ -357,18 +359,21 @@
 	"kind": "material",
 	"part": "Limestone Wall Kit",
 	"role": "Stone Wall Kit",
-	"effect": "A boxed limestone wall kit used by buildings, upgrades, and module installs.",
+	"effect": "A pine-crated limestone wall kit using bronze brackets, straps, rivets, and nails to hold upright stonework securely.",
 	"mat_tier": 1,
 	"min_building_tier": 1,
-	"req_con_lv": 1,
+	"req_con_lv": 5,
 	"delta_lv": 0,
-	"xp": 65,
+	"xp": 85,
 	"struct": {
-	  "stone_limestone": 12
+	  "stone_limestone": 12,
+	  "log_pine": 1
 	},
 	"hardware": {
-	  "nails_bronze": 24,
-	  "brackets_bronze": 2
+	  "brackets_bronze": 3,
+	  "straps_bronze": 2,
+	  "rivets_bronze": 8,
+	  "nails_bronze": 8
 	}
   },
   "floor_kit_clay": {
@@ -376,19 +381,22 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Clay Floor Kit",
+	"part": "Brick Floor Kit",
 	"role": "Stone Floor Kit",
-	"effect": "A boxed clay floor kit used by low-tier buildings, upgrades, and module installs.",
+	"effect": "A pine-crated brick floor kit with bronze nails, straps, and rivets for low-tier packed floor sections.",
 	"mat_tier": 1,
 	"min_building_tier": 1,
 	"req_con_lv": 5,
 	"delta_lv": 0,
-	"xp": 50,
+	"xp": 60,
 	"struct": {
-	  "stone_clay": 8
+	  "stone_clay": 8,
+	  "log_pine": 1
 	},
 	"hardware": {
-	  "nails_bronze": 16
+	  "nails_bronze": 10,
+	  "straps_bronze": 2,
+	  "rivets_bronze": 4
 	}
   },
   "wall_kit_clay": {
@@ -396,20 +404,23 @@
 	"building": "Construction Materials",
 	"skill": "construction",
 	"kind": "material",
-	"part": "Clay Wall Kit",
+	"part": "Brick Wall Kit",
 	"role": "Stone Wall Kit",
-	"effect": "A boxed clay wall kit used by low-tier buildings, upgrades, and module installs.",
+	"effect": "A pine-crated brick wall kit using bronze brackets, straps, rivets, and nails for basic braced wall sections.",
 	"mat_tier": 1,
 	"min_building_tier": 1,
-	"req_con_lv": 5,
+	"req_con_lv": 10,
 	"delta_lv": 0,
-	"xp": 70,
+	"xp": 95,
 	"struct": {
-	  "stone_clay": 12
+	  "stone_clay": 12,
+	  "log_pine": 1
 	},
 	"hardware": {
-	  "nails_bronze": 20,
-	  "brackets_bronze": 2
+	  "brackets_bronze": 2,
+	  "straps_bronze": 3,
+	  "rivets_bronze": 8,
+	  "nails_bronze": 6
 	}
   },
   "floor_kit_sandstone": {
@@ -419,18 +430,20 @@
 	"kind": "material",
 	"part": "Sandstone Floor Kit",
 	"role": "Stone Floor Kit",
-	"effect": "A boxed sandstone floor kit used by mid-low buildings, upgrades, and module installs.",
+	"effect": "A birch-crated sandstone floor kit with iron nails, rivets, and a plate for mid-low floor laying and joining.",
 	"mat_tier": 2,
 	"min_building_tier": 1,
 	"req_con_lv": 18,
 	"delta_lv": 0,
-	"xp": 150,
+	"xp": 170,
 	"struct": {
-	  "stone_sandstone": 12
+	  "stone_sandstone": 12,
+	  "log_birch": 1
 	},
 	"hardware": {
-	  "nails_iron": 28,
-	  "rivets_iron": 5
+	  "nails_iron": 16,
+	  "rivets_iron": 8,
+	  "flat_plate_iron": 1
 	}
   },
   "wall_kit_sandstone": {
@@ -440,19 +453,22 @@
 	"kind": "material",
 	"part": "Sandstone Wall Kit",
 	"role": "Stone Wall Kit",
-	"effect": "A boxed sandstone wall kit used by mid-low buildings, upgrades, and module installs.",
+	"effect": "A birch-crated sandstone wall kit using iron brackets, straps, rivets, bolts, and nails for secured wall sections.",
 	"mat_tier": 2,
 	"min_building_tier": 1,
-	"req_con_lv": 18,
+	"req_con_lv": 22,
 	"delta_lv": 0,
-	"xp": 210,
+	"xp": 250,
 	"struct": {
-	  "stone_sandstone": 18
+	  "stone_sandstone": 18,
+	  "log_birch": 1
 	},
 	"hardware": {
-	  "nails_iron": 34,
-	  "rivets_iron": 6,
-	  "brackets_iron": 4
+	  "brackets_iron": 6,
+	  "straps_iron": 4,
+	  "rivets_iron": 10,
+	  "bolts_iron": 6,
+	  "nails_iron": 10
 	}
   },
   "floor_kit_basalt": {
@@ -462,19 +478,21 @@
 	"kind": "material",
 	"part": "Basalt Floor Kit",
 	"role": "Stone Floor Kit",
-	"effect": "A boxed basalt floor kit used by sturdy buildings, upgrades, and module installs.",
+	"effect": "A willow-crated basalt floor kit reinforced with steel nails, rivets, bolts, and plates for sturdy floor sections.",
 	"mat_tier": 4,
 	"min_building_tier": 1,
 	"req_con_lv": 35,
 	"delta_lv": 0,
-	"xp": 420,
+	"xp": 460,
 	"struct": {
-	  "stone_basalt": 14
+	  "stone_basalt": 14,
+	  "log_willow": 1
 	},
 	"hardware": {
-	  "nails_mithrite": 32,
-	  "rivets_mithrite": 8,
-	  "flat_plate_mithrite": 2
+	  "nails_steel": 18,
+	  "rivets_steel": 10,
+	  "bolts_steel": 4,
+	  "flat_plate_steel": 2
 	}
   },
   "wall_kit_basalt": {
@@ -484,21 +502,23 @@
 	"kind": "material",
 	"part": "Basalt Wall Kit",
 	"role": "Stone Wall Kit",
-	"effect": "A boxed basalt wall kit used by sturdy buildings, upgrades, and module installs.",
+	"effect": "A willow-crated basalt wall kit reinforced with steel brackets, straps, plates, rods, rivets, and beam shoes.",
 	"mat_tier": 4,
 	"min_building_tier": 1,
-	"req_con_lv": 35,
+	"req_con_lv": 40,
 	"delta_lv": 0,
-	"xp": 600,
+	"xp": 700,
 	"struct": {
-	  "stone_basalt": 22
+	  "stone_basalt": 22,
+	  "log_willow": 1
 	},
 	"hardware": {
-	  "nails_mithrite": 40,
-	  "rivets_mithrite": 8,
-	  "brackets_mithrite": 5,
-	  "flat_plate_mithrite": 3,
-	  "reinforcement_rod_mithrite": 2
+	  "brackets_steel": 7,
+	  "straps_steel": 5,
+	  "flat_plate_steel": 4,
+	  "reinforcement_rod_steel": 3,
+	  "beam_shoe_steel": 2,
+	  "rivets_steel": 12
 	}
   },
   "floor_kit_granite": {
@@ -508,20 +528,21 @@
 	"kind": "material",
 	"part": "Granite Floor Kit",
 	"role": "Stone Floor Kit",
-	"effect": "A boxed granite floor kit used by advanced buildings, upgrades, and module installs.",
+	"effect": "A yew-crated granite floor kit using mithrite plates, rivets, bolts, and adamantite reinforcement for advanced floor sections.",
 	"mat_tier": 6,
 	"min_building_tier": 1,
-	"req_con_lv": 55,
+	"req_con_lv": 65,
 	"delta_lv": 0,
-	"xp": 1000,
+	"xp": 1180,
 	"struct": {
-	  "stone_granite": 18
+	  "stone_granite": 18,
+	  "log_yew": 1
 	},
 	"hardware": {
-	  "rivets_orichalcum": 12,
-	  "bolts_orichalcum": 8,
-	  "flat_plate_orichalcum": 4,
-	  "reinforcement_rod_orichalcum": 1
+	  "rivets_mithrite": 12,
+	  "bolts_mithrite": 8,
+	  "flat_plate_mithrite": 4,
+	  "reinforcement_rod_adamantite": 1
 	}
   },
   "wall_kit_granite": {
@@ -531,20 +552,21 @@
 	"kind": "material",
 	"part": "Granite Wall Kit",
 	"role": "Stone Wall Kit",
-	"effect": "A boxed granite wall kit used by advanced buildings, upgrades, and module installs.",
+	"effect": "A yew-crated granite wall kit using mithrite plates, adamantite rods and bolts, and orichalcum beam shoes for advanced wall sections.",
 	"mat_tier": 6,
 	"min_building_tier": 1,
-	"req_con_lv": 55,
+	"req_con_lv": 80,
 	"delta_lv": 0,
-	"xp": 1450,
+	"xp": 1700,
 	"struct": {
-	  "stone_granite": 28
+	  "stone_granite": 28,
+	  "log_yew": 1
 	},
 	"hardware": {
-	  "rivets_orichalcum": 16,
-	  "bolts_orichalcum": 10,
-	  "flat_plate_orichalcum": 5,
-	  "reinforcement_rod_orichalcum": 3,
+	  "rivets_mithrite": 16,
+	  "bolts_adamantite": 10,
+	  "flat_plate_mithrite": 5,
+	  "reinforcement_rod_adamantite": 3,
 	  "beam_shoe_orichalcum": 2
 	}
   },
@@ -555,20 +577,21 @@
 	"kind": "material",
 	"part": "Marble Floor Kit",
 	"role": "Stone Floor Kit",
-	"effect": "A boxed marble floor kit used by elite buildings, upgrades, and module installs.",
+	"effect": "A redwood-crated marble floor kit using orichalcum plates, brackets, and reinforcement with aether bonding bolts for elite floor sections.",
 	"mat_tier": 8,
 	"min_building_tier": 1,
-	"req_con_lv": 75,
+	"req_con_lv": 80,
 	"delta_lv": 0,
-	"xp": 1800,
+	"xp": 2050,
 	"struct": {
-	  "stone_marble": 22
+	  "stone_marble": 22,
+	  "log_redwood": 1
 	},
 	"hardware": {
 	  "bolts_aether": 10,
-	  "brackets_aether": 6,
-	  "flat_plate_aether": 5,
-	  "reinforcement_rod_aether": 2
+	  "brackets_orichalcum": 6,
+	  "flat_plate_orichalcum": 5,
+	  "reinforcement_rod_orichalcum": 2
 	}
   },
   "wall_kit_marble": {
@@ -578,20 +601,22 @@
 	"kind": "material",
 	"part": "Marble Wall Kit",
 	"role": "Stone Wall Kit",
-	"effect": "A boxed marble wall kit used by elite buildings, upgrades, and module installs.",
+	"effect": "A redwood-crated marble wall kit using orichalcum plates, rods, and beam shoes with aether bolts and rivets for elite wall sections.",
 	"mat_tier": 8,
 	"min_building_tier": 1,
-	"req_con_lv": 75,
+	"req_con_lv": 85,
 	"delta_lv": 0,
-	"xp": 2600,
+	"xp": 3000,
 	"struct": {
-	  "stone_marble": 34
+	  "stone_marble": 34,
+	  "log_redwood": 1
 	},
 	"hardware": {
 	  "bolts_aether": 14,
-	  "flat_plate_aether": 6,
-	  "reinforcement_rod_aether": 5,
-	  "beam_shoe_aether": 4
+	  "rivets_aether": 12,
+	  "flat_plate_orichalcum": 6,
+	  "reinforcement_rod_orichalcum": 5,
+	  "beam_shoe_orichalcum": 4
 	}
   }
 }
