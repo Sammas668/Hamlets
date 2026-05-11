@@ -8,17 +8,18 @@
 	"role": "Special",
 	"effect": "Chance the catalyst for a transmutation is not consumed.",
 	"struct": {
-	  "wall_kit_granite": 1,
-	  "floor_kit_granite": 1
+	  "wall_kit_granite": 2,
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
-	  "fittings_kit_t7": 1,
+	  "fittings_kit_t7": 2,
 	  "reinforcement_kit_t6": 1,
 	  "security_kit_t5": 1
 	},
 	"min_building_tier": 3,
 	"delta_lv": 8,
-	"req_con_lv": 68
+	"req_con_lv": 68,
+	"xp": 2600
   },
   "alembic_workshop_crystal_array": {
 	"id": "alembic_workshop_crystal_array",
@@ -127,17 +128,18 @@
 	"role": "Special/XP",
 	"effect": "Familiars linked to this tile gain a small stat buff; Magic and Leadership XP from joint use here get a tiny bonus.",
 	"struct": {
-	  "wall_kit_granite": 1,
-	  "floor_kit_granite": 1
+	  "wall_kit_granite": 2,
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
-	  "fittings_kit_t7": 1,
+	  "fittings_kit_t7": 2,
 	  "mechanism_kit_t8": 1,
 	  "security_kit_t5": 1
 	},
 	"min_building_tier": 3,
 	"delta_lv": 5,
-	"req_con_lv": 75
+	"req_con_lv": 75,
+	"xp": 3600
   },
   "arcanist_s_tower_rune_focus": {
 	"id": "arcanist_s_tower_rune_focus",
@@ -187,15 +189,16 @@
 	"role": "Special",
 	"effect": "Slightly reduced incoming damage for villagers performing Magic training here.",
 	"struct": {
-	  "wall_kit_granite": 2
+	  "wall_kit_granite": 3
 	},
 	"hardware": {
-	  "fastener_kit_t7": 1,
+	  "fastener_kit_t7": 2,
 	  "reinforcement_kit_t6": 1
 	},
 	"min_building_tier": 2,
 	"delta_lv": 4,
-	"req_con_lv": 64
+	"req_con_lv": 64,
+	"xp": 2200
   },
   "archery_range_butts_row": {
 	"id": "archery_range_butts_row",
@@ -684,15 +687,16 @@
 	"role": "Special",
 	"effect": "Slightly higher chance to produce “perfect” +quality gems used for high-end enchants.",
 	"struct": {
-	  "wall_kit_granite": 1
+	  "wall_kit_granite": 2
 	},
 	"hardware": {
-	  "fittings_kit_t7": 1,
+	  "fittings_kit_t7": 2,
 	  "security_kit_t5": 1
 	},
 	"min_building_tier": 2,
 	"delta_lv": 6,
-	"req_con_lv": 60
+	"req_con_lv": 60,
+	"xp": 1900
   },
   "gemcutter_s_studio_cutting_wheel": {
 	"id": "gemcutter_s_studio_cutting_wheel",
@@ -721,15 +725,17 @@
 	"role": "Yield/Special",
 	"effect": "Extra gem dust/shard outputs when cutting gems on this fragment.",
 	"struct": {
-	  "floor_kit_granite": 1
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
 	  "fastener_kit_t7": 1,
-	  "mechanism_kit_t4": 1
+	  "mechanism_kit_t4": 1,
+	  "reinforcement_kit_t6": 1
 	},
 	"min_building_tier": 2,
 	"delta_lv": 3,
-	"req_con_lv": 60
+	"req_con_lv": 60,
+	"xp": 1800
   },
   "gemcutter_s_studio_faceting_table": {
 	"id": "gemcutter_s_studio_faceting_table",
@@ -759,15 +765,18 @@
 	"role": "Special/XP",
 	"effect": "Small extra Enchanting XP on high-tier crafts and tiny chance to prevent material loss on failed attempts.",
 	"struct": {
-	  "wall_kit_granite": 2
+	  "wall_kit_granite": 3,
+	  "floor_kit_granite": 1
 	},
 	"hardware": {
-	  "fittings_kit_t7": 1,
-	  "security_kit_t5": 1
+	  "fittings_kit_t7": 2,
+	  "security_kit_t5": 2,
+	  "reinforcement_kit_t6": 1
 	},
 	"min_building_tier": 3,
 	"delta_lv": 5,
-	"req_con_lv": 70
+	"req_con_lv": 70,
+	"xp": 3400
   },
   "grand_smithy_double_forge_hearth": {
 	"id": "grand_smithy_double_forge_hearth",
@@ -1393,16 +1402,18 @@
 	"role": "Special",
 	"effect": "Grants each worker on this tile a tiny extra capacity / effectiveness when handling bound spirits/familiars.",
 	"struct": {
-	  "wall_kit_granite": 1,
-	  "floor_kit_granite": 1
+	  "wall_kit_granite": 2,
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
-	  "fastener_kit_t7": 1,
-	  "fittings_kit_t7": 1
+	  "fastener_kit_t7": 2,
+	  "fittings_kit_t7": 2,
+	  "security_kit_t5": 1
 	},
 	"min_building_tier": 3,
 	"delta_lv": 5,
-	"req_con_lv": 65
+	"req_con_lv": 65,
+	"xp": 2600
   },
   "spirit_lodge_totem_posts": {
 	"id": "spirit_lodge_totem_posts",
@@ -1451,14 +1462,16 @@
 	"role": "Special/XP",
 	"effect": "Completing a Chart here grants a small extra Astromancy XP bonus and a tiny chance of bonus Stardust.",
 	"struct": {
-	  "wall_kit_granite": 1
+	  "wall_kit_granite": 2
 	},
 	"hardware": {
-	  "fittings_kit_t7": 1
+	  "fittings_kit_t7": 2,
+	  "security_kit_t5": 1
 	},
 	"min_building_tier": 2,
 	"delta_lv": 4,
-	"req_con_lv": 60
+	"req_con_lv": 60,
+	"xp": 1700
   },
   "star_observatory_focus_lens": {
 	"id": "star_observatory_focus_lens",
@@ -1487,17 +1500,18 @@
 	"role": "Special",
 	"effect": "Astromancy actions here have a small chance to also grant a permanent micro-buff to a random skill associated with this tile (within clamp).",
 	"struct": {
-	  "wall_kit_granite": 1,
-	  "floor_kit_granite": 1
+	  "wall_kit_granite": 2,
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
-	  "fastener_kit_t7": 1,
-	  "fittings_kit_t7": 1,
-	  "reinforcement_kit_t6": 1
+	  "fastener_kit_t7": 2,
+	  "fittings_kit_t7": 2,
+	  "reinforcement_kit_t6": 2
 	},
 	"min_building_tier": 3,
 	"delta_lv": 8,
-	"req_con_lv": 70
+	"req_con_lv": 70,
+	"xp": 3800
   },
   "star_observatory_orrery_engine": {
 	"id": "star_observatory_orrery_engine",
@@ -1508,15 +1522,16 @@
 	"role": "Speed",
 	"effect": "−Observe/Calibrate action time on this tile (respects global Tempo clamp).",
 	"struct": {
-	  "floor_kit_granite": 1
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
-	  "mechanism_kit_t4": 1,
+	  "mechanism_kit_t4": 2,
 	  "reinforcement_kit_t6": 1
 	},
 	"min_building_tier": 2,
 	"delta_lv": 6,
-	"req_con_lv": 60
+	"req_con_lv": 60,
+	"xp": 2200
   },
   "star_observatory_star_chart_desk": {
 	"id": "star_observatory_star_chart_desk",
@@ -1547,16 +1562,18 @@
 	"role": "Special",
 	"effect": "Reduced chance to lose shards/fragments on risky Faithcraft operations here and a tiny cost discount on top-tier infusions.",
 	"struct": {
-	  "wall_kit_marble": 1,
-	  "floor_kit_marble": 1
+	  "wall_kit_marble": 3,
+	  "floor_kit_marble": 2
 	},
 	"hardware": {
-	  "reinforcement_kit_t6": 1,
-	  "security_kit_t9": 1
+	  "reinforcement_kit_t6": 2,
+	  "mechanism_kit_t8": 1,
+	  "security_kit_t9": 2
 	},
 	"min_building_tier": 3,
 	"delta_lv": 5,
-	"req_con_lv": 90
+	"req_con_lv": 90,
+	"xp": 7000
   },
   "starforge_celestial_archive": {
 	"id": "starforge_celestial_archive",
@@ -1567,15 +1584,17 @@
 	"role": "XP",
 	"effect": "Extra Faithcraft XP on this fragment, especially for high-tier Shard recipes.",
 	"struct": {
-	  "wall_kit_granite": 1
+	  "wall_kit_granite": 2,
+	  "floor_kit_granite": 1
 	},
 	"hardware": {
-	  "fittings_kit_t7": 1,
+	  "fittings_kit_t7": 2,
 	  "security_kit_t5": 1
 	},
 	"min_building_tier": 1,
 	"delta_lv": 3,
-	"req_con_lv": 63
+	"req_con_lv": 63,
+	"xp": 2200
   },
   "starforge_conduit_array": {
 	"id": "starforge_conduit_array",
@@ -1586,15 +1605,16 @@
 	"role": "Speed",
 	"effect": "−Faithcraft craft time (respects global clamps).",
 	"struct": {
-	  "floor_kit_granite": 1
+	  "floor_kit_granite": 3
 	},
 	"hardware": {
-	  "mechanism_kit_t8": 1,
-	  "reinforcement_kit_t6": 1
+	  "mechanism_kit_t8": 2,
+	  "reinforcement_kit_t6": 2
 	},
 	"min_building_tier": 2,
 	"delta_lv": 4,
-	"req_con_lv": 75
+	"req_con_lv": 75,
+	"xp": 4200
   },
   "starforge_resonance_lattice": {
 	"id": "starforge_resonance_lattice",
@@ -1605,16 +1625,18 @@
 	"role": "Special",
 	"effect": "Slightly higher chance to create potent/dual-infused shards from crafts on this tile.",
 	"struct": {
-	  "wall_kit_granite": 1,
-	  "floor_kit_granite": 1
+	  "wall_kit_granite": 2,
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
-	  "reinforcement_kit_t6": 1,
-	  "security_kit_t5": 1
+	  "reinforcement_kit_t6": 2,
+	  "security_kit_t5": 1,
+	  "mechanism_kit_t8": 1
 	},
 	"min_building_tier": 2,
 	"delta_lv": 6,
-	"req_con_lv": 76
+	"req_con_lv": 76,
+	"xp": 4200
   },
   "starforge_shard_loom": {
 	"id": "starforge_shard_loom",
@@ -1625,15 +1647,17 @@
 	"role": "Yield",
 	"effect": "Slightly increased shard output / success on Faithcraft crafts on this tile.",
 	"struct": {
-	  "floor_kit_granite": 1
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
 	  "mechanism_kit_t4": 1,
-	  "reinforcement_kit_t6": 1
+	  "reinforcement_kit_t6": 1,
+	  "fittings_kit_t7": 1
 	},
 	"min_building_tier": 1,
 	"delta_lv": 0,
-	"req_con_lv": 60
+	"req_con_lv": 60,
+	"xp": 1900
   },
   "summoner_s_circle_containment_sigils": {
 	"id": "summoner_s_circle_containment_sigils",
@@ -1644,16 +1668,17 @@
 	"role": "Special",
 	"effect": "Reduced mishap / backlash chance for high-tier Leadership summons here.",
 	"struct": {
-	  "wall_kit_granite": 1,
-	  "floor_kit_granite": 1
+	  "wall_kit_granite": 2,
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
-	  "reinforcement_kit_t6": 1,
-	  "security_kit_t5": 1
+	  "reinforcement_kit_t6": 2,
+	  "security_kit_t5": 2
 	},
 	"min_building_tier": 2,
 	"delta_lv": 4,
-	"req_con_lv": 74
+	"req_con_lv": 74,
+	"xp": 3800
   },
   "summoner_s_circle_familiar_pens": {
 	"id": "summoner_s_circle_familiar_pens",
@@ -1664,15 +1689,18 @@
 	"role": "Special",
 	"effect": "Familiars anchored to this tile gain a small HP/damage bonus.",
 	"struct": {
-	  "floor_kit_granite": 1
+	  "wall_kit_granite": 1,
+	  "floor_kit_granite": 3
 	},
 	"hardware": {
-	  "fastener_kit_t7": 1,
-	  "fittings_kit_t7": 1
+	  "fastener_kit_t7": 2,
+	  "fittings_kit_t7": 2,
+	  "security_kit_t5": 1
 	},
 	"min_building_tier": 2,
 	"delta_lv": 6,
-	"req_con_lv": 76
+	"req_con_lv": 76,
+	"xp": 3900
   },
   "summoner_s_circle_focus_obelisk": {
 	"id": "summoner_s_circle_focus_obelisk",
@@ -1683,15 +1711,16 @@
 	"role": "Speed",
 	"effect": "−Leadership ritual time on this fragment (within clamp).",
 	"struct": {
-	  "floor_kit_granite": 1
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
 	  "fastener_kit_t7": 1,
-	  "reinforcement_kit_t6": 1
+	  "reinforcement_kit_t6": 2
 	},
 	"min_building_tier": 1,
 	"delta_lv": 3,
-	"req_con_lv": 63
+	"req_con_lv": 63,
+	"xp": 2200
   },
   "summoner_s_circle_offering_altar": {
 	"id": "summoner_s_circle_offering_altar",
@@ -1702,16 +1731,19 @@
 	"role": "Special/Yield",
 	"effect": "Tiny chance to refund a Leadership reagent or generate an extra by-product on success.",
 	"struct": {
-	  "wall_kit_marble": 1,
-	  "floor_kit_marble": 1
+	  "wall_kit_marble": 3,
+	  "floor_kit_marble": 3
 	},
 	"hardware": {
-	  "fittings_kit_t7": 1,
-	  "security_kit_t9": 1
+	  "fittings_kit_t7": 2,
+	  "reinforcement_kit_t6": 1,
+	  "mechanism_kit_t8": 1,
+	  "security_kit_t9": 2
 	},
 	"min_building_tier": 3,
 	"delta_lv": 5,
-	"req_con_lv": 90
+	"req_con_lv": 90,
+	"xp": 7200
   },
   "summoner_s_circle_ritual_glyphs": {
 	"id": "summoner_s_circle_ritual_glyphs",
@@ -1722,15 +1754,17 @@
 	"role": "XP",
 	"effect": "+Leadership XP for rituals performed at this circle.",
 	"struct": {
-	  "floor_kit_granite": 1
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
 	  "fastener_kit_t7": 1,
-	  "reinforcement_kit_t6": 1
+	  "reinforcement_kit_t6": 1,
+	  "fittings_kit_t7": 1
 	},
 	"min_building_tier": 1,
 	"delta_lv": 0,
-	"req_con_lv": 60
+	"req_con_lv": 60,
+	"xp": 1800
   },
   "training_arena_footwork_rails": {
 	"id": "training_arena_footwork_rails",
@@ -1933,16 +1967,18 @@
 	"role": "Special/XP",
 	"effect": "When ≥2 villagers are training combat skills on this tile, everyone gains a trickle of Prayer XP.",
 	"struct": {
-	  "wall_kit_granite": 2,
-	  "floor_kit_granite": 1
+	  "wall_kit_granite": 3,
+	  "floor_kit_granite": 2
 	},
 	"hardware": {
-	  "mechanism_kit_t8": 1,
-	  "reinforcement_kit_t6": 1
+	  "mechanism_kit_t8": 2,
+	  "reinforcement_kit_t6": 2,
+	  "fittings_kit_t7": 1
 	},
 	"min_building_tier": 3,
 	"delta_lv": 5,
-	"req_con_lv": 75
+	"req_con_lv": 75,
+	"xp": 4600
   },
   "wayshrine_central_altar": {
 	"id": "wayshrine_central_altar",
@@ -2009,14 +2045,15 @@
 	"role": "Special",
 	"effect": "Small chance for combat on this fragment to reroll low-value loot into devotional/Prayer-tagged drops.",
 	"struct": {
-	  "wall_kit_granite": 1
+	  "wall_kit_granite": 2
 	},
 	"hardware": {
-	  "fittings_kit_t7": 1,
+	  "fittings_kit_t7": 2,
 	  "security_kit_t5": 1
 	},
 	"min_building_tier": 2,
 	"delta_lv": 5,
-	"req_con_lv": 65
+	"req_con_lv": 65,
+	"xp": 2400
   }
 }

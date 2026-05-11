@@ -11,6 +11,7 @@
 	"min_building_tier": 1,
 	"req_con_lv": 1,
 	"delta_lv": 0,
+	"xp": 55,
 	"struct": {
 	  "log_pine": 1
 	},
@@ -29,15 +30,17 @@
 	"effect": "Bundles bronze hinges, brackets, and straps into a boxed construction kit for building use or sale.",
 	"mat_tier": 1,
 	"min_building_tier": 1,
-	"req_con_lv": 1,
+	"req_con_lv": 5,
 	"delta_lv": 0,
+	"xp": 80,
 	"struct": {
 	  "log_pine": 1
 	},
 	"hardware": {
 	  "hinges_bronze": 2,
 	  "brackets_bronze": 4,
-	  "straps_bronze": 2
+	  "straps_bronze": 2,
+	  "nails_bronze": 20
 	}
   },
   "fastener_kit_t2": {
@@ -52,13 +55,14 @@
 	"min_building_tier": 1,
 	"req_con_lv": 10,
 	"delta_lv": 0,
+	"xp": 135,
 	"struct": {
 	  "log_birch": 1
 	},
 	"hardware": {
-	  "nails_iron": 50,
-	  "rivets_iron": 10,
-	  "bolts_iron": 4
+	  "nails_iron": 55,
+	  "rivets_iron": 12,
+	  "bolts_iron": 6
 	}
   },
   "fittings_kit_t2": {
@@ -73,14 +77,16 @@
 	"min_building_tier": 1,
 	"req_con_lv": 10,
 	"delta_lv": 0,
+	"xp": 165,
 	"struct": {
 	  "log_birch": 1
 	},
 	"hardware": {
 	  "hinges_iron": 3,
-	  "brackets_iron": 6,
-	  "straps_iron": 3,
-	  "flat_plate_iron": 2
+	  "brackets_iron": 7,
+	  "straps_iron": 4,
+	  "flat_plate_iron": 2,
+	  "nails_iron": 25
 	}
   },
   "fastener_kit_t3": {
@@ -95,14 +101,15 @@
 	"min_building_tier": 1,
 	"req_con_lv": 20,
 	"delta_lv": 0,
+	"xp": 260,
 	"struct": {
 	  "log_oak": 1
 	},
 	"hardware": {
-	  "nails_steel": 60,
-	  "rivets_steel": 12,
-	  "bolts_steel": 6,
-	  "spikes_steel": 4
+	  "nails_steel": 70,
+	  "rivets_steel": 16,
+	  "bolts_steel": 8,
+	  "spikes_steel": 6
 	}
   },
   "fittings_kit_t3": {
@@ -117,14 +124,16 @@
 	"min_building_tier": 1,
 	"req_con_lv": 20,
 	"delta_lv": 0,
+	"xp": 300,
 	"struct": {
 	  "log_oak": 1
 	},
 	"hardware": {
-	  "hinges_steel": 4,
-	  "brackets_steel": 8,
-	  "straps_steel": 4,
-	  "flat_plate_steel": 3
+	  "hinges_steel": 5,
+	  "brackets_steel": 10,
+	  "straps_steel": 5,
+	  "flat_plate_steel": 4,
+	  "nails_steel": 30
 	}
   },
   "reinforcement_kit_t3": {
@@ -139,13 +148,16 @@
 	"min_building_tier": 1,
 	"req_con_lv": 20,
 	"delta_lv": 0,
+	"xp": 420,
 	"struct": {
-	  "log_oak": 1
+	  "log_oak": 2
 	},
 	"hardware": {
-	  "reinforcement_rod_steel": 4,
-	  "flat_plate_steel": 4,
-	  "beam_shoe_steel": 2
+	  "reinforcement_rod_steel": 5,
+	  "flat_plate_steel": 5,
+	  "beam_shoe_steel": 3,
+	  "rivets_steel": 16,
+	  "bolts_steel": 4
 	}
   },
   "mechanism_kit_t4": {
@@ -155,18 +167,21 @@
 	"kind": "material",
 	"part": "Mechanism Kit (T4)",
 	"role": "Hardware Kit",
-	"effect": "Bundles mithrite chain, gears, and counterweights into a boxed mechanism kit for moving construction parts.",
+	"effect": "Bundles mithrite chain, gears, brackets, bolts, and counterweights into a boxed mechanism kit for moving construction parts.",
 	"mat_tier": 4,
 	"min_building_tier": 1,
 	"req_con_lv": 30,
 	"delta_lv": 0,
+	"xp": 620,
 	"struct": {
-	  "log_willow": 1
+	  "log_willow": 2
 	},
 	"hardware": {
-	  "chain_mithrite": 4,
-	  "gear_mithrite": 2,
-	  "counterweight_mithrite": 1
+	  "chain_mithrite": 5,
+	  "gear_mithrite": 3,
+	  "counterweight_mithrite": 1,
+	  "brackets_mithrite": 4,
+	  "bolts_mithrite": 8
 	}
   },
   "security_kit_t5": {
@@ -176,18 +191,21 @@
 	"kind": "material",
 	"part": "Security Kit (T5)",
 	"role": "Hardware Kit",
-	"effect": "Bundles adamantite lockwork and reinforced fittings into a boxed security kit for secure rooms, vaults, and specialist modules.",
+	"effect": "Bundles adamantite lockwork, chains, plates, hinges, and rivets into a boxed security kit for secure rooms, vaults, and specialist modules.",
 	"mat_tier": 5,
 	"min_building_tier": 1,
 	"req_con_lv": 40,
 	"delta_lv": 0,
+	"xp": 850,
 	"struct": {
-	  "log_maple": 1
+	  "log_maple": 2
 	},
 	"hardware": {
 	  "lockwork_adamantite": 1,
-	  "hinges_adamantite": 4,
-	  "flat_plate_adamantite": 4
+	  "hinges_adamantite": 5,
+	  "flat_plate_adamantite": 5,
+	  "chain_adamantite": 2,
+	  "rivets_adamantite": 12
 	}
   },
   "reinforcement_kit_t6": {
@@ -197,18 +215,21 @@
 	"kind": "material",
 	"part": "Reinforcement Kit (T6)",
 	"role": "Hardware Kit",
-	"effect": "Bundles orichalcum rods, plates, and beam shoes into a yew boxed reinforcement kit.",
+	"effect": "Bundles orichalcum rods, plates, beam shoes, rivets, and bolts into a yew boxed reinforcement kit.",
 	"mat_tier": 6,
 	"min_building_tier": 1,
 	"req_con_lv": 50,
 	"delta_lv": 0,
+	"xp": 1250,
 	"struct": {
-	  "log_yew": 1
+	  "log_yew": 2
 	},
 	"hardware": {
-	  "reinforcement_rod_orichalcum": 8,
-	  "flat_plate_orichalcum": 8,
-	  "beam_shoe_orichalcum": 4
+	  "reinforcement_rod_orichalcum": 10,
+	  "flat_plate_orichalcum": 10,
+	  "beam_shoe_orichalcum": 5,
+	  "rivets_orichalcum": 16,
+	  "bolts_orichalcum": 8
 	}
   },
   "fastener_kit_t7": {
@@ -223,14 +244,15 @@
 	"min_building_tier": 1,
 	"req_con_lv": 60,
 	"delta_lv": 0,
+	"xp": 1800,
 	"struct": {
-	  "log_ironwood": 1
+	  "log_ironwood": 2
 	},
 	"hardware": {
-	  "nails_aether": 80,
-	  "rivets_aether": 20,
-	  "bolts_aether": 12,
-	  "spikes_aether": 10
+	  "nails_aether": 100,
+	  "rivets_aether": 28,
+	  "bolts_aether": 18,
+	  "spikes_aether": 14
 	}
   },
   "fittings_kit_t7": {
@@ -245,15 +267,17 @@
 	"min_building_tier": 1,
 	"req_con_lv": 60,
 	"delta_lv": 0,
+	"xp": 1900,
 	"struct": {
-	  "log_ironwood": 1
+	  "log_ironwood": 2
 	},
 	"hardware": {
-	  "hinges_aether": 6,
-	  "brackets_aether": 12,
-	  "straps_aether": 8,
-	  "flat_plate_aether": 6,
-	  "beam_shoe_aether": 4
+	  "hinges_aether": 8,
+	  "brackets_aether": 16,
+	  "straps_aether": 10,
+	  "flat_plate_aether": 8,
+	  "beam_shoe_aether": 5,
+	  "nails_aether": 40
 	}
   },
   "mechanism_kit_t8": {
@@ -263,19 +287,22 @@
 	"kind": "material",
 	"part": "Mechanism Kit (T8)",
 	"role": "Hardware Kit",
-	"effect": "Bundles aether chain, gears, and counterweights into a redwood boxed mechanism kit.",
+	"effect": "Bundles aether chain, gears, brackets, bolts, beam shoes, and counterweights into a redwood boxed mechanism kit.",
 	"mat_tier": 8,
 	"min_building_tier": 1,
 	"req_con_lv": 75,
 	"delta_lv": 0,
+	"xp": 2800,
 	"struct": {
-	  "log_redwood": 1
+	  "log_redwood": 3
 	},
 	"hardware": {
-	  "chain_aether": 8,
-	  "gear_aether": 4,
-	  "counterweight_aether": 2,
-	  "beam_shoe_aether": 2
+	  "chain_aether": 10,
+	  "gear_aether": 6,
+	  "counterweight_aether": 3,
+	  "brackets_aether": 8,
+	  "bolts_aether": 16,
+	  "beam_shoe_aether": 4
 	}
   },
   "security_kit_t9": {
@@ -285,19 +312,22 @@
 	"kind": "material",
 	"part": "Security Kit (T9)",
 	"role": "Hardware Kit",
-	"effect": "Bundles aether lockwork and reinforced fittings into a sakura boxed security kit for elite magical and vault modules.",
+	"effect": "Bundles aether lockwork, chains, plates, hinges, rivets, and rods into a sakura boxed security kit for elite magical and vault modules.",
 	"mat_tier": 9,
 	"min_building_tier": 1,
 	"req_con_lv": 90,
 	"delta_lv": 0,
+	"xp": 3800,
 	"struct": {
-	  "log_sakura": 1
+	  "log_sakura": 3
 	},
 	"hardware": {
-	  "lockwork_aether": 2,
-	  "hinges_aether": 6,
-	  "flat_plate_aether": 6,
-	  "reinforcement_rod_aether": 4
+	  "lockwork_aether": 3,
+	  "hinges_aether": 8,
+	  "flat_plate_aether": 8,
+	  "chain_aether": 6,
+	  "rivets_aether": 24,
+	  "reinforcement_rod_aether": 6
 	}
   },
   "floor_kit_limestone": {
@@ -312,6 +342,7 @@
 	"min_building_tier": 1,
 	"req_con_lv": 1,
 	"delta_lv": 0,
+	"xp": 45,
 	"struct": {
 	  "stone_limestone": 8
 	},
@@ -331,6 +362,7 @@
 	"min_building_tier": 1,
 	"req_con_lv": 1,
 	"delta_lv": 0,
+	"xp": 65,
 	"struct": {
 	  "stone_limestone": 12
 	},
@@ -351,6 +383,7 @@
 	"min_building_tier": 1,
 	"req_con_lv": 5,
 	"delta_lv": 0,
+	"xp": 50,
 	"struct": {
 	  "stone_clay": 8
 	},
@@ -370,6 +403,7 @@
 	"min_building_tier": 1,
 	"req_con_lv": 5,
 	"delta_lv": 0,
+	"xp": 70,
 	"struct": {
 	  "stone_clay": 12
 	},
@@ -390,12 +424,13 @@
 	"min_building_tier": 1,
 	"req_con_lv": 18,
 	"delta_lv": 0,
+	"xp": 150,
 	"struct": {
-	  "stone_sandstone": 10
+	  "stone_sandstone": 12
 	},
 	"hardware": {
-	  "nails_iron": 24,
-	  "rivets_iron": 4
+	  "nails_iron": 28,
+	  "rivets_iron": 5
 	}
   },
   "wall_kit_sandstone": {
@@ -410,13 +445,14 @@
 	"min_building_tier": 1,
 	"req_con_lv": 18,
 	"delta_lv": 0,
+	"xp": 210,
 	"struct": {
-	  "stone_sandstone": 14
+	  "stone_sandstone": 18
 	},
 	"hardware": {
-	  "nails_iron": 28,
-	  "rivets_iron": 4,
-	  "brackets_iron": 3
+	  "nails_iron": 34,
+	  "rivets_iron": 6,
+	  "brackets_iron": 4
 	}
   },
   "floor_kit_basalt": {
@@ -431,13 +467,14 @@
 	"min_building_tier": 1,
 	"req_con_lv": 35,
 	"delta_lv": 0,
+	"xp": 420,
 	"struct": {
-	  "stone_basalt": 10
+	  "stone_basalt": 14
 	},
 	"hardware": {
-	  "nails_mithrite": 28,
-	  "rivets_mithrite": 6,
-	  "flat_plate_mithrite": 1
+	  "nails_mithrite": 32,
+	  "rivets_mithrite": 8,
+	  "flat_plate_mithrite": 2
 	}
   },
   "wall_kit_basalt": {
@@ -452,15 +489,16 @@
 	"min_building_tier": 1,
 	"req_con_lv": 35,
 	"delta_lv": 0,
+	"xp": 600,
 	"struct": {
-	  "stone_basalt": 16
+	  "stone_basalt": 22
 	},
 	"hardware": {
-	  "nails_mithrite": 32,
-	  "rivets_mithrite": 6,
-	  "brackets_mithrite": 4,
-	  "flat_plate_mithrite": 2,
-	  "reinforcement_rod_mithrite": 1
+	  "nails_mithrite": 40,
+	  "rivets_mithrite": 8,
+	  "brackets_mithrite": 5,
+	  "flat_plate_mithrite": 3,
+	  "reinforcement_rod_mithrite": 2
 	}
   },
   "floor_kit_granite": {
@@ -475,13 +513,15 @@
 	"min_building_tier": 1,
 	"req_con_lv": 55,
 	"delta_lv": 0,
+	"xp": 1000,
 	"struct": {
-	  "stone_granite": 12
+	  "stone_granite": 18
 	},
 	"hardware": {
-	  "rivets_orichalcum": 8,
-	  "bolts_orichalcum": 4,
-	  "flat_plate_orichalcum": 2
+	  "rivets_orichalcum": 12,
+	  "bolts_orichalcum": 8,
+	  "flat_plate_orichalcum": 4,
+	  "reinforcement_rod_orichalcum": 1
 	}
   },
   "wall_kit_granite": {
@@ -496,14 +536,16 @@
 	"min_building_tier": 1,
 	"req_con_lv": 55,
 	"delta_lv": 0,
+	"xp": 1450,
 	"struct": {
-	  "stone_granite": 18
+	  "stone_granite": 28
 	},
 	"hardware": {
-	  "rivets_orichalcum": 10,
-	  "bolts_orichalcum": 6,
-	  "flat_plate_orichalcum": 3,
-	  "reinforcement_rod_orichalcum": 2
+	  "rivets_orichalcum": 16,
+	  "bolts_orichalcum": 10,
+	  "flat_plate_orichalcum": 5,
+	  "reinforcement_rod_orichalcum": 3,
+	  "beam_shoe_orichalcum": 2
 	}
   },
   "floor_kit_marble": {
@@ -518,13 +560,15 @@
 	"min_building_tier": 1,
 	"req_con_lv": 75,
 	"delta_lv": 0,
+	"xp": 1800,
 	"struct": {
-	  "stone_marble": 12
+	  "stone_marble": 22
 	},
 	"hardware": {
-	  "bolts_aether": 6,
-	  "brackets_aether": 4,
-	  "flat_plate_aether": 3
+	  "bolts_aether": 10,
+	  "brackets_aether": 6,
+	  "flat_plate_aether": 5,
+	  "reinforcement_rod_aether": 2
 	}
   },
   "wall_kit_marble": {
@@ -539,14 +583,15 @@
 	"min_building_tier": 1,
 	"req_con_lv": 75,
 	"delta_lv": 0,
+	"xp": 2600,
 	"struct": {
-	  "stone_marble": 18
+	  "stone_marble": 34
 	},
 	"hardware": {
-	  "bolts_aether": 8,
-	  "flat_plate_aether": 4,
-	  "reinforcement_rod_aether": 3,
-	  "beam_shoe_aether": 2
+	  "bolts_aether": 14,
+	  "flat_plate_aether": 6,
+	  "reinforcement_rod_aether": 5,
+	  "beam_shoe_aether": 4
 	}
   }
 }

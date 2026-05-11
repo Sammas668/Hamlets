@@ -8,8 +8,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Grand Smithy (Smithing)",
-		"desc": "Tier I: 1 module slot.",
+		"desc": "Tier I full shell: 1 module slot.",
 		"level_req": 10,
+		"xp": 900,
 		"inputs": {
 		  "struct": [
 			{
@@ -35,23 +36,24 @@
 	  },
 	  "2": {
 		"label": "Grand Smithy (Smithing)",
-		"desc": "Tier II: 2 slots.",
+		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
+		"xp": 650,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 10
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 6
+			  "qty": 3
 			}
 		  ],
 		  "hardware": [
 			{
 			  "item": "fastener_kit_t2",
-			  "qty": 3
+			  "qty": 2
 			},
 			{
 			  "item": "fittings_kit_t2",
@@ -62,27 +64,28 @@
 	  },
 	  "3": {
 		"label": "Grand Smithy (Smithing)",
-		"desc": "Tier III: 3 slots.",
+		"desc": "Tier III reinforced upgrade: 3 module slots.",
 		"level_req": 30,
+		"xp": 950,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 12
+			  "qty": 7
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 8
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
 			{
 			  "item": "fastener_kit_t3",
-			  "qty": 4
+			  "qty": 3
 			},
 			{
 			  "item": "fittings_kit_t3",
-			  "qty": 2
+			  "qty": 1
 			},
 			{
 			  "item": "reinforcement_kit_t3",
@@ -102,8 +105,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Training Arena (Melee)",
-		"desc": "Tier I: 1 module slot.",
+		"desc": "Tier I full shell: 1 module slot.",
 		"level_req": 10,
+		"xp": 600,
 		"inputs": {
 		  "struct": [
 			{
@@ -129,17 +133,18 @@
 	  },
 	  "2": {
 		"label": "Training Arena (Melee)",
-		"desc": "Tier II: 2 slots.",
+		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
+		"xp": 450,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 5
+			  "qty": 3
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 5
+			  "qty": 3
 			}
 		  ],
 		  "hardware": [
@@ -156,17 +161,18 @@
 	  },
 	  "3": {
 		"label": "Training Arena (Melee)",
-		"desc": "Tier III: 3 slots.",
+		"desc": "Tier III reinforced upgrade: 3 module slots.",
 		"level_req": 30,
+		"xp": 700,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 6
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 6
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -196,8 +202,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Barracks (Defence)",
-		"desc": "Tier I: 1 module slot.",
+		"desc": "Tier I full shell: 1 module slot.",
 		"level_req": 10,
+		"xp": 950,
 		"inputs": {
 		  "struct": [
 			{
@@ -223,23 +230,24 @@
 	  },
 	  "2": {
 		"label": "Barracks (Defence)",
-		"desc": "Tier II: 2 slots.",
+		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
+		"xp": 700,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 8
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 8
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
 			{
 			  "item": "fastener_kit_t2",
-			  "qty": 3
+			  "qty": 2
 			},
 			{
 			  "item": "fittings_kit_t2",
@@ -250,17 +258,18 @@
 	  },
 	  "3": {
 		"label": "Barracks (Defence)",
-		"desc": "Tier III: 3 slots.",
+		"desc": "Tier III reinforced upgrade: 3 module slots.",
 		"level_req": 30,
+		"xp": 1050,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 10
+			  "qty": 6
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
@@ -270,7 +279,7 @@
 			},
 			{
 			  "item": "fittings_kit_t3",
-			  "qty": 2
+			  "qty": 1
 			},
 			{
 			  "item": "reinforcement_kit_t3",
@@ -290,8 +299,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Archery Range (Ranged)",
-		"desc": "Tier I: 1 module slot.",
+		"desc": "Tier I full shell: 1 module slot.",
 		"level_req": 20,
+		"xp": 850,
 		"inputs": {
 		  "struct": [
 			{
@@ -317,17 +327,18 @@
 	  },
 	  "2": {
 		"label": "Archery Range (Ranged)",
-		"desc": "Tier II: 2 module slots.",
+		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 30,
+		"xp": 650,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 3
+			  "qty": 2
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 5
+			  "qty": 3
 			}
 		  ],
 		  "hardware": [
@@ -344,17 +355,18 @@
 	  },
 	  "3": {
 		"label": "Archery Range (Ranged)",
-		"desc": "Tier III: 3 module slots.",
+		"desc": "Tier III basalt upgrade: 3 module slots.",
 		"level_req": 40,
+		"xp": 1100,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 4
+			  "qty": 3
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 6
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -384,8 +396,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Net Wharf (Fishing)",
-		"desc": "Tier I: 1 module slot.",
+		"desc": "Tier I full shell: 1 module slot.",
 		"level_req": 20,
+		"xp": 950,
 		"inputs": {
 		  "struct": [
 			{
@@ -411,17 +424,18 @@
 	  },
 	  "2": {
 		"label": "Net Wharf (Fishing)",
-		"desc": "Tier II: 2 module slots.",
+		"desc": "Tier II partial/mechanical upgrade: 2 module slots.",
 		"level_req": 30,
+		"xp": 800,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 3
+			  "qty": 2
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -442,17 +456,18 @@
 	  },
 	  "3": {
 		"label": "Net Wharf (Fishing)",
-		"desc": "Tier III: 3 module slots.",
+		"desc": "Tier III reinforced/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
+		"xp": 1250,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 4
+			  "qty": 3
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
@@ -486,8 +501,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Logging Yard (Woodcutting)",
-		"desc": "Tier I: 1 module slot.",
+		"desc": "Tier I full shell: 1 module slot.",
 		"level_req": 20,
+		"xp": 850,
 		"inputs": {
 		  "struct": [
 			{
@@ -513,17 +529,18 @@
 	  },
 	  "2": {
 		"label": "Logging Yard (Woodcutting)",
-		"desc": "Tier II: 2 module slots.",
+		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 30,
+		"xp": 650,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 5
+			  "qty": 3
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 5
+			  "qty": 3
 			}
 		  ],
 		  "hardware": [
@@ -540,17 +557,18 @@
 	  },
 	  "3": {
 		"label": "Logging Yard (Woodcutting)",
-		"desc": "Tier III: 3 module slots.",
+		"desc": "Tier III basalt/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
+		"xp": 1050,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 6
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 6
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -580,8 +598,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Construction Hall (Construction)",
-		"desc": "Tier I: 1 module slot.",
+		"desc": "Tier I full shell: 1 module slot.",
 		"level_req": 20,
+		"xp": 1300,
 		"inputs": {
 		  "struct": [
 			{
@@ -607,17 +626,18 @@
 	  },
 	  "2": {
 		"label": "Construction Hall (Construction)",
-		"desc": "Tier II: 2 module slots.",
+		"desc": "Tier II partial/mechanical upgrade: 2 module slots.",
 		"level_req": 30,
+		"xp": 1050,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 9
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -642,17 +662,18 @@
 	  },
 	  "3": {
 		"label": "Construction Hall (Construction)",
-		"desc": "Tier III: 3 module slots.",
+		"desc": "Tier III basalt reinforced/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
+		"xp": 1600,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 10
+			  "qty": 6
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
@@ -686,8 +707,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Hearth Kitchen (Cooking)",
-		"desc": "Tier I shell: 1 module slot; unlocks Cooking building on this tile.",
+		"desc": "Tier I full shell: 1 module slot; unlocks Cooking building on this tile.",
 		"level_req": 10,
+		"xp": 700,
 		"inputs": {
 		  "struct": [
 			{
@@ -713,17 +735,18 @@
 	  },
 	  "2": {
 		"label": "Hearth Kitchen (Cooking)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
+		"xp": 500,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 6
+			  "qty": 3
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 5
+			  "qty": 2
 			}
 		  ],
 		  "hardware": [
@@ -740,17 +763,18 @@
 	  },
 	  "3": {
 		"label": "Hearth Kitchen (Cooking)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III partial/mechanical upgrade: 3 module slots.",
 		"level_req": 30,
+		"xp": 750,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 7
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 6
+			  "qty": 3
 			}
 		  ],
 		  "hardware": [
@@ -780,8 +804,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Forager’s Hut (Herbalism)",
-		"desc": "Tier I shell: 1 module slot; unlocks Herbalism building on this tile.",
+		"desc": "Tier I full shell: 1 module slot; unlocks Herbalism building on this tile.",
 		"level_req": 10,
+		"xp": 600,
 		"inputs": {
 		  "struct": [
 			{
@@ -807,17 +832,18 @@
 	  },
 	  "2": {
 		"label": "Forager’s Hut (Herbalism)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
+		"xp": 400,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 4
+			  "qty": 2
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 4
+			  "qty": 2
 			}
 		  ],
 		  "hardware": [
@@ -834,17 +860,18 @@
 	  },
 	  "3": {
 		"label": "Forager’s Hut (Herbalism)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III partial upgrade: 3 module slots.",
 		"level_req": 30,
+		"xp": 600,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 5
+			  "qty": 3
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 5
+			  "qty": 3
 			}
 		  ],
 		  "hardware": [
@@ -854,6 +881,10 @@
 			},
 			{
 			  "item": "fittings_kit_t3",
+			  "qty": 1
+			},
+			{
+			  "item": "reinforcement_kit_t3",
 			  "qty": 1
 			}
 		  ]
@@ -870,8 +901,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Alembic Workshop (Transmutation)",
-		"desc": "Tier I shell: 1 module slot; unlocks Transmutation building on this tile.",
+		"desc": "Tier I full shell: 1 module slot; unlocks Transmutation building on this tile.",
 		"level_req": 40,
+		"xp": 2600,
 		"inputs": {
 		  "struct": [
 			{
@@ -901,17 +933,18 @@
 	  },
 	  "2": {
 		"label": "Alembic Workshop (Transmutation)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II partial secure/mechanical upgrade: 2 module slots.",
 		"level_req": 50,
+		"xp": 1900,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 7
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -921,7 +954,7 @@
 			},
 			{
 			  "item": "fittings_kit_t3",
-			  "qty": 2
+			  "qty": 1
 			},
 			{
 			  "item": "mechanism_kit_t4",
@@ -936,23 +969,24 @@
 	  },
 	  "3": {
 		"label": "Alembic Workshop (Transmutation)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 60,
+		"xp": 3200,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
 			{
 			  "item": "fastener_kit_t7",
-			  "qty": 3
+			  "qty": 2
 			},
 			{
 			  "item": "fittings_kit_t7",
@@ -984,8 +1018,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Prospector’s Shaft (Mining)",
-		"desc": "Tier I shell: 1 module slot; unlocks Mining building on this tile.",
+		"desc": "Tier I full shell: 1 module slot; unlocks Mining building on this tile.",
 		"level_req": 20,
+		"xp": 900,
 		"inputs": {
 		  "struct": [
 			{
@@ -1011,17 +1046,18 @@
 	  },
 	  "2": {
 		"label": "Prospector’s Shaft (Mining)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II partial reinforced upgrade: 2 module slots.",
 		"level_req": 30,
+		"xp": 750,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 5
+			  "qty": 3
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 5
+			  "qty": 3
 			}
 		  ],
 		  "hardware": [
@@ -1042,17 +1078,18 @@
 	  },
 	  "3": {
 		"label": "Prospector’s Shaft (Mining)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III basalt reinforced/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
+		"xp": 1200,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 6
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 6
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -1086,8 +1123,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Farmstead (Farming)",
-		"desc": "Tier I shell: 1 module slot; unlocks Farming building on this tile.",
+		"desc": "Tier I full shell: 1 module slot; unlocks Farming building on this tile.",
 		"level_req": 20,
+		"xp": 1000,
 		"inputs": {
 		  "struct": [
 			{
@@ -1113,17 +1151,18 @@
 	  },
 	  "2": {
 		"label": "Farmstead (Farming)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 30,
+		"xp": 750,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 7
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -1140,17 +1179,18 @@
 	  },
 	  "3": {
 		"label": "Farmstead (Farming)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III basalt/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
+		"xp": 1250,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 8
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
@@ -1180,8 +1220,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Village Inn (Charisma)",
-		"desc": "Tier I shell: 1 module slot; unlocks Charisma building on this tile.",
+		"desc": "Tier I full shell: 1 module slot; unlocks Charisma building on this tile.",
 		"level_req": 5,
+		"xp": 950,
 		"inputs": {
 		  "struct": [
 			{
@@ -1207,17 +1248,18 @@
 	  },
 	  "2": {
 		"label": "Village Inn (Charisma)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 25,
+		"xp": 750,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_sandstone",
-			  "qty": 10
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_sandstone",
-			  "qty": 8
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -1234,17 +1276,18 @@
 	  },
 	  "3": {
 		"label": "Village Inn (Charisma)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III basalt secure upgrade: 3 module slots.",
 		"level_req": 50,
+		"xp": 1800,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 12
+			  "qty": 7
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 10
+			  "qty": 6
 			}
 		  ],
 		  "hardware": [
@@ -1274,8 +1317,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Spirit Lodge (Diplomacy)",
-		"desc": "Tier I shell: 1 module slot; unlocks Diplomacy building on this tile.",
+		"desc": "Tier I full shell: 1 module slot; unlocks Diplomacy building on this tile.",
 		"level_req": 40,
+		"xp": 2800,
 		"inputs": {
 		  "struct": [
 			{
@@ -1305,17 +1349,18 @@
 	  },
 	  "2": {
 		"label": "Spirit Lodge (Diplomacy)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II partial secure/reinforced upgrade: 2 module slots.",
 		"level_req": 50,
+		"xp": 2300,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 7
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -1325,7 +1370,7 @@
 			},
 			{
 			  "item": "fittings_kit_t3",
-			  "qty": 2
+			  "qty": 1
 			},
 			{
 			  "item": "security_kit_t5",
@@ -1340,23 +1385,24 @@
 	  },
 	  "3": {
 		"label": "Spirit Lodge (Diplomacy)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 60,
+		"xp": 3600,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
 			{
 			  "item": "fastener_kit_t7",
-			  "qty": 3
+			  "qty": 2
 			},
 			{
 			  "item": "fittings_kit_t7",
@@ -1384,8 +1430,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Summoner’s Circle (Leadership)",
-		"desc": "Tier I shell: 1 module slot; unlocks Leadership building on this tile.",
+		"desc": "Tier I full shell: 1 module slot; unlocks Leadership building on this tile.",
 		"level_req": 50,
+		"xp": 3600,
 		"inputs": {
 		  "struct": [
 			{
@@ -1419,17 +1466,18 @@
 	  },
 	  "2": {
 		"label": "Summoner’s Circle (Leadership)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
+		"xp": 3400,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 7
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 9
+			  "qty": 6
 			}
 		  ],
 		  "hardware": [
@@ -1454,17 +1502,18 @@
 	  },
 	  "3": {
 		"label": "Summoner’s Circle (Leadership)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
+		"xp": 5200,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 8
+			  "qty": 6
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 10
+			  "qty": 7
 			}
 		  ],
 		  "hardware": [
@@ -1498,8 +1547,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Arcanist’s Tower (Magic)",
-		"desc": "Unlocks Magic building on this fragment. R1/2/3 spells can be researched here.",
+		"desc": "Tier I full shell: 1 module slot; R1/2/3 spells can be researched here.",
 		"level_req": 50,
+		"xp": 4000,
 		"inputs": {
 		  "struct": [
 			{
@@ -1533,17 +1583,18 @@
 	  },
 	  "2": {
 		"label": "Arcanist’s Tower (Magic)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
+		"xp": 3800,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 11
+			  "qty": 6
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -1572,17 +1623,18 @@
 	  },
 	  "3": {
 		"label": "Arcanist’s Tower (Magic)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
+		"xp": 5600,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 12
+			  "qty": 8
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
@@ -1620,8 +1672,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Star Observatory (Astromancy)",
-		"desc": "Unlocks Astromancy building on this fragment. R1/2/3 auguries can be bound here.",
+		"desc": "Tier I full shell: 1 module slot; R1/2/3 auguries can be bound here.",
 		"level_req": 50,
+		"xp": 3800,
 		"inputs": {
 		  "struct": [
 			{
@@ -1655,17 +1708,18 @@
 	  },
 	  "2": {
 		"label": "Star Observatory (Astromancy)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
+		"xp": 3600,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 9
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -1694,17 +1748,18 @@
 	  },
 	  "3": {
 		"label": "Star Observatory (Astromancy)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
+		"xp": 5200,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 10
+			  "qty": 7
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
@@ -1742,8 +1797,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Gemcutter’s Studio (Enchanting)",
-		"desc": "Unlocks Enchanting building on this fragment. R1/2/3 enchantments can be prepared here.",
+		"desc": "Tier I full shell: 1 module slot; R1/2/3 enchantments can be prepared here.",
 		"level_req": 50,
+		"xp": 3600,
 		"inputs": {
 		  "struct": [
 			{
@@ -1773,17 +1829,18 @@
 	  },
 	  "2": {
 		"label": "Gemcutter’s Studio (Enchanting)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
+		"xp": 3400,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 9
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -1808,17 +1865,18 @@
 	  },
 	  "3": {
 		"label": "Gemcutter’s Studio (Enchanting)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
+		"xp": 5000,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 10
+			  "qty": 7
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
@@ -1856,8 +1914,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Starforge (Faithcraft)",
-		"desc": "Unlocks Faithcraft building on this fragment. R1/2/3 rituals can be forged here.",
+		"desc": "Tier I full shell: 1 module slot; R1/2/3 rituals can be forged here.",
 		"level_req": 50,
+		"xp": 3800,
 		"inputs": {
 		  "struct": [
 			{
@@ -1887,17 +1946,18 @@
 	  },
 	  "2": {
 		"label": "Starforge (Faithcraft)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
+		"xp": 3700,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 9
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -1922,17 +1982,18 @@
 	  },
 	  "3": {
 		"label": "Starforge (Faithcraft)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III granite secure/reinforced upgrade: 3 module slots.",
 		"level_req": 70,
+		"xp": 5600,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 10
+			  "qty": 7
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
@@ -1970,8 +2031,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Wayshrine (Prayer)",
-		"desc": "Unlocks Prayer building on this fragment. R1/2/3 prayers can be bound here.",
+		"desc": "Tier I full shell: 1 module slot; R1/2/3 prayers can be bound here.",
 		"level_req": 50,
+		"xp": 3000,
 		"inputs": {
 		  "struct": [
 			{
@@ -2005,17 +2067,18 @@
 	  },
 	  "2": {
 		"label": "Wayshrine (Prayer)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
+		"xp": 2600,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 5
+			  "qty": 3
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 5
+			  "qty": 3
 			}
 		  ],
 		  "hardware": [
@@ -2040,17 +2103,18 @@
 	  },
 	  "3": {
 		"label": "Wayshrine (Prayer)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
+		"xp": 4200,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 6
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 6
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -2084,8 +2148,9 @@
 	"tiers": {
 	  "1": {
 		"label": "Loom House (Weaving)",
-		"desc": "Unlocks Weaving building on this fragment. R1/2/3 patterns can be woven here.",
+		"desc": "Tier I full shell: 1 module slot; R1/2/3 patterns can be woven here.",
 		"level_req": 40,
+		"xp": 2600,
 		"inputs": {
 		  "struct": [
 			{
@@ -2111,17 +2176,18 @@
 	  },
 	  "2": {
 		"label": "Loom House (Weaving)",
-		"desc": "Tier II shell: 2 module slots; upgrades existing pieces.",
+		"desc": "Tier II partial secure upgrade: 2 module slots.",
 		"level_req": 50,
+		"xp": 2000,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_basalt",
-			  "qty": 7
+			  "qty": 4
 			},
 			{
 			  "item": "floor_kit_basalt",
-			  "qty": 7
+			  "qty": 4
 			}
 		  ],
 		  "hardware": [
@@ -2131,7 +2197,7 @@
 			},
 			{
 			  "item": "fittings_kit_t3",
-			  "qty": 2
+			  "qty": 1
 			},
 			{
 			  "item": "security_kit_t5",
@@ -2142,23 +2208,24 @@
 	  },
 	  "3": {
 		"label": "Loom House (Weaving)",
-		"desc": "Tier III shell: 3 module slots; final upgrade for this tile.",
+		"desc": "Tier III granite/mechanical upgrade: 3 module slots.",
 		"level_req": 60,
+		"xp": 3200,
 		"inputs": {
 		  "struct": [
 			{
 			  "item": "wall_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			},
 			{
 			  "item": "floor_kit_granite",
-			  "qty": 8
+			  "qty": 5
 			}
 		  ],
 		  "hardware": [
 			{
 			  "item": "fastener_kit_t7",
-			  "qty": 3
+			  "qty": 2
 			},
 			{
 			  "item": "fittings_kit_t7",
