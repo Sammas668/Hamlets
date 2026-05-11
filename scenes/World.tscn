@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://ql7mnypnwy1x" path="res://scenes/ESC menu/save_panel.gd" id="4_hlk0d"]
 [ext_resource type="Script" uid="uid://cvxw5mk26n8od" path="res://scenes/ESC menu/settings_panel.gd" id="5_0uv0p"]
 [ext_resource type="Script" uid="uid://dx326gmopsmmy" path="res://scripts/loadpanel.gd" id="6_0uv0p"]
+[ext_resource type="Script" uid="uid://c1cwsqwyu0wux" path="res://ui/building_slot_drop_target.gd" id="7_b3faq"]
 [ext_resource type="PackedScene" uid="uid://drr474uy35gyy" path="res://scenes/Right Dock/right_dock.tscn" id="8_b3faq"]
 
 [node name="World" type="Node2D" unique_id=1619141292 groups=["World"]]
@@ -450,6 +451,7 @@ theme_override_constants/separation = 12
 [node name="BuildingSlot" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow" unique_id=895720341]
 custom_minimum_size = Vector2(68, 68)
 layout_mode = 2
+script = ExtResource("7_b3faq")
 
 [node name="BuildingSummary" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow" unique_id=2073077467]
 layout_mode = 2

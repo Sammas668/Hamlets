@@ -38,7 +38,7 @@
 		"label": "Grand Smithy (Smithing)",
 		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
-		"xp": 650,
+		"xp": 1150,
 		"inputs": {
 		  "struct": [
 			{
@@ -66,7 +66,7 @@
 		"label": "Grand Smithy (Smithing)",
 		"desc": "Tier III reinforced upgrade: 3 module slots.",
 		"level_req": 30,
-		"xp": 950,
+		"xp": 1600,
 		"inputs": {
 		  "struct": [
 			{
@@ -135,7 +135,7 @@
 		"label": "Training Arena (Melee)",
 		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
-		"xp": 450,
+		"xp": 750,
 		"inputs": {
 		  "struct": [
 			{
@@ -163,7 +163,7 @@
 		"label": "Training Arena (Melee)",
 		"desc": "Tier III reinforced upgrade: 3 module slots.",
 		"level_req": 30,
-		"xp": 700,
+		"xp": 1050,
 		"inputs": {
 		  "struct": [
 			{
@@ -232,7 +232,7 @@
 		"label": "Barracks (Defence)",
 		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
-		"xp": 700,
+		"xp": 1200,
 		"inputs": {
 		  "struct": [
 			{
@@ -260,7 +260,7 @@
 		"label": "Barracks (Defence)",
 		"desc": "Tier III reinforced upgrade: 3 module slots.",
 		"level_req": 30,
-		"xp": 1050,
+		"xp": 1700,
 		"inputs": {
 		  "struct": [
 			{
@@ -329,7 +329,7 @@
 		"label": "Archery Range (Ranged)",
 		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 30,
-		"xp": 650,
+		"xp": 1100,
 		"inputs": {
 		  "struct": [
 			{
@@ -357,7 +357,7 @@
 		"label": "Archery Range (Ranged)",
 		"desc": "Tier III basalt upgrade: 3 module slots.",
 		"level_req": 40,
-		"xp": 1100,
+		"xp": 1500,
 		"inputs": {
 		  "struct": [
 			{
@@ -426,7 +426,7 @@
 		"label": "Net Wharf (Fishing)",
 		"desc": "Tier II partial/mechanical upgrade: 2 module slots.",
 		"level_req": 30,
-		"xp": 800,
+		"xp": 1200,
 		"inputs": {
 		  "struct": [
 			{
@@ -458,7 +458,7 @@
 		"label": "Net Wharf (Fishing)",
 		"desc": "Tier III reinforced/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
-		"xp": 1250,
+		"xp": 1700,
 		"inputs": {
 		  "struct": [
 			{
@@ -531,7 +531,7 @@
 		"label": "Logging Yard (Woodcutting)",
 		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 30,
-		"xp": 650,
+		"xp": 1100,
 		"inputs": {
 		  "struct": [
 			{
@@ -559,7 +559,7 @@
 		"label": "Logging Yard (Woodcutting)",
 		"desc": "Tier III basalt/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
-		"xp": 1050,
+		"xp": 1500,
 		"inputs": {
 		  "struct": [
 			{
@@ -628,7 +628,7 @@
 		"label": "Construction Hall (Construction)",
 		"desc": "Tier II partial/mechanical upgrade: 2 module slots.",
 		"level_req": 30,
-		"xp": 1050,
+		"xp": 1650,
 		"inputs": {
 		  "struct": [
 			{
@@ -664,7 +664,7 @@
 		"label": "Construction Hall (Construction)",
 		"desc": "Tier III basalt reinforced/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
-		"xp": 1600,
+		"xp": 2300,
 		"inputs": {
 		  "struct": [
 			{
@@ -737,7 +737,7 @@
 		"label": "Hearth Kitchen (Cooking)",
 		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
-		"xp": 500,
+		"xp": 900,
 		"inputs": {
 		  "struct": [
 			{
@@ -765,7 +765,7 @@
 		"label": "Hearth Kitchen (Cooking)",
 		"desc": "Tier III partial/mechanical upgrade: 3 module slots.",
 		"level_req": 30,
-		"xp": 750,
+		"xp": 1250,
 		"inputs": {
 		  "struct": [
 			{
@@ -834,7 +834,7 @@
 		"label": "Forager’s Hut (Herbalism)",
 		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 20,
-		"xp": 400,
+		"xp": 750,
 		"inputs": {
 		  "struct": [
 			{
@@ -862,7 +862,7 @@
 		"label": "Forager’s Hut (Herbalism)",
 		"desc": "Tier III partial upgrade: 3 module slots.",
 		"level_req": 30,
-		"xp": 600,
+		"xp": 1050,
 		"inputs": {
 		  "struct": [
 			{
@@ -935,7 +935,7 @@
 		"label": "Alembic Workshop (Transmutation)",
 		"desc": "Tier II partial secure/mechanical upgrade: 2 module slots.",
 		"level_req": 50,
-		"xp": 1900,
+		"xp": 3250,
 		"inputs": {
 		  "struct": [
 			{
@@ -971,7 +971,7 @@
 		"label": "Alembic Workshop (Transmutation)",
 		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 60,
-		"xp": 3200,
+		"xp": 4550,
 		"inputs": {
 		  "struct": [
 			{
@@ -1048,7 +1048,7 @@
 		"label": "Prospector’s Shaft (Mining)",
 		"desc": "Tier II partial reinforced upgrade: 2 module slots.",
 		"level_req": 30,
-		"xp": 750,
+		"xp": 1150,
 		"inputs": {
 		  "struct": [
 			{
@@ -1080,7 +1080,7 @@
 		"label": "Prospector’s Shaft (Mining)",
 		"desc": "Tier III basalt reinforced/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
-		"xp": 1200,
+		"xp": 1600,
 		"inputs": {
 		  "struct": [
 			{
@@ -1153,7 +1153,7 @@
 		"label": "Farmstead (Farming)",
 		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 30,
-		"xp": 750,
+		"xp": 1250,
 		"inputs": {
 		  "struct": [
 			{
@@ -1181,7 +1181,7 @@
 		"label": "Farmstead (Farming)",
 		"desc": "Tier III basalt/mechanical upgrade: 3 module slots.",
 		"level_req": 40,
-		"xp": 1250,
+		"xp": 1750,
 		"inputs": {
 		  "struct": [
 			{
@@ -1250,7 +1250,7 @@
 		"label": "Village Inn (Charisma)",
 		"desc": "Tier II partial upgrade: 2 module slots.",
 		"level_req": 25,
-		"xp": 750,
+		"xp": 1200,
 		"inputs": {
 		  "struct": [
 			{
@@ -1278,7 +1278,7 @@
 		"label": "Village Inn (Charisma)",
 		"desc": "Tier III basalt secure upgrade: 3 module slots.",
 		"level_req": 50,
-		"xp": 1800,
+		"xp": 1700,
 		"inputs": {
 		  "struct": [
 			{
@@ -1351,7 +1351,7 @@
 		"label": "Spirit Lodge (Diplomacy)",
 		"desc": "Tier II partial secure/reinforced upgrade: 2 module slots.",
 		"level_req": 50,
-		"xp": 2300,
+		"xp": 3500,
 		"inputs": {
 		  "struct": [
 			{
@@ -1387,7 +1387,7 @@
 		"label": "Spirit Lodge (Diplomacy)",
 		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 60,
-		"xp": 3600,
+		"xp": 4900,
 		"inputs": {
 		  "struct": [
 			{
@@ -1468,7 +1468,7 @@
 		"label": "Summoner’s Circle (Leadership)",
 		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
-		"xp": 3400,
+		"xp": 4500,
 		"inputs": {
 		  "struct": [
 			{
@@ -1504,7 +1504,7 @@
 		"label": "Summoner’s Circle (Leadership)",
 		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
-		"xp": 5200,
+		"xp": 6300,
 		"inputs": {
 		  "struct": [
 			{
@@ -1585,7 +1585,7 @@
 		"label": "Arcanist’s Tower (Magic)",
 		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
-		"xp": 3800,
+		"xp": 5000,
 		"inputs": {
 		  "struct": [
 			{
@@ -1625,7 +1625,7 @@
 		"label": "Arcanist’s Tower (Magic)",
 		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
-		"xp": 5600,
+		"xp": 7000,
 		"inputs": {
 		  "struct": [
 			{
@@ -1710,7 +1710,7 @@
 		"label": "Star Observatory (Astromancy)",
 		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
-		"xp": 3600,
+		"xp": 4750,
 		"inputs": {
 		  "struct": [
 			{
@@ -1750,7 +1750,7 @@
 		"label": "Star Observatory (Astromancy)",
 		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
-		"xp": 5200,
+		"xp": 6650,
 		"inputs": {
 		  "struct": [
 			{
@@ -1831,7 +1831,7 @@
 		"label": "Gemcutter’s Studio (Enchanting)",
 		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
-		"xp": 3400,
+		"xp": 4500,
 		"inputs": {
 		  "struct": [
 			{
@@ -1867,7 +1867,7 @@
 		"label": "Gemcutter’s Studio (Enchanting)",
 		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
-		"xp": 5000,
+		"xp": 6300,
 		"inputs": {
 		  "struct": [
 			{
@@ -1948,7 +1948,7 @@
 		"label": "Starforge (Faithcraft)",
 		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
-		"xp": 3700,
+		"xp": 4750,
 		"inputs": {
 		  "struct": [
 			{
@@ -1984,7 +1984,7 @@
 		"label": "Starforge (Faithcraft)",
 		"desc": "Tier III granite secure/reinforced upgrade: 3 module slots.",
 		"level_req": 70,
-		"xp": 5600,
+		"xp": 6650,
 		"inputs": {
 		  "struct": [
 			{
@@ -2069,7 +2069,7 @@
 		"label": "Wayshrine (Prayer)",
 		"desc": "Tier II granite partial upgrade: 2 module slots.",
 		"level_req": 60,
-		"xp": 2600,
+		"xp": 3750,
 		"inputs": {
 		  "struct": [
 			{
@@ -2105,7 +2105,7 @@
 		"label": "Wayshrine (Prayer)",
 		"desc": "Tier III granite reinforced upgrade: 3 module slots.",
 		"level_req": 70,
-		"xp": 4200,
+		"xp": 5250,
 		"inputs": {
 		  "struct": [
 			{
@@ -2178,7 +2178,7 @@
 		"label": "Loom House (Weaving)",
 		"desc": "Tier II partial secure upgrade: 2 module slots.",
 		"level_req": 50,
-		"xp": 2000,
+		"xp": 3250,
 		"inputs": {
 		  "struct": [
 			{
@@ -2210,7 +2210,7 @@
 		"label": "Loom House (Weaving)",
 		"desc": "Tier III granite/mechanical upgrade: 3 module slots.",
 		"level_req": 60,
-		"xp": 3200,
+		"xp": 4550,
 		"inputs": {
 		  "struct": [
 			{

@@ -1,4 +1,5 @@
-# res://autoloads/ConstructionSystem.gd
+# res://scripts/autoload/construction_system.gd
+# Also safe if your project path comment says: res://autoloads/ConstructionSystem.gd
 extends Node
 
 ## ConstructionSystem
@@ -6,83 +7,43 @@ extends Node
 ## Locked Construction design:
 ## - Construction Materials recipes craft boxed kits from logs, stone, and Smithing hardware.
 ## - Building base tiers consume only construction kits.
+## - Base building recipes now craft placeable building inventory items.
+## - Placeable building items are dragged from inventory into the SelectionHUD building slot.
+## - Placed buildings are stored by tile coordinate.
+## - Removing a placed building refunds 25% of the kits used to craft it.
 ## - Module installs consume only construction kits.
 ## - No timber-processing pattern remapping.
 ## - No cut_log / cut_stone material tier resolver.
 ## - Base buildings expose one recipe per tier: "<base_id>:t1", "<base_id>:t2", "<base_id>:t3".
-##
-## Expected data:
-##
-## construction_materials.json
-## {
-##   "fastener_kit_t1": {
-##     "id": "fastener_kit_t1",
-##     "building": "Construction Materials",
-##     "skill": "construction",
-##     "kind": "material",
-##     "part": "Fastener Kit (T1)",
-##     "req_con_lv": 1,
-##     "struct": { "log_pine": 1 },
-##     "hardware": { "nails": 40, "rivets": 8 }
-##   }
-## }
-##
-## buildings.json
-## {
-##   "hearth_kitchen_base": {
-##     "kind": "base",
-##     "building": "Hearth Kitchen",
-##     "skill": "cooking",
-##     "tiers": {
-##       "1": {
-##         "level_req": 10,
-##         "inputs": {
-##           "struct": [
-##             { "item": "wall_kit_limestone", "qty": 4 },
-##             { "item": "floor_kit_limestone", "qty": 3 }
-##           ],
-##           "hardware": [
-##             { "item": "fastener_kit_t1", "qty": 2 },
-##             { "item": "fittings_kit_t1", "qty": 1 }
-##           ]
-##         }
-##       }
-##     }
-##   }
-## }
-##
-## modules.json
-## {
-##   "hearth_kitchen_oven": {
-##     "kind": "module",
-##     "building": "Hearth Kitchen",
-##     "skill": "cooking",
-##     "part": "Oven",
-##     "construction_level_req": 20,
-##     "req_skill_lv": 1,
-##     "struct": { "wall_kit_clay": 1, "floor_kit_clay": 1 },
-##     "hardware": { "fastener_kit_t2": 1, "fittings_kit_t2": 1 }
-##   }
-## }
 
 signal construction_recipes_changed
 signal item_constructed(item_id: StringName, count: int)
 signal construction_recipe_completed(recipe_id: StringName, output_id: StringName, count: int, recipe: Dictionary)
+signal building_changed(ax: Vector2i)
 
 const BASE_ACTION_TIME := 2.4
+const BUILDING_REMOVE_ACTION_TIME := 6.0
+const BUILDING_REMOVE_REFUND_RATE := 0.25
+
 const CONSTRUCTION_SKILL_ID := "construction"
 
 const BUILDINGS_JSON_PATH := "res://data/specs/resources/buildings.json"
 const MODULES_JSON_PATH := "res://data/specs/resources/modules.json"
 const MATERIALS_JSON_PATH := "res://data/specs/resources/construction_materials.json"
 
+const CONSTRUCTION_ICON_ROOT := "res://assets/items/Construction"
+
 const GROUP_BASE := &"building_base"
 const GROUP_MODULE := &"building_module"
 const GROUP_MATERIAL := &"building_material"
+const GROUP_REMOVE := &"building_remove"
 
 const KIND_BASE := "base"
 const KIND_MODULE := "module"
 const KIND_MATERIAL := "material"
+const KIND_REMOVE_BUILDING := "remove_building"
+
+const REMOVE_BUILDING_RECIPE_PREFIX := "remove_building:"
 
 ## If true, base/module recipes warn when they consume anything outside the locked kit list.
 ## Material recipes are allowed to consume raw logs, raw stone, and smithing parts.
@@ -131,9 +92,43 @@ var _recipe_cache: Dictionary = {}
 ## Used to prevent repeated warning spam.
 var _warned_messages: Dictionary = {}
 
+## Placed building state:
+## key "x,y" -> {
+##   "base_item_id": "building_grand_smithy_t1",
+##   "base_id": "grand_smithy_base",
+##   "recipe_id": "grand_smithy_base:t1",
+##   "building": "Grand Smithy",
+##   "tier": 1,
+##   "inputs": [],
+##   "modules": []
+## }
+var _placed_buildings: Dictionary = {}
+
 
 func _ready() -> void:
 	reload_blueprints()
+
+
+# -------------------------------------------------------------------
+# Save / load runtime state
+# -------------------------------------------------------------------
+
+func to_save_dict() -> Dictionary:
+	return {
+		"placed_buildings": _placed_buildings.duplicate(true),
+	}
+
+
+func from_save_dict(d: Dictionary) -> void:
+	_placed_buildings.clear()
+
+	var placed_v: Variant = d.get("placed_buildings", {})
+	if placed_v is Dictionary:
+		_placed_buildings = (placed_v as Dictionary).duplicate(true)
+
+
+func reset_runtime_state() -> void:
+	_placed_buildings.clear()
 
 
 # -------------------------------------------------------------------
@@ -158,7 +153,7 @@ func reload_blueprints() -> void:
 		if typeof(bp_v) != TYPE_DICTIONARY:
 			continue
 
-		var bp: Dictionary = bp_v
+		var bp: Dictionary = bp_v as Dictionary
 		var kind := String(bp.get("kind", "")).strip_edges().to_lower()
 
 		match kind:
@@ -209,7 +204,7 @@ func _load_json_into(dst: Dictionary, path: String) -> void:
 	var data_any: Variant = json.data
 
 	if typeof(data_any) == TYPE_DICTIONARY:
-		var data_dict: Dictionary = data_any
+		var data_dict: Dictionary = data_any as Dictionary
 		for key_v in data_dict.keys():
 			var key := String(key_v)
 			var entry_v: Variant = data_dict[key_v]
@@ -218,7 +213,7 @@ func _load_json_into(dst: Dictionary, path: String) -> void:
 				_warn_once("[Construction] Skipping non-dictionary entry '%s' in %s." % [key, path])
 				continue
 
-			var entry: Dictionary = entry_v
+			var entry: Dictionary = entry_v as Dictionary
 			var id_str := String(entry.get("id", key)).strip_edges()
 			if id_str == "":
 				id_str = key
@@ -228,7 +223,7 @@ func _load_json_into(dst: Dictionary, path: String) -> void:
 			dst[id_str] = entry
 
 	elif typeof(data_any) == TYPE_ARRAY:
-		var data_arr: Array = data_any
+		var data_arr: Array = data_any as Array
 		for i in range(data_arr.size()):
 			var entry_v: Variant = data_arr[i]
 
@@ -236,7 +231,7 @@ func _load_json_into(dst: Dictionary, path: String) -> void:
 				_warn_once("[Construction] Skipping non-dictionary array entry %d in %s." % [i, path])
 				continue
 
-			var entry: Dictionary = entry_v
+			var entry: Dictionary = entry_v as Dictionary
 			var id_str := String(entry.get("id", "")).strip_edges()
 			if id_str == "":
 				_warn_once("[Construction] Skipping array entry %d in %s because it has no id." % [i, path])
@@ -266,6 +261,16 @@ func _make_tier_recipe_id(base_id: StringName, tier: int) -> StringName:
 		return base_id
 
 	return StringName("%s:t%d" % [String(base_id), tier])
+
+
+func _make_building_item_id(base_id: StringName, tier: int) -> StringName:
+	var s := String(base_id)
+
+	# grand_smithy_base -> grand_smithy
+	if s.ends_with("_base"):
+		s = s.substr(0, s.length() - "_base".length())
+
+	return StringName("building_%s_t%d" % [s, tier])
 
 
 ## Supports:
@@ -304,6 +309,30 @@ func _parse_tier_from_id(recipe_id: StringName) -> Dictionary:
 	}
 
 
+func _is_remove_building_recipe_id(recipe_id: StringName) -> bool:
+	return String(recipe_id).begins_with(REMOVE_BUILDING_RECIPE_PREFIX)
+
+
+func _make_remove_building_recipe_id(ax: Vector2i) -> StringName:
+	return StringName("%s%d,%d" % [REMOVE_BUILDING_RECIPE_PREFIX, ax.x, ax.y])
+
+
+func _parse_remove_building_recipe_id(recipe_id: StringName) -> Dictionary:
+	var s := String(recipe_id)
+	if not s.begins_with(REMOVE_BUILDING_RECIPE_PREFIX):
+		return {}
+
+	var payload := s.substr(REMOVE_BUILDING_RECIPE_PREFIX.length()).strip_edges()
+	var parts := payload.split(",", false)
+
+	if parts.size() != 2:
+		return {}
+
+	return {
+		"ax": Vector2i(int(parts[0]), int(parts[1])),
+	}
+
+
 func _get_blueprint(id: StringName) -> Dictionary:
 	var key := String(id)
 	if not _blueprints.has(key):
@@ -313,7 +342,7 @@ func _get_blueprint(id: StringName) -> Dictionary:
 	if typeof(bp_v) != TYPE_DICTIONARY:
 		return {}
 
-	return bp_v
+	return bp_v as Dictionary
 
 
 # -------------------------------------------------------------------
@@ -329,7 +358,7 @@ func _get_tiers(bp: Dictionary) -> Dictionary:
 	if typeof(tiers_v) != TYPE_DICTIONARY:
 		return {}
 
-	return tiers_v
+	return tiers_v as Dictionary
 
 
 func _get_sorted_tier_numbers(bp: Dictionary) -> Array:
@@ -360,6 +389,14 @@ func _get_primary_tier_index(bp: Dictionary) -> int:
 	return int(sorted[0])
 
 
+func _get_tier_max(bp: Dictionary) -> int:
+	var sorted := _get_sorted_tier_numbers(bp)
+	if sorted.is_empty():
+		return 0
+
+	return int(sorted[sorted.size() - 1])
+
+
 func _get_tier_data(bp: Dictionary, tier: int) -> Dictionary:
 	if tier <= 0:
 		tier = _get_primary_tier_index(bp)
@@ -377,7 +414,7 @@ func _get_tier_data(bp: Dictionary, tier: int) -> Dictionary:
 	if typeof(tier_v) != TYPE_DICTIONARY:
 		return {}
 
-	return tier_v
+	return tier_v as Dictionary
 
 
 func _get_build_tier_from_recipe_id(recipe_id: StringName, bp: Dictionary) -> int:
@@ -429,6 +466,13 @@ func _ensure_bank_with(methods: Array[StringName]) -> bool:
 func _resolve_item_label(id: StringName) -> String:
 	var fallback := String(id)
 
+	# Avoid recursion for generated construction building items.
+	if String(id).begins_with("building_"):
+		var info := get_building_item_info(id)
+		if not info.is_empty():
+			return String(info.get("label", info.get("building", fallback)))
+		return fallback
+
 	if typeof(Items) != TYPE_NIL \
 	and Items.has_method("is_valid") \
 	and Items.has_method("display_name") \
@@ -439,6 +483,10 @@ func _resolve_item_label(id: StringName) -> String:
 
 
 func _resolve_item_icon_path(id: StringName) -> Variant:
+	# Avoid Items -> ConstructionSystem -> Items recursion for generated building IDs.
+	if String(id).begins_with("building_"):
+		return "%s/%s.png" % [CONSTRUCTION_ICON_ROOT, String(id)]
+
 	if typeof(Items) != TYPE_NIL \
 	and Items.has_method("is_valid") \
 	and Items.has_method("get_icon_path") \
@@ -466,6 +514,315 @@ func get_locked_construction_kit_ids() -> Array:
 
 
 # -------------------------------------------------------------------
+# Placed building state
+# -------------------------------------------------------------------
+
+func _coord_key(ax: Vector2i) -> String:
+	return "%d,%d" % [ax.x, ax.y]
+
+
+func has_building_at(ax: Vector2i) -> bool:
+	return _placed_buildings.has(_coord_key(ax))
+
+
+func get_building_at(ax: Vector2i) -> Dictionary:
+	var key := _coord_key(ax)
+	if not _placed_buildings.has(key):
+		return {}
+
+	var v: Variant = _placed_buildings[key]
+	return (v as Dictionary).duplicate(true) if v is Dictionary else {}
+
+
+func get_all_placed_buildings() -> Dictionary:
+	return _placed_buildings.duplicate(true)
+
+
+func clear_building_at(ax: Vector2i) -> void:
+	var key := _coord_key(ax)
+	if not _placed_buildings.has(key):
+		return
+
+	_placed_buildings.erase(key)
+	building_changed.emit(ax)
+
+
+func _get_recipe_id_for_building_item(item_id: StringName) -> StringName:
+	var item_s := String(item_id)
+
+	for key_v in _blueprints.keys():
+		var bp_id := StringName(String(key_v))
+		var bp := _get_blueprint(bp_id)
+		if bp.is_empty():
+			continue
+
+		var kind := String(bp.get("kind", "")).strip_edges().to_lower()
+		if kind != KIND_BASE:
+			continue
+
+		if _has_tiers(bp):
+			for tier_v in _get_sorted_tier_numbers(bp):
+				var tier := int(tier_v)
+				var tier_data := _get_tier_data(bp, tier)
+				var expected := String(tier_data.get(
+					"output_id",
+					bp.get("output_id", String(_make_building_item_id(bp_id, tier)))
+				))
+
+				if expected == item_s:
+					return _make_tier_recipe_id(bp_id, tier)
+		else:
+			var tier := int(bp.get("build_tier", bp.get("tier", 1)))
+			if tier <= 0:
+				tier = 1
+
+			var expected := String(bp.get("output_id", String(_make_building_item_id(bp_id, tier))))
+			if expected == item_s:
+				return _make_tier_recipe_id(bp_id, tier)
+
+	return StringName("")
+
+
+func get_building_item_info(item_id: StringName) -> Dictionary:
+	var recipe_id := _get_recipe_id_for_building_item(item_id)
+	if String(recipe_id) == "":
+		return {}
+
+	var rec := _build_recipe_for(recipe_id)
+	if rec.is_empty():
+		return {}
+
+	return rec.duplicate(true)
+
+
+func is_placeable_building_item(item_id: StringName) -> bool:
+	return not get_building_item_info(item_id).is_empty()
+
+
+func get_placeable_building_item_ids() -> Array[StringName]:
+	var out: Array[StringName] = []
+
+	for rec_v in get_all_recipes():
+		if typeof(rec_v) != TYPE_DICTIONARY:
+			continue
+
+		var rec: Dictionary = rec_v as Dictionary
+		if String(rec.get("kind", "")) != KIND_BASE:
+			continue
+
+		var output_id := StringName(String(rec.get("output_id", "")))
+		if String(output_id) != "":
+			out.append(output_id)
+
+	out.sort()
+	return out
+
+
+func get_place_building_block_reason(ax: Vector2i, item_id: StringName) -> String:
+	if has_building_at(ax):
+		return "This tile already has a building."
+
+	if not is_placeable_building_item(item_id):
+		return "This item is not a placeable building."
+
+	if typeof(Bank) == TYPE_NIL:
+		return "Bank is unavailable."
+
+	if not Bank.has_method("has_at_least"):
+		return "Bank is missing has_at_least()."
+
+	if not Bank.has_at_least(item_id, 1):
+		return "You do not have this building item."
+
+	return ""
+
+
+func can_place_building_item_at(ax: Vector2i, item_id: StringName) -> bool:
+	return get_place_building_block_reason(ax, item_id) == ""
+
+
+func place_building_item_at(ax: Vector2i, item_id: StringName) -> bool:
+	var reason := get_place_building_block_reason(ax, item_id)
+	if reason != "":
+		push_warning("[Construction] Cannot place building: %s" % reason)
+		return false
+
+	var rec := get_building_item_info(item_id)
+	if rec.is_empty():
+		push_warning("[Construction] Cannot place building: no recipe info for %s." % String(item_id))
+		return false
+
+	if not _ensure_bank_with([&"take"]):
+		return false
+
+	Bank.take(item_id, 1)
+
+	var inputs_v: Variant = rec.get("inputs", [])
+	var saved_inputs: Array = []
+	if inputs_v is Array:
+		saved_inputs = (inputs_v as Array).duplicate(true)
+
+	var state := {
+		"base_item_id": String(item_id),
+		"base_id": String(rec.get("base_id", "")),
+		"recipe_id": String(rec.get("id", "")),
+		"building": String(rec.get("building", rec.get("label", String(item_id)))),
+		"label": String(rec.get("label", rec.get("building", String(item_id)))),
+		"linked_skill": String(rec.get("linked_skill", "")),
+		"tier": int(rec.get("build_tier", 1)),
+		"inputs": saved_inputs,
+		"modules": [],
+	}
+
+	_placed_buildings[_coord_key(ax)] = state
+	building_changed.emit(ax)
+	return true
+
+
+func _refund_inputs(inputs: Array, rate: float) -> Dictionary:
+	var refunded: Dictionary = {}
+
+	if typeof(Bank) == TYPE_NIL:
+		return refunded
+
+	if not Bank.has_method("add"):
+		return refunded
+
+	for input_v in inputs:
+		if not (input_v is Dictionary):
+			continue
+
+		var input: Dictionary = input_v as Dictionary
+		var item_id := StringName(String(input.get("item", "")))
+		var qty := int(input.get("qty", 0))
+
+		if String(item_id) == "" or qty <= 0:
+			continue
+
+		var refund_qty := int(floor(float(qty) * rate))
+		if refund_qty <= 0:
+			continue
+
+		Bank.add(item_id, refund_qty)
+		refunded[String(item_id)] = int(refunded.get(String(item_id), 0)) + refund_qty
+
+	return refunded
+
+
+func remove_building_at(ax: Vector2i, refund: bool = true) -> Dictionary:
+	var key := _coord_key(ax)
+
+	if not _placed_buildings.has(key):
+		return {
+			"ok": false,
+			"reason": "No building on this tile.",
+			"refunded": {},
+		}
+
+	var state_v: Variant = _placed_buildings[key]
+	if not (state_v is Dictionary):
+		_placed_buildings.erase(key)
+		building_changed.emit(ax)
+		return {
+			"ok": false,
+			"reason": "Invalid building state.",
+			"refunded": {},
+		}
+
+	var state: Dictionary = state_v as Dictionary
+	var refunded: Dictionary = {}
+
+	if refund:
+		var inputs_v: Variant = state.get("inputs", [])
+		if inputs_v is Array:
+			refunded = _refund_inputs(inputs_v as Array, BUILDING_REMOVE_REFUND_RATE)
+
+		# Future module handling:
+		# If modules later store their own "inputs", refund 25% of each module here too.
+
+	_placed_buildings.erase(key)
+	building_changed.emit(ax)
+
+	return {
+		"ok": true,
+		"reason": "",
+		"refunded": refunded,
+	}
+
+
+func _describe_refunded(refunded: Dictionary) -> String:
+	if refunded.is_empty():
+		return "No kits were refunded."
+
+	var parts: Array[String] = []
+	for key_v in refunded.keys():
+		var item_id := StringName(String(key_v))
+		var qty := int(refunded[key_v])
+		if qty <= 0:
+			continue
+
+		parts.append("%d× %s" % [
+			qty,
+			_resolve_item_label(item_id)
+		])
+
+	if parts.is_empty():
+		return "No kits were refunded."
+
+	return ", ".join(parts)
+
+
+func get_remove_building_recipe(ax: Vector2i) -> Dictionary:
+	var building := get_building_at(ax)
+	if building.is_empty():
+		return {}
+
+	var building_name := String(building.get("building", building.get("label", "Building")))
+	var recipe_id := _make_remove_building_recipe_id(ax)
+
+	return {
+		"id": recipe_id,
+		"base_id": recipe_id,
+		"output_id": StringName(""),
+		"output_qty": 0,
+
+		"label": "Remove %s" % building_name,
+		"desc": "Dismantles this building and refunds 25% of the kits used to build it.",
+		"effect_raw": "Refunds 25% of the building kit cost.",
+		"level_req": 1,
+		"xp": 10,
+		"duration": BUILDING_REMOVE_ACTION_TIME,
+		"icon": "",
+		"inputs": [],
+		"outputs": [],
+		"group": GROUP_REMOVE,
+
+		"building": building_name,
+		"linked_skill": String(building.get("linked_skill", "")),
+		"skill": CONSTRUCTION_SKILL_ID,
+		"kind": KIND_REMOVE_BUILDING,
+		"part": "REMOVE",
+		"role": "Remove Building",
+
+		"build_tier": int(building.get("tier", 1)),
+		"module_tier": 0,
+		"mat_tier": 0,
+		"min_building_tier": int(building.get("tier", 1)),
+		"delta_lv": 0,
+
+		"req_skill_lv": 0,
+		"construction_level_req": 1,
+
+		"tier_min": 0,
+		"tier_max": 0,
+		"tier_default": 0,
+		"is_pattern": false,
+		"is_install_recipe": false,
+		"is_remove_recipe": true,
+	}
+
+
+# -------------------------------------------------------------------
 # Input composition
 # -------------------------------------------------------------------
 
@@ -478,11 +835,15 @@ func _append_input(inputs: Array, item_id: StringName, qty: int, section: String
 		if typeof(existing_v) != TYPE_DICTIONARY:
 			continue
 
-		var existing: Dictionary = existing_v
+		var existing: Dictionary = existing_v as Dictionary
 		if StringName(existing.get("item", StringName(""))) == item_id:
 			existing["qty"] = int(existing.get("qty", 0)) + qty
 
-			var sections: Array = existing.get("sections", []) as Array
+			var sections: Array = []
+			var sections_v: Variant = existing.get("sections", [])
+			if sections_v is Array:
+				sections = sections_v as Array
+
 			if not sections.has(section):
 				sections.append(section)
 			existing["sections"] = sections
@@ -500,7 +861,7 @@ func _append_input(inputs: Array, item_id: StringName, qty: int, section: String
 func _append_inputs_from_value(inputs: Array, value: Variant, section: String, require_kits: bool, context_id: String) -> void:
 	match typeof(value):
 		TYPE_DICTIONARY:
-			var map: Dictionary = value
+			var map: Dictionary = value as Dictionary
 			for key_v in map.keys():
 				var item_id := StringName(String(key_v).strip_edges())
 				var qty := int(map[key_v])
@@ -516,12 +877,12 @@ func _append_inputs_from_value(inputs: Array, value: Variant, section: String, r
 				_append_input(inputs, item_id, qty, section)
 
 		TYPE_ARRAY:
-			var arr: Array = value
+			var arr: Array = value as Array
 			for entry_v in arr:
 				if typeof(entry_v) != TYPE_DICTIONARY:
 					continue
 
-				var entry: Dictionary = entry_v
+				var entry: Dictionary = entry_v as Dictionary
 				var item_id := StringName(String(entry.get("item", "")).strip_edges())
 				var qty := int(entry.get("qty", 0))
 				if String(item_id) == "" or qty <= 0:
@@ -551,7 +912,7 @@ func _compose_inputs_for_base_tier(bp_id: StringName, bp: Dictionary, tier: int)
 		_warn_once("[Construction] Base recipe %s:t%d has no valid inputs block." % [String(bp_id), tier])
 		return inputs
 
-	var inputs_block: Dictionary = inputs_block_v
+	var inputs_block: Dictionary = inputs_block_v as Dictionary
 	var context_id := "%s:t%d" % [String(bp_id), tier]
 
 	_append_inputs_from_value(inputs, inputs_block.get("struct", []), "struct", true, context_id)
@@ -614,6 +975,8 @@ func _kind_to_group(kind: String) -> StringName:
 			return GROUP_MODULE
 		KIND_MATERIAL, "building_material":
 			return GROUP_MATERIAL
+		KIND_REMOVE_BUILDING, "building_remove":
+			return GROUP_REMOVE
 		_:
 			return StringName("")
 
@@ -625,7 +988,7 @@ func _default_xp_for(inputs: Array, level_req: int, kind: String) -> int:
 		if typeof(input_v) != TYPE_DICTIONARY:
 			continue
 
-		var input: Dictionary = input_v
+		var input: Dictionary = input_v as Dictionary
 		total_qty += int(input.get("qty", 0))
 
 	if total_qty <= 0:
@@ -680,13 +1043,16 @@ func _build_base_recipe(recipe_id: StringName, bp_id: StringName, bp: Dictionary
 	var inputs := _compose_inputs_for_base_tier(bp_id, bp, build_tier)
 	var xp_gain := int(tier_data.get("xp", bp.get("xp", _default_xp_for(inputs, level_req, KIND_BASE))))
 
-	var output_id := StringName(String(bp.get("output_id", String(bp_id))))
+	var output_id := StringName(String(tier_data.get(
+		"output_id",
+		bp.get("output_id", String(_make_building_item_id(bp_id, build_tier)))
+	)))
 
 	var rec := {
 		"id": recipe_id,
 		"base_id": bp_id,
 		"output_id": output_id,
-		"output_qty": _get_output_qty(bp),
+		"output_qty": 1,
 
 		"label": label,
 		"desc": desc,
@@ -699,7 +1065,7 @@ func _build_base_recipe(recipe_id: StringName, bp_id: StringName, bp: Dictionary
 
 		"building": building_name,
 		"linked_skill": linked_skill,
-		"skill": linked_skill,
+		"skill": CONSTRUCTION_SKILL_ID,
 		"attr": attr,
 		"kind": KIND_BASE,
 		"part": "BASE",
@@ -715,10 +1081,11 @@ func _build_base_recipe(recipe_id: StringName, bp_id: StringName, bp: Dictionary
 		"construction_level_req": level_req,
 
 		"tier_min": 1,
-		"tier_max": max(1, _get_sorted_tier_numbers(bp).size()),
+		"tier_max": max(1, _get_tier_max(bp)),
 		"tier_default": build_tier,
 		"is_pattern": false,
-		"is_install_recipe": true
+		"is_install_recipe": false,
+		"placeable_kind": "building_base",
 	}
 
 	return rec
@@ -755,7 +1122,7 @@ func _build_module_recipe(recipe_id: StringName, bp_id: StringName, bp: Dictiona
 
 		"building": building_name,
 		"linked_skill": linked_skill,
-		"skill": linked_skill,
+		"skill": CONSTRUCTION_SKILL_ID,
 		"kind": KIND_MODULE,
 		"part": part,
 		"role": role,
@@ -815,7 +1182,7 @@ func _build_material_recipe(recipe_id: StringName, bp_id: StringName, bp: Dictio
 
 		"building": building_name,
 		"linked_skill": linked_skill,
-		"skill": linked_skill,
+		"skill": CONSTRUCTION_SKILL_ID,
 		"kind": KIND_MATERIAL,
 		"part": part,
 		"role": String(bp.get("role", "Construction Kit")),
@@ -899,6 +1266,14 @@ func _build_fallback_recipe(recipe_id: StringName, bp_id: StringName, bp: Dictio
 
 
 func _build_recipe_for(recipe_id: StringName) -> Dictionary:
+	if _is_remove_building_recipe_id(recipe_id):
+		var parsed_remove := _parse_remove_building_recipe_id(recipe_id)
+		if parsed_remove.is_empty():
+			return {}
+
+		var ax: Vector2i = parsed_remove.get("ax", Vector2i.ZERO)
+		return get_remove_building_recipe(ax)
+
 	if _recipe_cache.has(recipe_id):
 		return _recipe_cache[recipe_id]
 
@@ -966,7 +1341,7 @@ func get_recipes_for_level(con_lv: int) -> Array:
 		if typeof(rec_v) != TYPE_DICTIONARY:
 			continue
 
-		var rec: Dictionary = rec_v
+		var rec: Dictionary = rec_v as Dictionary
 		var level_req := int(rec.get("level_req", rec.get("construction_level_req", 1)))
 
 		if level_req <= con_lv:
@@ -986,7 +1361,7 @@ func get_recipes_for_level_and_kind(con_lv: int, kind: String) -> Array:
 		if typeof(rec_v) != TYPE_DICTIONARY:
 			continue
 
-		var rec: Dictionary = rec_v
+		var rec: Dictionary = rec_v as Dictionary
 		if StringName(rec.get("group", StringName(""))) == desired_group:
 			out.append(rec)
 
@@ -1000,7 +1375,7 @@ func get_recipes_for_building(con_lv: int, building_name: String) -> Array:
 		if typeof(rec_v) != TYPE_DICTIONARY:
 			continue
 
-		var rec: Dictionary = rec_v
+		var rec: Dictionary = rec_v as Dictionary
 		if String(rec.get("building", "")) == building_name:
 			out.append(rec)
 
@@ -1028,8 +1403,13 @@ func has_recipe(recipe_id: StringName) -> bool:
 
 
 func has_part(id: String) -> bool:
-	var parsed := _parse_recipe_id(StringName(id))
-	var bp_id: StringName = parsed.get("base_id", StringName(id))
+	var id_name := StringName(id)
+
+	if is_placeable_building_item(id_name):
+		return true
+
+	var parsed := _parse_recipe_id(id_name)
+	var bp_id: StringName = parsed.get("base_id", id_name)
 	var tier := int(parsed.get("tier", 0))
 
 	if not _blueprints.has(String(bp_id)):
@@ -1046,12 +1426,18 @@ func has_part(id: String) -> bool:
 
 
 func get_part_display_name(id: String) -> String:
-	var recipe := _build_recipe_for(StringName(id))
+	var item_id := StringName(id)
+
+	var placeable := get_building_item_info(item_id)
+	if not placeable.is_empty():
+		return String(placeable.get("label", placeable.get("building", id)))
+
+	var recipe := _build_recipe_for(item_id)
 	if not recipe.is_empty():
 		return String(recipe.get("label", id))
 
-	var parsed := _parse_recipe_id(StringName(id))
-	var bp_id: StringName = parsed.get("base_id", StringName(id))
+	var parsed := _parse_recipe_id(item_id)
+	var bp_id: StringName = parsed.get("base_id", item_id)
 	var bp := _get_blueprint(bp_id)
 
 	if bp.is_empty():
@@ -1069,7 +1455,10 @@ func get_part_display_name(id: String) -> String:
 	return "%s – %s" % [building_name, part]
 
 
-func get_action_time(_recipe_id: StringName = StringName("")) -> float:
+func get_action_time(recipe_id: StringName = StringName("")) -> float:
+	if _is_remove_building_recipe_id(recipe_id):
+		return BUILDING_REMOVE_ACTION_TIME
+
 	return BASE_ACTION_TIME
 
 
@@ -1080,6 +1469,9 @@ func get_action_time(_recipe_id: StringName = StringName("")) -> float:
 func get_missing_inputs(recipe_id: StringName) -> Array:
 	var missing: Array = []
 
+	if _is_remove_building_recipe_id(recipe_id):
+		return missing
+
 	if not _ensure_bank_with([&"amount"]):
 		return missing
 
@@ -1087,14 +1479,18 @@ func get_missing_inputs(recipe_id: StringName) -> Array:
 	if rec.is_empty():
 		return missing
 
-	var inputs: Array = rec.get("inputs", []) as Array
+	var inputs_v: Variant = rec.get("inputs", [])
+	if not (inputs_v is Array):
+		return missing
+
+	var inputs: Array = inputs_v as Array
 
 	for input_v in inputs:
 		if typeof(input_v) != TYPE_DICTIONARY:
 			continue
 
-		var input: Dictionary = input_v
-		var item_id := StringName(input.get("item", StringName("")))
+		var input: Dictionary = input_v as Dictionary
+		var item_id := StringName(String(input.get("item", "")))
 		var need := int(input.get("qty", 0))
 		if String(item_id) == "" or need <= 0:
 			continue
@@ -1113,6 +1509,14 @@ func get_missing_inputs(recipe_id: StringName) -> Array:
 
 
 func can_construct(recipe_id: StringName) -> bool:
+	if _is_remove_building_recipe_id(recipe_id):
+		var parsed_remove := _parse_remove_building_recipe_id(recipe_id)
+		if parsed_remove.is_empty():
+			return false
+
+		var ax: Vector2i = parsed_remove.get("ax", Vector2i.ZERO)
+		return has_building_at(ax)
+
 	if _build_recipe_for(recipe_id).is_empty():
 		return false
 
@@ -1129,7 +1533,7 @@ func describe_missing_inputs(recipe_id: StringName) -> String:
 		if typeof(entry_v) != TYPE_DICTIONARY:
 			continue
 
-		var entry: Dictionary = entry_v
+		var entry: Dictionary = entry_v as Dictionary
 		parts.append("%s %d/%d" % [
 			String(entry.get("label", entry.get("item", ""))),
 			int(entry.get("have", 0)),
@@ -1157,6 +1561,9 @@ func do_construction_work(recipe_id: StringName) -> Dictionary:
 		result["loot_desc"] = "No construction recipe selected."
 		return result
 
+	if _is_remove_building_recipe_id(recipe_id):
+		return _do_remove_building_work(recipe_id)
+
 	if not _ensure_bank_with([&"amount", &"take", &"add"]):
 		result["loot_desc"] = "Bank API missing required methods."
 		return result
@@ -1166,7 +1573,12 @@ func do_construction_work(recipe_id: StringName) -> Dictionary:
 		result["loot_desc"] = "Unknown construction recipe."
 		return result
 
-	var inputs: Array = rec.get("inputs", []) as Array
+	var inputs_v: Variant = rec.get("inputs", [])
+	if not (inputs_v is Array):
+		result["loot_desc"] = "Construction recipe has invalid inputs."
+		return result
+
+	var inputs: Array = inputs_v as Array
 	var label := String(rec.get("label", String(recipe_id)))
 
 	if inputs.is_empty():
@@ -1185,8 +1597,8 @@ func do_construction_work(recipe_id: StringName) -> Dictionary:
 		if typeof(input_v) != TYPE_DICTIONARY:
 			continue
 
-		var input: Dictionary = input_v
-		var item_id := StringName(input.get("item", StringName("")))
+		var input: Dictionary = input_v as Dictionary
+		var item_id := StringName(String(input.get("item", "")))
 		var qty := int(input.get("qty", 0))
 
 		if String(item_id) == "" or qty <= 0:
@@ -1194,7 +1606,7 @@ func do_construction_work(recipe_id: StringName) -> Dictionary:
 
 		Bank.take(item_id, qty)
 
-	var output_id := StringName(rec.get("output_id", recipe_id))
+	var output_id := StringName(String(rec.get("output_id", recipe_id)))
 	var output_qty := int(rec.get("output_qty", 1))
 	if output_qty <= 0:
 		output_qty = 1
@@ -1222,5 +1634,43 @@ func do_construction_work(recipe_id: StringName) -> Dictionary:
 
 	emit_signal("item_constructed", output_id, output_qty)
 	emit_signal("construction_recipe_completed", recipe_id, output_id, output_qty, rec)
+
+	return result
+
+
+func _do_remove_building_work(recipe_id: StringName) -> Dictionary:
+	var result := {
+		"ok": false,
+		"xp": 0,
+		"loot_desc": "",
+		"recipe_id": recipe_id,
+		"output_id": StringName(""),
+		"output_count": 0
+	}
+
+	var parsed := _parse_remove_building_recipe_id(recipe_id)
+	if parsed.is_empty():
+		result["loot_desc"] = "Invalid remove-building recipe."
+		return result
+
+	var ax: Vector2i = parsed.get("ax", Vector2i.ZERO)
+	var rec := get_remove_building_recipe(ax)
+	if rec.is_empty():
+		result["loot_desc"] = "No building to remove."
+		return result
+
+	var remove_result := remove_building_at(ax, true)
+	if not bool(remove_result.get("ok", false)):
+		result["loot_desc"] = String(remove_result.get("reason", "Could not remove building."))
+		return result
+
+	var refunded: Dictionary = remove_result.get("refunded", {})
+	var xp_gain := int(rec.get("xp", 0))
+
+	result["ok"] = true
+	result["xp"] = xp_gain
+	result["loot_desc"] = "Building removed. Refunded: %s" % _describe_refunded(refunded)
+
+	emit_signal("construction_recipe_completed", recipe_id, StringName(""), 0, rec)
 
 	return result

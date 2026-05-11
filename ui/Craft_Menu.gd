@@ -19,18 +19,19 @@ var _detail_req: Label
 var _detail_inputs_vbox: VBoxContainer
 var _close_btn: Button
 
-# New: multi-craft buttons + X input
+# Multi-craft buttons + X input
 var _craft_1_btn: Button
 var _craft_x_btn: Button
 var _craft_all_btn: Button
 var _x_input: LineEdit
+var _x_label: Label
 
 # Extra references so we can scale text
 var _title_label: Label
 var _left_label: Label
 var _inputs_label: Label
 
-# New: tier selector (for tiered recipes, e.g. construction)
+# Tier selector for tiered recipes
 var _tier_panel: PanelContainer
 var _tier_box: HBoxContainer
 var _tier_label: Label
@@ -41,12 +42,12 @@ var _selected_tier: int = 0
 var _tier_min: int = 0
 var _tier_max: int = 0
 
-# NEW: filter buttons row (Tier + Use-Skill)
+# Filter buttons row
 var _filters_row: HBoxContainer
 var _tier_filter_btn: Button
 var _use_filter_btn: Button
 
-# NEW: filter state/options
+# Filter state/options
 # Tier: -1=All, 0=Untiered, >0=exact tier
 var _filter_tier: int = -1
 # Use-skill: &"" = All
@@ -57,12 +58,11 @@ var _use_filter_options: Array[StringName] = []
 
 var _ui_scale: float = 1.0
 
-# Is this menu being used to summon a fragment (empty adjacent hex) rather than forge?
+# Is this menu being used to summon a fragment rather than forge?
 var _is_summon: bool = false
 
 
 func _ready() -> void:
-	# Make this overlay independent of the world/camera
 	set_as_top_level(true)
 
 	_build_layout()
@@ -71,7 +71,8 @@ func _ready() -> void:
 	_resize_to_viewport()
 	var vp := get_viewport()
 	if vp:
-		vp.size_changed.connect(_resize_to_viewport)
+		if not vp.size_changed.is_connected(_resize_to_viewport):
+			vp.size_changed.connect(_resize_to_viewport)
 
 
 # Called by TaskPicker
@@ -80,35 +81,39 @@ func setup(v_idx: int, job: StringName, ax: Vector2i, recipes: Array) -> void:
 	_job = job
 	_ax = ax
 
-	#  if TaskPicker passed nothing / wrong data, ask VillagerManager
-	# so recipes still come through the normalized recipe contract.
+	# If TaskPicker passed nothing/wrong data, ask VillagerManager so recipes
+	# still come through the normalized recipe contract.
 	if not _recipes_look_valid(recipes):
 		if typeof(VillagerManager) != TYPE_NIL \
 		and VillagerManager.has_method("get_recipes_for_job"):
 			recipes = VillagerManager.get_recipes_for_job(_v_idx, _job, _ax)
 
-	# IMPORTANT: copy so later mutations elsewhere don't affect us
 	_all_recipes = recipes.duplicate(true)
 	_recipes = _all_recipes.duplicate(true)
 
-	# Detect summon vs forge for Astromancy
+	# Detect summon vs forge for Astromancy.
 	_is_summon = false
 	if _job == &"astromancy":
 		var world := get_tree().get_first_node_in_group("World")
 		var has_frag := false
 		if world and world.has_method("_has_fragment_at"):
 			has_frag = bool(world.call("_has_fragment_at", _ax))
-		_is_summon = (not has_frag)
+		_is_summon = not has_frag
 
-	# --- titles + labels per job ---
 	if _title_label:
 		match _job:
 			&"mining":
 				_title_label.text = "Gather resources"
+			&"woodcutting":
+				_title_label.text = "Woodcutting"
+			&"fishing":
+				_title_label.text = "Fishing"
+			&"herbalism":
+				_title_label.text = "Herbalism"
 			&"scrying":
 				_title_label.text = "Scrying"
 			&"astromancy":
-				_title_label.text = ("Summon fragment" if _is_summon else "Astromancy forge")
+				_title_label.text = "Summon fragment" if _is_summon else "Astromancy forge"
 			&"smithing":
 				_title_label.text = "Smithing forge"
 			&"construction":
@@ -120,6 +125,12 @@ func setup(v_idx: int, job: StringName, ax: Vector2i, recipes: Array) -> void:
 		match _job:
 			&"mining":
 				_left_label.text = "Deposits"
+			&"woodcutting":
+				_left_label.text = "Trees"
+			&"fishing":
+				_left_label.text = "Fishing spots"
+			&"herbalism":
+				_left_label.text = "Patches"
 			&"scrying":
 				_left_label.text = "Options"
 			&"construction":
@@ -128,11 +139,16 @@ func setup(v_idx: int, job: StringName, ax: Vector2i, recipes: Array) -> void:
 				_left_label.text = "Recipes"
 
 	if _inputs_label:
-		_inputs_label.text = ("Result:" if _job == &"mining" else "Required materials:")
+		_inputs_label.text = "Result:" if _job == &"mining" else "Required materials:"
 
-	# Button labels
 	if _craft_1_btn:
 		if _job == &"mining":
+			_craft_1_btn.text = "Gather"
+		elif _job == &"woodcutting":
+			_craft_1_btn.text = "Chop"
+		elif _job == &"fishing":
+			_craft_1_btn.text = "Fish"
+		elif _job == &"herbalism":
 			_craft_1_btn.text = "Gather"
 		elif _job == &"astromancy" and _is_summon:
 			_craft_1_btn.text = "Summon"
@@ -140,12 +156,11 @@ func setup(v_idx: int, job: StringName, ax: Vector2i, recipes: Array) -> void:
 			_craft_1_btn.text = "Craft 1"
 
 	if _craft_x_btn:
-		_craft_x_btn.text = ("Gather X" if _job == &"mining" else "Craft X")
+		_craft_x_btn.text = "Gather X" if _job == &"mining" else "Craft X"
 
 	if _craft_all_btn:
-		_craft_all_btn.text = ("Gather All" if _job == &"mining" else "Craft All")
+		_craft_all_btn.text = "Gather All" if _job == &"mining" else "Craft All"
 
-	# NEW: init + apply filters
 	_init_filters_from_recipes()
 	_apply_filters(false)
 
@@ -154,12 +169,10 @@ func setup(v_idx: int, job: StringName, ax: Vector2i, recipes: Array) -> void:
 # Layout
 # -------------------------------------------------------------------
 func _build_layout() -> void:
-	# Full-screen overlay, locked to viewport (camera-independent)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	set_anchors_preset(Control.PRESET_FULL_RECT)
 	set_offsets_preset(Control.PRESET_FULL_RECT)
 
-	# Dim background
 	_dim = ColorRect.new()
 	_dim.color = Color(0, 0, 0, 0.55)
 	_dim.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -167,7 +180,6 @@ func _build_layout() -> void:
 	_dim.set_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(_dim)
 
-	# Center container
 	var center := CenterContainer.new()
 	center.name = "Center"
 	center.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -175,7 +187,6 @@ func _build_layout() -> void:
 	center.set_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(center)
 
-	# Frame
 	_frame = PanelContainer.new()
 	_frame.name = "Frame"
 	_frame.mouse_filter = Control.MOUSE_FILTER_STOP
@@ -196,7 +207,6 @@ func _build_layout() -> void:
 	root_v.add_theme_constant_override("separation", 14)
 	margin.add_child(root_v)
 
-	# Header: title + close
 	var header := HBoxContainer.new()
 	header.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_theme_constant_override("separation", 10)
@@ -215,14 +225,12 @@ func _build_layout() -> void:
 	_close_btn.focus_mode = Control.FOCUS_NONE
 	header.add_child(_close_btn)
 
-	# Body: [ Recipes list | Details ]
 	var body := HBoxContainer.new()
 	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	body.add_theme_constant_override("separation", 20)
 	root_v.add_child(body)
 
-	# Left column
 	var left := VBoxContainer.new()
 	left.custom_minimum_size = Vector2(380, 0)
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -235,7 +243,6 @@ func _build_layout() -> void:
 	_left_label.add_theme_font_size_override("font_size", 24)
 	left.add_child(_left_label)
 
-	# NEW: filters row
 	_filters_row = HBoxContainer.new()
 	_filters_row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_filters_row.add_theme_constant_override("separation", 8)
@@ -265,7 +272,6 @@ func _build_layout() -> void:
 	_recipes_vbox.add_theme_constant_override("separation", 8)
 	scroll.add_child(_recipes_vbox)
 
-	# Right column
 	var right := VBoxContainer.new()
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	right.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -303,7 +309,6 @@ func _build_layout() -> void:
 	_detail_req.add_theme_font_size_override("font_size", 20)
 	name_box.add_child(_detail_req)
 
-	# Tier selector row (hidden by default)
 	_tier_panel = PanelContainer.new()
 	_tier_panel.visible = false
 	_tier_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -311,7 +316,7 @@ func _build_layout() -> void:
 
 	var tier_style := StyleBoxFlat.new()
 	tier_style.bg_color = Color(0.10, 0.13, 0.18, 0.95)
-	tier_style.set_border_width_all(2.0)
+	tier_style.set_border_width_all(2)
 	tier_style.border_color = Color(0.55, 0.75, 1.0)
 	tier_style.corner_radius_top_left = 4
 	tier_style.corner_radius_top_right = 4
@@ -362,7 +367,6 @@ func _build_layout() -> void:
 	_detail_inputs_vbox.add_theme_constant_override("separation", 6)
 	right.add_child(_detail_inputs_vbox)
 
-	# Footer
 	var footer := HBoxContainer.new()
 	footer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
@@ -373,10 +377,10 @@ func _build_layout() -> void:
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	footer.add_child(spacer)
 
-	var x_label := Label.new()
-	x_label.text = "X:"
-	x_label.add_theme_font_size_override("font_size", 18)
-	footer.add_child(x_label)
+	_x_label = Label.new()
+	_x_label.text = "X:"
+	_x_label.add_theme_font_size_override("font_size", 18)
+	footer.add_child(_x_label)
 
 	_x_input = LineEdit.new()
 	_x_input.custom_minimum_size = Vector2(70, 32)
@@ -436,7 +440,6 @@ func _resize_to_viewport() -> void:
 		_tier_value_label.add_theme_font_size_override("font_size", int(22 * _ui_scale))
 		_tier_value_label.add_theme_color_override("font_color", Color(0.8, 0.95, 1.0))
 
-	# NEW: filter button scaling
 	if _tier_filter_btn:
 		_tier_filter_btn.add_theme_font_size_override("font_size", int(18 * _ui_scale))
 		_tier_filter_btn.custom_minimum_size.y = 36 * _ui_scale
@@ -448,6 +451,8 @@ func _resize_to_viewport() -> void:
 		var icon_size := 128.0 * _ui_scale
 		_detail_icon.custom_minimum_size = Vector2(icon_size, icon_size)
 
+	if _x_label:
+		_x_label.add_theme_font_size_override("font_size", int(18 * _ui_scale))
 	if _x_input:
 		_x_input.custom_minimum_size.y = 32 * _ui_scale
 	if _craft_1_btn:
@@ -467,6 +472,7 @@ func _resize_to_viewport() -> void:
 func _refresh_recipe_row_fonts() -> void:
 	if _recipes_vbox == null:
 		return
+
 	for c in _recipes_vbox.get_children():
 		if c is Button:
 			var b := c as Button
@@ -486,23 +492,21 @@ func _wire_basic() -> void:
 				queue_free()
 		)
 
-	# NEW: filter buttons
 	if _tier_filter_btn:
 		_tier_filter_btn.pressed.connect(func() -> void:
 			_cycle_tier_filter()
 		)
+
 	if _use_filter_btn:
 		_use_filter_btn.pressed.connect(func() -> void:
 			_cycle_use_filter()
 		)
 
-	# Craft 1
 	if _craft_1_btn:
 		_craft_1_btn.pressed.connect(func() -> void:
 			_start_craft(1)
 		)
 
-	# Craft All
 	if _craft_all_btn:
 		_craft_all_btn.pressed.connect(func() -> void:
 			var max_count := _max_craftable_count()
@@ -510,23 +514,24 @@ func _wire_basic() -> void:
 				_start_craft(max_count)
 		)
 
-	# Craft X
 	if _craft_x_btn:
 		_craft_x_btn.pressed.connect(func() -> void:
 			var x := _parse_x_input()
 			if x <= 0:
 				return
+
 			var max_count := _max_craftable_count()
 			if max_count > 0:
 				x = min(x, max_count)
+
 			_start_craft(x)
 		)
 
-	# Tier prev / next
 	if _tier_prev_btn:
 		_tier_prev_btn.pressed.connect(func() -> void:
 			_change_tier(-1)
 		)
+
 	if _tier_next_btn:
 		_tier_next_btn.pressed.connect(func() -> void:
 			_change_tier(1)
@@ -547,25 +552,26 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 # -------------------------------------------------------------------
-# Filters (Tier + Use-Skill)
+# Filters
 # -------------------------------------------------------------------
 func _init_filters_from_recipes() -> void:
 	_tier_filter_options.clear()
 	_use_filter_options.clear()
 
-	var tier_set := {}        # int -> true
+	var tier_set := {}
 	var has_untiered := false
-	var use_set := {}         # String -> true
+	var use_set := {}
 
 	for rec_v in _all_recipes:
 		if typeof(rec_v) != TYPE_DICTIONARY:
 			continue
+
 		var rec: Dictionary = rec_v
 
-		# Tier discovery (range recipes add all tiers in range)
 		if rec.has("tier_min") and rec.has("tier_max"):
 			var tmin := int(rec.get("tier_min", 0))
 			var tmax := int(rec.get("tier_max", 0))
+
 			if tmin > 0 and tmax >= tmin and (tmax - tmin) <= 50:
 				for t in range(tmin, tmax + 1):
 					tier_set[t] = true
@@ -582,44 +588,45 @@ func _init_filters_from_recipes() -> void:
 			else:
 				has_untiered = true
 
-		# Use-skill discovery (based on output item)
 		var use := _recipe_use_skill(rec)
 		if use != StringName():
 			use_set[String(use)] = true
 
-	# Build tier options
-	_tier_filter_options.append(-1) # All
+	_tier_filter_options.append(-1)
 	if has_untiered:
-		_tier_filter_options.append(0) # Untiered
+		_tier_filter_options.append(0)
 
 	var tiers: Array[int] = []
 	for k in tier_set.keys():
 		tiers.append(int(k))
 	tiers.sort()
+
 	for t in tiers:
 		_tier_filter_options.append(t)
 
-	# Build use options
-	_use_filter_options.append(&"") # All
+	_use_filter_options.append(&"")
+
 	var use_names: Array[String] = []
 	for k2 in use_set.keys():
 		use_names.append(String(k2))
 	use_names.sort()
+
 	for s in use_names:
 		_use_filter_options.append(StringName(s))
 
-	# Reset state
 	_filter_tier = -1
 	_filter_use_skill = &""
 
-	# Show/hide filter row/buttons if not needed
 	if _tier_filter_btn:
-		_tier_filter_btn.visible = (_tier_filter_options.size() > 1)
+		_tier_filter_btn.visible = _tier_filter_options.size() > 1
 	if _use_filter_btn:
-		_use_filter_btn.visible = (_use_filter_options.size() > 1)
+		_use_filter_btn.visible = _use_filter_options.size() > 1
 
 	if _filters_row:
-		_filters_row.visible = (_tier_filter_btn.visible or _use_filter_btn.visible)
+		_filters_row.visible = (
+			(_tier_filter_btn != null and _tier_filter_btn.visible)
+			or (_use_filter_btn != null and _use_filter_btn.visible)
+		)
 
 	_update_filter_button_texts()
 
@@ -631,23 +638,28 @@ func _update_filter_button_texts() -> void:
 			ttxt = "Untiered"
 		elif _filter_tier > 0:
 			ttxt = "T%d" % _filter_tier
+
 		_tier_filter_btn.text = "Tier: %s" % ttxt
 
 	if _use_filter_btn:
 		var utxt := "All"
 		if _filter_use_skill != &"":
 			utxt = String(_filter_use_skill)
+
 		_use_filter_btn.text = "Use: %s" % utxt
 
 
 func _cycle_tier_filter() -> void:
 	if _tier_filter_options.is_empty():
 		return
+
 	var idx := _tier_filter_options.find(_filter_tier)
 	if idx == -1:
 		idx = 0
+
 	idx = (idx + 1) % _tier_filter_options.size()
 	_filter_tier = _tier_filter_options[idx]
+
 	_update_filter_button_texts()
 	_apply_filters(true)
 
@@ -655,17 +667,21 @@ func _cycle_tier_filter() -> void:
 func _cycle_use_filter() -> void:
 	if _use_filter_options.is_empty():
 		return
+
 	var idx := _use_filter_options.find(_filter_use_skill)
 	if idx == -1:
 		idx = 0
+
 	idx = (idx + 1) % _use_filter_options.size()
 	_filter_use_skill = _use_filter_options[idx]
+
 	_update_filter_button_texts()
 	_apply_filters(true)
 
 
 func _apply_filters(keep_selection: bool) -> void:
 	var prev_id: StringName = &""
+
 	if keep_selection and _selected_idx >= 0 and _selected_idx < _recipes.size():
 		var pv: Variant = _recipes[_selected_idx]
 		if typeof(pv) == TYPE_DICTIONARY:
@@ -676,6 +692,7 @@ func _apply_filters(keep_selection: bool) -> void:
 	for rec_v in _all_recipes:
 		if typeof(rec_v) != TYPE_DICTIONARY:
 			continue
+
 		var rec: Dictionary = rec_v
 		if _recipe_passes_filters(rec):
 			_recipes.append(rec)
@@ -683,6 +700,7 @@ func _apply_filters(keep_selection: bool) -> void:
 	_populate_recipes()
 
 	var new_idx := -1
+
 	if prev_id != StringName():
 		for i in range(_recipes.size()):
 			var rv: Variant = _recipes[i]
@@ -702,34 +720,34 @@ func _apply_filters(keep_selection: bool) -> void:
 
 
 func _recipe_passes_filters(rec: Dictionary) -> bool:
-	# Use-skill filter
 	if _filter_use_skill != &"":
 		var use := _recipe_use_skill(rec)
 		if use != _filter_use_skill:
 			return false
 
-	# Tier filter
 	if _filter_tier != -1:
-		# Range recipes are never "untiered"
 		if rec.has("tier_min") and rec.has("tier_max"):
 			if _filter_tier == 0:
 				return false
+
 			var tmin := int(rec.get("tier_min", 0))
 			var tmax := int(rec.get("tier_max", 0))
-			return (_filter_tier >= tmin and _filter_tier <= tmax)
+			return _filter_tier >= tmin and _filter_tier <= tmax
 
 		var fixed := _recipe_fixed_tier(rec)
 		if _filter_tier == 0:
 			return fixed <= 0
+
 		return fixed == _filter_tier
 
 	return true
 
+
 func _recipe_output_item_id(rec: Dictionary) -> StringName:
-	# Phase 1C canonical field.
 	var outputs_v: Variant = rec.get("outputs", [])
 	if outputs_v is Array:
 		var outputs: Array = outputs_v as Array
+
 		for out_v in outputs:
 			if typeof(out_v) != TYPE_DICTIONARY:
 				continue
@@ -737,60 +755,62 @@ func _recipe_output_item_id(rec: Dictionary) -> StringName:
 			var out_d: Dictionary = out_v as Dictionary
 			var item_v: Variant = out_d.get("item", out_d.get("id", StringName("")))
 
-			if item_v is StringName:
-				if item_v != StringName():
-					return item_v
-			elif typeof(item_v) == TYPE_STRING:
+			if item_v is StringName and item_v != StringName():
+				return item_v
+
+			if typeof(item_v) == TYPE_STRING:
 				var s := String(item_v).strip_edges()
 				if s != "":
 					return StringName(s)
 
-	# Legacy field: "output": { "item": id, "qty": n }
 	var output_v: Variant = rec.get("output", {})
 	if output_v is Dictionary:
 		var output_d: Dictionary = output_v as Dictionary
 		var item_v2: Variant = output_d.get("item", output_d.get("id", StringName("")))
 
-		if item_v2 is StringName:
-			if item_v2 != StringName():
-				return item_v2
-		elif typeof(item_v2) == TYPE_STRING:
+		if item_v2 is StringName and item_v2 != StringName():
+			return item_v2
+
+		if typeof(item_v2) == TYPE_STRING:
 			var s2 := String(item_v2).strip_edges()
 			if s2 != "":
 				return StringName(s2)
 
-	# Legacy direct fields.
 	var keys := ["out", "result", "item", "output_item", "product", "produces", "crafted_item"]
 	for k in keys:
-		if rec.has(k):
-			var v: Variant = rec.get(k, null)
-			if v is StringName:
-				if v != StringName():
-					return v
-			elif typeof(v) == TYPE_STRING:
-				var s3 := String(v).strip_edges()
-				if s3 != "":
-					return StringName(s3)
+		if not rec.has(k):
+			continue
 
-	# Fallback: many recipes use id == crafted item id.
+		var v: Variant = rec.get(k, null)
+
+		if v is StringName and v != StringName():
+			return v
+
+		if typeof(v) == TYPE_STRING:
+			var s3 := String(v).strip_edges()
+			if s3 != "":
+				return StringName(s3)
+
 	var idv: Variant = rec.get("id", &"")
 	if idv is StringName:
 		return idv
+
 	if typeof(idv) == TYPE_STRING and String(idv).strip_edges() != "":
 		return StringName(String(idv).strip_edges())
 
 	return StringName()
 
+
 func _recipe_use_skill(rec: Dictionary) -> StringName:
-	# Prefer parsing the recipe id for smithing recipes (robust, no naming assumptions)
+	if _is_action_recipe(rec):
+		return &"construction"
+
 	var rid_v: Variant = rec.get("id", &"")
 	var rid: String = String(rid_v)
 
-	# Smelting always "uses" smithing
 	if rid.begins_with("smelt:"):
 		return &"smithing"
 
-	# Smithing forge ids: forge:<group>:<family>:<metal>
 	if rid.begins_with("forge:"):
 		var parts: PackedStringArray = rid.split(":")
 		if parts.size() >= 3:
@@ -799,7 +819,6 @@ func _recipe_use_skill(rec: Dictionary) -> StringName:
 
 			match group:
 				"tool":
-					# map tool family to the *use* skill
 					match family:
 						"pickaxe":
 							return &"mining"
@@ -808,30 +827,25 @@ func _recipe_use_skill(rec: Dictionary) -> StringName:
 						"sickle":
 							return &"herbalism"
 						"hoe":
-							return &"farming" # if you don't have farming yet, return &"herbalism" or &"construction"
+							return &"farming"
 						_:
-							# knife/hammer/chisel etc are generally "smithing use"
 							return &"smithing"
 
 				"fishing":
 					return &"fishing"
 
 				"hardware":
-					# hardware is used mainly by construction
 					return &"construction"
 
 				"weapon", "armour":
 					return &"combat"
 
-			# fallback: the act of forging is smithing
 			return &"smithing"
 
-	# ---- fallback to your existing output-item heuristic ----
 	var item_id := _recipe_output_item_id(rec)
 	if item_id == StringName():
 		return StringName()
 
-	# Strip tier suffix like ":t3"
 	var base := String(item_id)
 	var colon := base.find(":")
 	if colon != -1:
@@ -839,38 +853,42 @@ func _recipe_use_skill(rec: Dictionary) -> StringName:
 
 	var base_sn := StringName(base)
 
-	# Optional: Items.get_use_skill
 	if typeof(Items) != TYPE_NIL and Items != null and Items.has_method("get_use_skill"):
 		var ret: Variant = Items.call("get_use_skill", base_sn)
 		if ret is StringName:
 			return ret
+
 		if typeof(ret) == TYPE_STRING:
 			var ss: String = String(ret).strip_edges()
 			if ss != "":
 				return StringName(ss)
 
-	# Your existing naming convention inference
 	var p: String = base
 
 	if p.begins_with("axe_") or p.begins_with("hatchet_") or p.begins_with("woodcutting_"):
 		return &"woodcutting"
+
 	if p.begins_with("pickaxe_") or p.begins_with("mining_"):
 		return &"mining"
+
 	if p.begins_with("rod_") or p.begins_with("net_") or p.begins_with("harpoon_") or p.begins_with("fishing_"):
 		return &"fishing"
+
 	if p.begins_with("sickle_") or p.begins_with("herbalism_") or p.begins_with("forage_"):
 		return &"herbalism"
 
 	if p.begins_with("hammer_") or p.begins_with("tongs_") or p.begins_with("smith_"):
 		return &"smithing"
+
 	if p.begins_with("needle_") or p.begins_with("thread_") or p.begins_with("tailor_"):
 		return &"tailoring"
+
 	if p.begins_with("chisel_") or p.begins_with("saw_") or p.begins_with("construction_"):
 		return &"construction"
 
 	if p.begins_with("sword_") or p.begins_with("dagger_") or p.begins_with("mace_") or p.begins_with("scimitar_") \
-	or p.begins_with("longsword_") or p.begins_with("warhammer_") or p.begins_with("battleaxe_") or p.begins_with("two_handed_sword_") \
-	or p.begins_with("bow_") or p.begins_with("spear_"):
+	or p.begins_with("longsword_") or p.begins_with("warhammer_") or p.begins_with("battleaxe_") \
+	or p.begins_with("two_handed_sword_") or p.begins_with("bow_") or p.begins_with("spear_"):
 		return &"combat"
 
 	if p.begins_with("helm_") or p.begins_with("chest_") or p.begins_with("legs_") or p.begins_with("boots_") \
@@ -879,15 +897,17 @@ func _recipe_use_skill(rec: Dictionary) -> StringName:
 
 	return StringName()
 
+
 func _recipe_fixed_tier(rec: Dictionary) -> int:
 	if rec.has("tier"):
 		return int(rec.get("tier", 0))
+
 	if rec.has("mat_tier"):
 		return int(rec.get("mat_tier", 0))
+
 	if rec.has("tier_req"):
 		return int(rec.get("tier_req", 0))
 
-	# Parse id like "frame:t3"
 	var id_str := String(rec.get("id", ""))
 	var p := id_str.find(":t")
 	if p != -1:
@@ -899,19 +919,13 @@ func _recipe_fixed_tier(rec: Dictionary) -> int:
 	return 0
 
 
-# -------------------------------------------------------------------
-# Helper: does this recipe *really* use the tier UI?
-# -------------------------------------------------------------------
 func _has_real_tiers_for_recipe(rec: Dictionary) -> bool:
 	if _job != &"construction":
 		return false
 
-	# IMPORTANT: Only recipes that provide a base_id are allowed to use the tier selector.
-	# Fixed-tier recipes (like cut_log_pine -> pine timber) should NOT have base_id.
 	if not rec.has("base_id"):
 		return false
 
-	# If the recipe id is already tiered (e.g. "frame:t3"), do not show tier UI.
 	var rid := String(rec.get("id", ""))
 	if rid.find(":t") != -1:
 		return false
@@ -924,10 +938,12 @@ func _has_real_tiers_for_recipe(rec: Dictionary) -> bool:
 
 	if tmin <= 0:
 		return false
+
 	if tmax <= tmin:
 		return false
 
 	return true
+
 
 # -------------------------------------------------------------------
 # Populate + selection
@@ -943,6 +959,7 @@ func _populate_recipes() -> void:
 		var rec_v: Variant = _recipes[i]
 		if typeof(rec_v) != TYPE_DICTIONARY:
 			continue
+
 		var rec: Dictionary = rec_v
 
 		var btn := Button.new()
@@ -955,10 +972,14 @@ func _populate_recipes() -> void:
 
 		var label_str := String(rec.get("label", "Recipe"))
 		var level_req := int(rec.get("level_req", 0))
+
 		if level_req > 0:
 			label_str += "  (Lv %d)" % level_req
-		btn.text = label_str
 
+		if _is_action_recipe(rec):
+			label_str = "⚙ %s" % label_str
+
+		btn.text = label_str
 		btn.set_meta("recipe_index", i)
 
 		btn.pressed.connect(func() -> void:
@@ -973,12 +994,11 @@ func _populate_recipes() -> void:
 func _select_recipe(idx: int) -> void:
 	_selected_idx = idx
 
-	# Update toggle states
 	for b_v in _recipes_vbox.get_children():
 		if b_v is Button:
 			var b := b_v as Button
 			var bi := int(b.get_meta("recipe_index", -1))
-			b.button_pressed = (bi == idx)
+			b.button_pressed = bi == idx
 
 	if idx < 0 or idx >= _recipes.size():
 		_clear_detail()
@@ -990,9 +1010,10 @@ func _select_recipe(idx: int) -> void:
 		return
 
 	var rec: Dictionary = rec_v
+	var is_action := _is_action_recipe(rec)
 
 	var label_str := String(rec.get("label", "Recipe"))
-	var desc_str := String(rec.get("desc", ""))
+	var desc_str := String(rec.get("desc", rec.get("effect_raw", "")))
 	var level_req := int(rec.get("level_req", 0))
 	var xp := int(rec.get("xp", 0))
 
@@ -1000,7 +1021,12 @@ func _select_recipe(idx: int) -> void:
 		_detail_name.text = label_str
 
 	if _detail_desc:
-		_detail_desc.text = (desc_str if desc_str != "" else "No description yet.")
+		if desc_str != "":
+			_detail_desc.text = desc_str
+		elif is_action:
+			_detail_desc.text = "Perform this one-time tile action."
+		else:
+			_detail_desc.text = "No description yet."
 
 	if _detail_req:
 		var req_parts: Array[String] = []
@@ -1012,22 +1038,25 @@ func _select_recipe(idx: int) -> void:
 		if xp > 0:
 			req_parts.append("%d XP per cycle" % xp)
 
+		if is_action:
+			req_parts.append("One-time action")
+
 		_detail_req.text = " • ".join(req_parts)
 
-	# Tier config for this recipe (if any)
 	_tier_min = int(rec.get("tier_min", 0))
 	_tier_max = int(rec.get("tier_max", 0))
 	var tier_default := int(rec.get("tier_default", 0))
-
 	var has_real_tiers := _has_real_tiers_for_recipe(rec)
 
 	if has_real_tiers:
 		var chosen_tier := _selected_tier
+
 		if chosen_tier < _tier_min or chosen_tier > _tier_max:
 			if tier_default >= _tier_min and tier_default <= _tier_max:
 				chosen_tier = tier_default
 			else:
 				chosen_tier = _tier_min
+
 		_selected_tier = chosen_tier
 
 		if _tier_panel:
@@ -1038,87 +1067,121 @@ func _select_recipe(idx: int) -> void:
 		_tier_min = 0
 		_tier_max = 0
 		_selected_tier = 0
+
 		if _tier_panel:
 			_tier_panel.visible = false
 		if _tier_value_label:
 			_tier_value_label.text = "-"
 
-	# Icon (output item)
 	if _detail_icon:
 		var tex: Texture2D = null
 		var icon_v: Variant = rec.get("icon", null)
 
 		if icon_v is Texture2D:
-			tex = icon_v
+			tex = icon_v as Texture2D
 		elif typeof(icon_v) == TYPE_STRING:
-			var path: String = icon_v
-			if path != "":
+			var path: String = String(icon_v)
+			if path != "" and ResourceLoader.exists(path):
 				var loaded := load(path)
 				if loaded is Texture2D:
-					tex = loaded
+					tex = loaded as Texture2D
 
 		_detail_icon.texture = tex
 
-	# Materials (have / need)
-	if _detail_inputs_vbox:
-		for c in _detail_inputs_vbox.get_children():
-			c.queue_free()
+	_populate_requirement_rows(rec, is_action)
+	_update_start_button_state()
 
-		var inputs: Array = rec.get("inputs", []) as Array
-		for inp_v in inputs:
-			if typeof(inp_v) != TYPE_DICTIONARY:
-				continue
-			var inp: Dictionary = inp_v
-			var item_id := StringName(inp.get("item", &""))
-			var qty_needed := int(inp.get("qty", 0))
-			if String(item_id) == "":
-				continue
 
-			var have := 0
-			if typeof(Bank) != TYPE_NIL and Bank.has_method("amount"):
-				have = int(Bank.amount(item_id))
+func _populate_requirement_rows(rec: Dictionary, is_action: bool) -> void:
+	if _detail_inputs_vbox == null:
+		return
 
-			var row := HBoxContainer.new()
-			row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			row.add_theme_constant_override("separation", 8)
+	for c in _detail_inputs_vbox.get_children():
+		c.queue_free()
 
-			# Input icon
-			var input_tex: Texture2D = null
-			if typeof(Items) != TYPE_NIL and Items.has_method("get_icon_path"):
+	var inputs: Array = rec.get("inputs", []) as Array
+
+	if _inputs_label:
+		if is_action:
+			_inputs_label.text = "Action:"
+		elif _job == &"mining":
+			_inputs_label.text = "Result:"
+		else:
+			_inputs_label.text = "Required materials:"
+
+	if inputs.is_empty():
+		var lbl := Label.new()
+		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+		lbl.add_theme_font_size_override("font_size", int(20 * _ui_scale))
+
+		if is_action:
+			lbl.text = "No materials required. This is a one-time tile action."
+			lbl.add_theme_color_override("font_color", Color(0.85, 0.95, 1.0))
+		else:
+			lbl.text = "No materials required."
+			lbl.add_theme_color_override("font_color", Color(0.8, 1.0, 0.8))
+
+		_detail_inputs_vbox.add_child(lbl)
+		return
+
+	for inp_v in inputs:
+		if typeof(inp_v) != TYPE_DICTIONARY:
+			continue
+
+		var inp: Dictionary = inp_v
+		var item_id := StringName(inp.get("item", &""))
+		var qty_needed := int(inp.get("qty", 0))
+
+		if String(item_id) == "" or qty_needed <= 0:
+			continue
+
+		var have := 0
+		if typeof(Bank) != TYPE_NIL and Bank.has_method("amount"):
+			have = int(Bank.amount(item_id))
+
+		var row := HBoxContainer.new()
+		row.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		row.add_theme_constant_override("separation", 8)
+
+		var input_tex: Texture2D = null
+		if typeof(Items) != TYPE_NIL:
+			if Items.has_method("get_icon"):
+				var icon_v: Variant = Items.get_icon(item_id)
+				if icon_v is Texture2D:
+					input_tex = icon_v as Texture2D
+			elif Items.has_method("get_icon_path"):
 				var ipath: String = String(Items.get_icon_path(item_id))
-				if ipath != "":
+				if ipath != "" and ResourceLoader.exists(ipath):
 					var loaded_icon := load(ipath)
 					if loaded_icon is Texture2D:
-						input_tex = loaded_icon
+						input_tex = loaded_icon as Texture2D
 
-			if input_tex != null:
-				var icon_rect := TextureRect.new()
-				icon_rect.custom_minimum_size = Vector2(40, 40) * _ui_scale
-				icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-				icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-				icon_rect.texture = input_tex
-				row.add_child(icon_rect)
+		if input_tex != null:
+			var icon_rect := TextureRect.new()
+			icon_rect.custom_minimum_size = Vector2(40, 40) * _ui_scale
+			icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			icon_rect.texture = input_tex
+			row.add_child(icon_rect)
 
-			var name_str := String(item_id)
-			if typeof(Items) != TYPE_NIL and Items.has_method("display_name"):
-				if (Items.has_method("is_valid") and Items.is_valid(item_id)) \
-				or not Items.has_method("is_valid"):
-					name_str = Items.display_name(item_id)
+		var name_str := String(item_id)
+		if typeof(Items) != TYPE_NIL and Items.has_method("display_name"):
+			if (Items.has_method("is_valid") and Items.is_valid(item_id)) or not Items.has_method("is_valid"):
+				name_str = String(Items.display_name(item_id))
 
-			var lbl := Label.new()
-			lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			lbl.text = "%s: %d / %d" % [name_str, have, qty_needed]
-			lbl.add_theme_font_size_override("font_size", int(20 * _ui_scale))
+		var lbl2 := Label.new()
+		lbl2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lbl2.text = "%s: %d / %d" % [name_str, have, qty_needed]
+		lbl2.add_theme_font_size_override("font_size", int(20 * _ui_scale))
 
-			if have >= qty_needed:
-				lbl.add_theme_color_override("font_color", Color(0.8, 1.0, 0.8))
-			else:
-				lbl.add_theme_color_override("font_color", Color(1.0, 0.6, 0.6))
+		if have >= qty_needed:
+			lbl2.add_theme_color_override("font_color", Color(0.8, 1.0, 0.8))
+		else:
+			lbl2.add_theme_color_override("font_color", Color(1.0, 0.6, 0.6))
 
-			row.add_child(lbl)
-			_detail_inputs_vbox.add_child(row)
-
-	_update_start_button_state()
+		row.add_child(lbl2)
+		_detail_inputs_vbox.add_child(row)
 
 
 func _clear_detail() -> void:
@@ -1137,6 +1200,7 @@ func _clear_detail() -> void:
 	_tier_min = 0
 	_tier_max = 0
 	_selected_tier = 0
+
 	if _tier_panel:
 		_tier_panel.visible = false
 	if _tier_value_label:
@@ -1148,8 +1212,6 @@ func _clear_detail() -> void:
 # -------------------------------------------------------------------
 # Tier selector helpers
 # -------------------------------------------------------------------
-
-
 func _get_skill_level(skill_id: StringName) -> int:
 	var lv: int = 1
 
@@ -1164,8 +1226,9 @@ func _get_skill_level(skill_id: StringName) -> int:
 func _recipes_look_valid(arr: Array) -> bool:
 	if arr.is_empty():
 		return false
-	# We only accept dictionaries here
+
 	return typeof(arr[0]) == TYPE_DICTIONARY
+
 
 func _change_tier(delta: int) -> void:
 	if _selected_idx < 0 or _selected_idx >= _recipes.size():
@@ -1174,6 +1237,7 @@ func _change_tier(delta: int) -> void:
 	var rec_v: Variant = _recipes[_selected_idx]
 	if typeof(rec_v) != TYPE_DICTIONARY:
 		return
+
 	var rec: Dictionary = rec_v
 
 	if not _has_real_tiers_for_recipe(rec):
@@ -1184,11 +1248,9 @@ func _change_tier(delta: int) -> void:
 	if _tier_value_label:
 		_tier_value_label.text = str(_selected_tier)
 
-	# For Construction, rebuild recipe from ConstructionSystem using chosen tier
 	if _job == &"construction" \
 	and typeof(ConstructionSystem) != TYPE_NIL \
 	and ConstructionSystem.has_method("get_recipe_by_id"):
-
 		var base_id: StringName = StringName(rec.get("base_id", rec.get("id", &"")))
 		var tiered_id_str := "%s:t%d" % [String(base_id), _selected_tier]
 		var tiered_id: StringName = StringName(tiered_id_str)
@@ -1202,26 +1264,55 @@ func _change_tier(delta: int) -> void:
 	_update_start_button_state()
 
 
+func _selected_recipe() -> Dictionary:
+	if _selected_idx < 0 or _selected_idx >= _recipes.size():
+		return {}
+
+	var rec_v: Variant = _recipes[_selected_idx]
+	if typeof(rec_v) != TYPE_DICTIONARY:
+		return {}
+
+	return rec_v as Dictionary
+
+
+func _is_action_recipe(rec: Dictionary) -> bool:
+	var rid: String = String(rec.get("id", ""))
+
+	if rid.begins_with("remove_building:"):
+		return true
+
+	if String(rec.get("kind", "")).strip_edges().to_lower() == "action":
+		return true
+
+	if bool(rec.get("is_action", false)):
+		return true
+
+	# Keep generic zero-IO action detection narrow so normal gathering recipes
+	# with empty outputs do not become action recipes.
+	if _job == &"construction":
+		var inputs: Array = rec.get("inputs", []) as Array
+		var outputs: Array = rec.get("outputs", []) as Array
+		var group := String(rec.get("group", ""))
+		var kind := String(rec.get("kind", "")).strip_edges().to_lower()
+
+		if inputs.is_empty() and outputs.is_empty() and (group == "" or kind == "action"):
+			return true
+
+	return false
+
+
 # -------------------------------------------------------------------
 # Requirements + Buttons
 # -------------------------------------------------------------------
 func _can_craft_selected() -> bool:
-	if _selected_idx < 0 or _selected_idx >= _recipes.size():
+	var rec := _selected_recipe()
+	if rec.is_empty():
 		return false
-
-	var rec_v: Variant = _recipes[_selected_idx]
-	if typeof(rec_v) != TYPE_DICTIONARY:
-		return false
-
-	var rec: Dictionary = rec_v
 
 	if bool(rec.get("disabled", false)):
 		return false
 
 	var level_req: int = int(rec.get("level_req", 0))
-
-	# Phase 1C: recipe contract is authoritative.
-	# rec["skill"] is the skill used to perform/gate this recipe.
 	var skill_id: StringName = StringName(rec.get("skill", _job))
 
 	if level_req > 0 and skill_id != StringName():
@@ -1231,14 +1322,11 @@ func _can_craft_selected() -> bool:
 
 	return _max_craftable_count() > 0
 
-func _max_craftable_count() -> int:
-	if _selected_idx < 0 or _selected_idx >= _recipes.size():
-		return 0
 
-	var rec_v: Variant = _recipes[_selected_idx]
-	if typeof(rec_v) != TYPE_DICTIONARY:
+func _max_craftable_count() -> int:
+	var rec := _selected_recipe()
+	if rec.is_empty():
 		return 0
-	var rec: Dictionary = rec_v
 
 	var inputs: Array = rec.get("inputs", []) as Array
 	if inputs.is_empty():
@@ -1248,12 +1336,15 @@ func _max_craftable_count() -> int:
 		return 0
 
 	var max_count := 1_000_000_000
+
 	for inp_v in inputs:
 		if typeof(inp_v) != TYPE_DICTIONARY:
 			continue
+
 		var inp: Dictionary = inp_v
 		var item_id := StringName(inp.get("item", &""))
 		var qty_needed := int(inp.get("qty", 0))
+
 		if String(item_id) == "" or qty_needed <= 0:
 			continue
 
@@ -1274,23 +1365,42 @@ func _max_craftable_count() -> int:
 func _parse_x_input() -> int:
 	if _x_input == null:
 		return 1
+
 	var text := _x_input.text.strip_edges()
 	if text == "":
 		return 1
+
 	var n := int(text)
 	if n <= 0:
 		return 0
+
 	return n
 
 
+func _is_single_run_job() -> bool:
+	return (
+		_is_summon
+		or _job == &"mining"
+		or _job == &"woodcutting"
+		or _job == &"fishing"
+		or _job == &"herbalism"
+	)
+
+
 func _update_start_button_state() -> void:
+	var rec := _selected_recipe()
+	var is_action := false
+	if not rec.is_empty():
+		is_action = _is_action_recipe(rec)
+
 	var can1 := _can_craft_selected()
 	var max_count := 0
 	if can1:
 		max_count = _max_craftable_count()
 
-	# Summoning OR Mining: only show the single button
-	if _is_summon or _job == &"mining":
+	if _is_single_run_job() or is_action:
+		if _x_label:
+			_x_label.visible = false
 		if _x_input:
 			_x_input.visible = false
 		if _craft_x_btn:
@@ -1301,41 +1411,67 @@ func _update_start_button_state() -> void:
 			_craft_all_btn.disabled = true
 
 		if _craft_1_btn:
+			_craft_1_btn.visible = true
 			_craft_1_btn.disabled = not can1
+
+			if is_action:
+				var rid: String = String(rec.get("id", ""))
+				if rid.begins_with("remove_building:"):
+					_craft_1_btn.text = "Remove"
+				else:
+					_craft_1_btn.text = "Do Action"
+			elif _job == &"mining":
+				_craft_1_btn.text = "Gather"
+			elif _job == &"woodcutting":
+				_craft_1_btn.text = "Chop"
+			elif _job == &"fishing":
+				_craft_1_btn.text = "Fish"
+			elif _job == &"herbalism":
+				_craft_1_btn.text = "Gather"
+			elif _job == &"astromancy" and _is_summon:
+				_craft_1_btn.text = "Summon"
+			else:
+				_craft_1_btn.text = "Start"
+
 		return
 
-	# Forge mode
+	if _x_label:
+		_x_label.visible = true
 	if _x_input:
 		_x_input.visible = true
 
 	if _craft_1_btn:
+		_craft_1_btn.visible = true
+		_craft_1_btn.text = "Craft 1"
 		_craft_1_btn.disabled = not can1
 
 	if _craft_x_btn:
 		_craft_x_btn.visible = true
+		_craft_x_btn.text = "Craft X"
 		_craft_x_btn.disabled = not can1
 
 	if _craft_all_btn:
 		_craft_all_btn.visible = true
-		_craft_all_btn.disabled = (not can1 or max_count <= 1)
+		_craft_all_btn.text = "Craft All"
+		_craft_all_btn.disabled = not can1 or max_count <= 1
 
 
 func _start_craft(count: int) -> void:
 	if count <= 0:
 		return
+
 	if not _can_craft_selected():
 		return
-	if _selected_idx < 0 or _selected_idx >= _recipes.size():
+
+	var rec := _selected_recipe()
+	if rec.is_empty():
 		return
 
-	var rec_v: Variant = _recipes[_selected_idx]
-	if typeof(rec_v) != TYPE_DICTIONARY:
-		return
-
-	var rec: Dictionary = rec_v
 	var recipe_id := StringName(rec.get("id", &""))
 
-	# For tiered construction recipes, embed tier in the id
+	if _is_action_recipe(rec) or _is_single_run_job():
+		count = 1
+
 	if _job == &"construction" and _has_real_tiers_for_recipe(rec) and _selected_tier > 0:
 		var id_str := String(recipe_id)
 		if id_str.find(":") == -1:

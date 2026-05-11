@@ -929,33 +929,54 @@ func get_recipes_for_job(v_idx: int, job: StringName, ax: Vector2i) -> Array:
 		if typeof(ConstructionSystem) == TYPE_NIL:
 			return _normalize_recipe_list(job, recipes)
 
+		var out: Array = []
+
+		# ------------------------------------------------------------
+		# 0) Special tile action: remove installed building
+		# ------------------------------------------------------------
+		if ConstructionSystem.has_method("get_remove_building_recipe"):
+			var remove_recipe_v: Variant = ConstructionSystem.get_remove_building_recipe(ax)
+			if remove_recipe_v is Dictionary:
+				var remove_recipe: Dictionary = remove_recipe_v as Dictionary
+				if not remove_recipe.is_empty():
+					out.append(remove_recipe)
+
+		# ------------------------------------------------------------
+		# 1) Construction Materials
+		# Current menu policy: show kit/material recipes only.
+		# Base buildings are crafted as bank items, but if you want to hide
+		# them from this menu for now, keep only "material" here.
+		# ------------------------------------------------------------
 		if ConstructionSystem.has_method("get_recipes_for_level_and_kind"):
 			var all_mat_v: Variant = ConstructionSystem.get_recipes_for_level_and_kind(con_lv, "material")
-			if not (all_mat_v is Array):
-				return _normalize_recipe_list(job, recipes)
+			if all_mat_v is Array:
+				var all_mat: Array = all_mat_v as Array
 
-			var all_mat: Array = all_mat_v as Array
-			var out: Array = []
+				for rec_v: Variant in all_mat:
+					if not (rec_v is Dictionary):
+						continue
 
-			for rec_v: Variant in all_mat:
-				if not (rec_v is Dictionary):
-					continue
+					var rec: Dictionary = rec_v as Dictionary
+					var part_str: String = String(rec.get("part", "")).strip_edges()
+					if part_str == "":
+						continue
 
-				var rec: Dictionary = rec_v as Dictionary
-				var part_str: String = String(rec.get("part", "")).strip_edges()
-				if part_str == "":
-					continue
-
-				out.append(rec)
+					out.append(rec)
 
 			return _normalize_recipe_list(job, out)
 
+		# ------------------------------------------------------------
+		# 2) Fallback: old full Construction recipe list
+		# ------------------------------------------------------------
 		if ConstructionSystem.has_method("get_recipes_for_level"):
 			var con_recipes_v: Variant = ConstructionSystem.get_recipes_for_level(con_lv)
 			if con_recipes_v is Array:
-				return _normalize_recipe_list(job, con_recipes_v as Array)
+				var con_recipes: Array = con_recipes_v as Array
+				for rec2_v: Variant in con_recipes:
+					if rec2_v is Dictionary:
+						out.append(rec2_v as Dictionary)
 
-		return _normalize_recipe_list(job, recipes)
+		return _normalize_recipe_list(job, out)
 
 	# --- WOODCUTTING ---
 	if job == JOB_WOODCUTTING:
@@ -1033,6 +1054,8 @@ func _job_duration(job: StringName, recipe_id: StringName = StringName()) -> flo
 
 		JOB_CONSTRUCTION:
 			if typeof(ConstructionSystem) != TYPE_NIL:
+				if ConstructionSystem.has_method("get_action_time"):
+					return float(ConstructionSystem.get_action_time(recipe_id))
 				return float(ConstructionSystem.BASE_ACTION_TIME)
 			return 4.8
 
@@ -1193,6 +1216,16 @@ func _complete_job(v_idx: int) -> void:
 			will_continue = true
 			call_deferred("assign_job_with_recipe", v_idx, job, ax, recipe, 1, true)
 
+		elif job == JOB_CONSTRUCTION:
+			var recipe_s_repeat: String = String(recipe)
+
+			# Remove-building is never repeatable.
+			if recipe_s_repeat.begins_with("remove_building:"):
+				pass
+			elif xp > 0:
+				will_continue = true
+				call_deferred("assign_job_with_recipe", v_idx, job, ax, recipe, 1, true)
+
 		else:
 			if xp > 0:
 				will_continue = true
@@ -1218,10 +1251,17 @@ func _complete_job(v_idx: int) -> void:
 				call_deferred("assign_job_with_recipe", v_idx, job, ax, recipe, next_remaining2)
 
 		elif job == JOB_CONSTRUCTION:
-			var next_remaining3: int = remaining - 1
-			if next_remaining3 > 0 and xp > 0:
-				will_continue = true
-				call_deferred("assign_job_with_recipe", v_idx, job, ax, recipe, next_remaining3)
+			var recipe_s: String = String(recipe)
+
+			# Remove-building is a one-shot tile action.
+			# Do not allow Craft X / Craft All to attempt repeated removals.
+			if recipe_s.begins_with("remove_building:"):
+				pass
+			else:
+				var next_remaining3: int = remaining - 1
+				if next_remaining3 > 0 and xp > 0:
+					will_continue = true
+					call_deferred("assign_job_with_recipe", v_idx, job, ax, recipe, next_remaining3)
 
 	# Clear current job state.
 	_jobs.erase(v_idx)

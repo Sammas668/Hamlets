@@ -3,6 +3,7 @@ extends Node
 
 var _pending_world: Dictionary = {}   # consumed by World.gd
 
+
 func _get_herbalism_system() -> Node:
 	var herb := get_node_or_null("/root/herbalism_system")
 	if herb != null:
@@ -17,6 +18,7 @@ func _get_herbalism_system() -> Node:
 		return herb
 
 	return null
+
 
 func has_pending_world() -> bool:
 	return not _pending_world.is_empty()
@@ -73,8 +75,6 @@ func from_dict(d: Dictionary) -> void:
 		if jm_raw is Dictionary:
 			VillagerManager.from_save_dict(jm_raw as Dictionary)
 
-	# (later you can add: global skills, settings, etc.)
-
 	# -------------------------
 	# 5) MiningSystem runtime state
 	# -------------------------
@@ -96,25 +96,45 @@ func from_dict(d: Dictionary) -> void:
 		if herb_raw is Dictionary:
 			herb.from_save_dict(herb_raw as Dictionary)
 
+	# -------------------------
+	# 7) ConstructionSystem runtime state
+	# -------------------------
+	if d.has("construction_system") \
+	and typeof(ConstructionSystem) != TYPE_NIL \
+	and ConstructionSystem.has_method("from_save_dict"):
+		var con_raw: Variant = d["construction_system"]
+		if con_raw is Dictionary:
+			ConstructionSystem.from_save_dict(con_raw as Dictionary)
+
+
 func reset_runtime_state() -> void:
 	_pending_world = {}
 
 	if typeof(WorldData) != TYPE_NIL and WorldData.has_method("reset_runtime_state"):
 		WorldData.reset_runtime_state()
+
 	if typeof(Villagers) != TYPE_NIL and Villagers.has_method("reset_runtime_state"):
 		Villagers.reset_runtime_state()
+
 	if typeof(VillagerManager) != TYPE_NIL and VillagerManager.has_method("reset_runtime_state"):
 		VillagerManager.reset_runtime_state()
+
 	if typeof(MiningSystem) != TYPE_NIL and MiningSystem.has_method("reset_runtime_state"):
 		MiningSystem.reset_runtime_state()
 
 	var herb := _get_herbalism_system()
 	if herb != null and herb.has_method("reset_runtime_state"):
 		herb.reset_runtime_state()
+
+	if typeof(ConstructionSystem) != TYPE_NIL and ConstructionSystem.has_method("reset_runtime_state"):
+		ConstructionSystem.reset_runtime_state()
+
 	if typeof(Selection) != TYPE_NIL and Selection.has_method("clear"):
 		Selection.clear()
+
 	if typeof(WorldQuery) != TYPE_NIL and WorldQuery.has_method("set_selected"):
 		WorldQuery.set_selected(Vector2i.ZERO)
+
 
 func to_dict() -> Dictionary:
 	var data: Dictionary = {}
@@ -158,5 +178,11 @@ func to_dict() -> Dictionary:
 	var herb := _get_herbalism_system()
 	if herb != null and herb.has_method("to_save_dict"):
 		data["herbalism_system"] = herb.to_save_dict()
+
+	# -------------------------
+	# 7) ConstructionSystem runtime state
+	# -------------------------
+	if typeof(ConstructionSystem) != TYPE_NIL and ConstructionSystem.has_method("to_save_dict"):
+		data["construction_system"] = ConstructionSystem.to_save_dict()
 
 	return data

@@ -147,6 +147,12 @@ func _ready() -> void:
 		if debug_logging:
 			print("[SelectionHUD] Selection autoload missing or has no fragment_selected signal.")
 
+	# Wire ConstructionSystem placed-building refresh
+	if _construction != null and _construction.has_signal("building_changed"):
+		var cb_building_changed := Callable(self, "_on_construction_building_changed")
+		if not _construction.is_connected("building_changed", cb_building_changed):
+			_construction.connect("building_changed", cb_building_changed)
+
 	# Make sure tab visibility matches current tab
 	if _mode_tabs:
 		_on_tab_changed(_mode_tabs.current_tab, true)
@@ -157,9 +163,11 @@ func _get_drag_data(_at_position: Vector2) -> Variant:
 	if debug_logging:
 		print("[SelectionHUD] DRAG START ", get_path())
 		print_stack()
+
 	var vp: Viewport = get_viewport()
 	if vp != null:
 		vp.gui_cancel_drag()
+
 	return null
 
 
@@ -595,7 +603,7 @@ func _apply_slot_styles() -> void:
 
 
 # -------------------------
-# Fragment selection (UPDATED: instant apply + multi-frame reapply)
+# Fragment selection
 # -------------------------
 func set_fragment(fragment: Node) -> void:
 	_current_fragment = fragment
@@ -604,11 +612,9 @@ func set_fragment(fragment: Node) -> void:
 	_apply_seq += 1
 	var seq: int = _apply_seq
 
-	# Best-effort immediate draw (fixes “must click off/on”)
 	if is_inside_tree():
 		_apply_fragment()
 
-	# Then re-apply across a few frames to catch deferred data writes
 	call_deferred("_apply_fragment_seq", seq, fragment)
 
 
@@ -624,7 +630,6 @@ func _apply_fragment_seq(seq: int, frag: Node) -> void:
 	if tree == null:
 		return
 
-	# Re-apply for several frames to catch late biome/mods/building updates
 	for _i in range(6):
 		await tree.process_frame
 		if seq != _apply_seq:
@@ -644,6 +649,16 @@ func _on_fragment_selected(fragment: Node) -> void:
 	set_fragment(fragment)
 
 
+func _on_construction_building_changed(ax: Vector2i) -> void:
+	if ax != _current_coord:
+		return
+
+	if _current_fragment == null or not is_instance_valid(_current_fragment):
+		return
+
+	_apply_fragment()
+
+
 func _apply_fragment() -> void:
 	if _current_fragment == null or not is_instance_valid(_current_fragment):
 		visible = false
@@ -661,7 +676,6 @@ func _apply_fragment() -> void:
 	_update_building_tab()
 
 	if _mode_tabs:
-		# Only reset scroll on first apply for this selection
 		_on_tab_changed(_mode_tabs.current_tab, first_apply_this_selection)
 
 	if debug_logging:
@@ -675,7 +689,6 @@ func _apply_fragment() -> void:
 			_current_coord, biome_str, tier_val, mods.size(), resources.size(), building_id, modules
 		])
 
-	# Only dock/reflow on first apply to avoid jitter
 	if dock_to_bottom_left and first_apply_this_selection:
 		_dock_bottom_left()
 		_apply_full_width_constraints()
@@ -727,29 +740,35 @@ func _update_tile_tab() -> void:
 func _get_biome_string(fragment: Node) -> String:
 	if fragment == null or not is_instance_valid(fragment):
 		return "Unknown"
+
 	var v: Variant = fragment.get("biome")
 	if v == null:
 		return "Unknown"
+
 	return String(v)
 
 
 func _get_tile_name(fragment: Node, biome_str: String) -> String:
 	if fragment == null or not is_instance_valid(fragment):
 		return biome_str if biome_str != "" else "Tile"
+
 	var v: Variant = fragment.get("tile_name")
 	if v != null:
 		var name_str: String = String(v)
 		if name_str.strip_edges() != "":
 			return name_str
+
 	return biome_str if biome_str != "" else "Tile"
 
 
 func _get_tile_tier(fragment: Node) -> int:
 	if fragment == null or not is_instance_valid(fragment):
 		return 0
+
 	var v: Variant = fragment.get("tier")
 	if v == null:
 		return 0
+
 	return int(v)
 
 
@@ -776,9 +795,11 @@ func _get_biome_icon(_fragment: Node, biome_str: String) -> Texture2D:
 func _get_modifiers_from_fragment(frag: Node) -> Array:
 	if frag == null or not is_instance_valid(frag):
 		return []
+
 	var v: Variant = frag.get("modifiers")
 	if v is Array:
 		return v as Array
+
 	return []
 
 
@@ -877,11 +898,14 @@ func _modifier_get_name(mod: Variant) -> String:
 		var name_str: String = String(d.get("name", d.get("detail", ""))).strip_edges()
 		if name_str != "":
 			return name_str
+
 		var kind: String = String(d.get("kind", "")).strip_edges()
 		if kind != "":
 			return kind
+
 	if typeof(mod) == TYPE_STRING:
 		return String(mod)
+
 	return "Modifier"
 
 
@@ -889,6 +913,7 @@ func _modifier_get_rarity(mod: Variant) -> String:
 	if mod is Dictionary:
 		var d: Dictionary = mod as Dictionary
 		return String(d.get("rarity", ""))
+
 	return ""
 
 
@@ -946,6 +971,7 @@ func _modifier_to_tooltip(mod: Variant) -> String:
 			bits.append("Kind: %s" % kind)
 		if skill != "":
 			bits.append("Skill: %s" % skill)
+
 		return "\n".join(bits)
 
 	if typeof(mod) == TYPE_STRING:
@@ -979,8 +1005,8 @@ func _build_resource_nodes_from_modifiers(fragment: Node) -> Array:
 	for m in (mods_v as Array):
 		if typeof(m) != TYPE_DICTIONARY:
 			continue
-		var md: Dictionary = m as Dictionary
 
+		var md: Dictionary = m as Dictionary
 		var kind: String = String(md.get("kind", "")).strip_edges().to_lower().replace("_", " ")
 		if kind != "resource spawn":
 			continue
@@ -988,7 +1014,10 @@ func _build_resource_nodes_from_modifiers(fragment: Node) -> Array:
 		var detail: String = String(md.get("name", md.get("detail", ""))).strip_edges()
 		var skill: String = String(md.get("skill", "")).strip_edges()
 
-		nodes.append({"detail": detail, "skill": skill})
+		nodes.append({
+			"detail": detail,
+			"skill": skill
+		})
 
 	return nodes
 
@@ -1006,6 +1035,7 @@ func _build_resource_entries(nodes: Array) -> Array:
 	for n_v in nodes:
 		if typeof(n_v) != TYPE_DICTIONARY:
 			continue
+
 		var n: Dictionary = n_v as Dictionary
 
 		var skill: String = String(n.get("skill", "")).strip_edges()
@@ -1053,7 +1083,7 @@ func _build_resource_entries(nodes: Array) -> Array:
 				maxc = left
 
 			left_charges[key] = int(left_charges.get(key, 0)) + max(0, left)
-			max_charges[key]  = int(max_charges.get(key, 0)) + max(0, maxc)
+			max_charges[key] = int(max_charges.get(key, 0)) + max(0, maxc)
 
 	var keys: Array = display.keys()
 	keys.sort_custom(func(a, b):
@@ -1090,7 +1120,11 @@ func _build_resource_entries(nodes: Array) -> Array:
 					_fmt_mmss(float(cooldown_min[k]))
 				]
 
-		entries.append({"text": line, "icon": tex, "header": false})
+		entries.append({
+			"text": line,
+			"icon": tex,
+			"header": false
+		})
 
 	return entries
 
@@ -1123,11 +1157,13 @@ func _resolve_item_icon(id: StringName) -> Texture2D:
 		var t_v: Variant = _items.call("get_icon", id)
 		if t_v is Texture2D:
 			return t_v as Texture2D
+
 	if _items and _items.has_method("get_icon_path"):
 		var p_v: Variant = _items.call("get_icon_path", id)
 		var path: String = String(p_v)
 		if path != "" and ResourceLoader.exists(path):
 			return load(path) as Texture2D
+
 	return null
 
 
@@ -1135,9 +1171,11 @@ func _resource_icon_for_skill(skill: String) -> Texture2D:
 	var s: String = skill.strip_edges().to_lower()
 	if s == "":
 		return null
+
 	var path: String = "res://assets/icons/modifiers/%s_node.png" % s
 	if ResourceLoader.exists(path):
 		return load(path) as Texture2D
+
 	return null
 
 
@@ -1179,6 +1217,7 @@ func _build_list_row(text: String, icon_tex: Texture2D, header: bool = false) ->
 func _populate_entries(list_node: VBoxContainer, entries: Array, placeholder: String = "") -> void:
 	if list_node == null:
 		return
+
 	_clear_container(list_node)
 
 	var out: Array = entries
@@ -1206,6 +1245,7 @@ func _populate_entries(list_node: VBoxContainer, entries: Array, placeholder: St
 func _populate_list(list_node: VBoxContainer, lines: Array[String], placeholder: String = "") -> void:
 	if list_node == null:
 		return
+
 	_clear_container(list_node)
 
 	var output_lines: Array[String] = lines
@@ -1234,6 +1274,7 @@ func _set_section_visible(section: Control, should_show: bool) -> void:
 func _set_buttons_enabled(container: Control, is_enabled: bool) -> void:
 	if container == null:
 		return
+
 	for child in container.get_children():
 		if child is Button:
 			(child as Button).disabled = not is_enabled
@@ -1245,12 +1286,14 @@ func _set_buttons_enabled(container: Control, is_enabled: bool) -> void:
 func _on_building_slot_pressed() -> void:
 	if _current_fragment == null or not is_instance_valid(_current_fragment):
 		return
+
 	emit_signal("building_slot_requested", _current_coord, "base", 0)
 
 
 func _on_module_slot_pressed(slot_index: int) -> void:
 	if _current_fragment == null or not is_instance_valid(_current_fragment):
 		return
+
 	emit_signal("building_slot_requested", _current_coord, "module", slot_index)
 
 
@@ -1259,8 +1302,24 @@ func _update_building_tab() -> void:
 	if _building_chips_row:
 		_building_chips_row.visible = false
 
-	var building_id: String = _get_equipped_building_id(_current_fragment)
-	var modules: Array[String] = _get_equipped_modules(_current_fragment)
+	var placed: Dictionary = _get_placed_building_state()
+	var using_placed_building := not placed.is_empty()
+
+	var building_id: String = ""
+	var modules: Array[String] = []
+
+	if using_placed_building:
+		building_id = String(placed.get("base_item_id", placed.get("recipe_id", ""))).strip_edges()
+
+		var modules_v: Variant = placed.get("modules", [])
+		if modules_v is Array:
+			for m in modules_v as Array:
+				var ms := String(m).strip_edges()
+				if ms != "":
+					modules.append(ms)
+	else:
+		building_id = _get_equipped_building_id(_current_fragment)
+		modules = _get_equipped_modules(_current_fragment)
 
 	# Slot icons
 	_set_button_icon_from_id(_building_slot, building_id)
@@ -1270,14 +1329,16 @@ func _update_building_tab() -> void:
 			id = modules[i]
 		_set_button_icon_from_id(_module_slots[i], id)
 
-	# No building equipped
+	# No building equipped/placed
 	if building_id.strip_edges() == "":
 		if _building_name_label:
-			_building_name_label.text = "No building equipped"
+			_building_name_label.text = "No building installed"
 			_building_name_label.add_theme_font_size_override("font_size", font_section_title)
+
 		if _building_status_label:
-			_building_status_label.text = "Select a building to start producing."
+			_building_status_label.text = "Drag a crafted building item from the bank into the building slot."
 			_building_status_label.add_theme_font_size_override("font_size", font_body)
+
 		if _building_tier_label:
 			_building_tier_label.text = ""
 			_building_tier_label.add_theme_font_size_override("font_size", font_small)
@@ -1285,6 +1346,7 @@ func _update_building_tab() -> void:
 		if _building_inputs_list:
 			_clear_container(_building_inputs_list)
 			_building_inputs_list.add_child(_build_list_row("—", null, false))
+
 		if _building_outputs_list:
 			_clear_container(_building_outputs_list)
 			_building_outputs_list.add_child(_build_list_row("—", null, false))
@@ -1293,27 +1355,56 @@ func _update_building_tab() -> void:
 		_set_buttons_enabled(_building_buttons_row, false)
 		return
 
-	# Building equipped: derive display info + IO (best-effort)
-	var def: Dictionary = _get_building_def(building_id)
-
 	var display_name: String = ""
-	if def.has("name"):
-		display_name = String(def.get("name", "")).strip_edges()
-	if display_name == "":
-		display_name = building_id
-
 	var tier_val: int = 0
-	if def.has("tier"):
-		tier_val = int(def.get("tier", 0))
-	else:
-		var tfrag: Variant = _p(_current_fragment, "building_tier", null)
-		if tfrag != null:
-			tier_val = int(tfrag)
+	var status: String = ""
+	var in_entries: Array = []
+	var out_entries: Array = []
 
-	var status: String = "Equipped"
-	var sfrag: Variant = _p(_current_fragment, "building_status", null)
-	if sfrag != null and String(sfrag).strip_edges() != "":
-		status = String(sfrag)
+	if using_placed_building:
+		display_name = String(placed.get("label", placed.get("building", building_id))).strip_edges()
+		if display_name == "":
+			display_name = building_id
+
+		tier_val = int(placed.get("tier", 0))
+
+		var linked_skill := String(placed.get("linked_skill", "")).strip_edges()
+		if linked_skill != "":
+			status = "Installed. Supports %s." % linked_skill.capitalize()
+		else:
+			status = "Installed."
+
+		in_entries = _io_to_entries(placed.get("inputs", []))
+		out_entries = []
+	else:
+		var def: Dictionary = _get_building_def(building_id)
+
+		if def.has("name"):
+			display_name = String(def.get("name", "")).strip_edges()
+		if display_name == "":
+			display_name = building_id
+
+		if def.has("tier"):
+			tier_val = int(def.get("tier", 0))
+		else:
+			var tfrag: Variant = _p(_current_fragment, "building_tier", null)
+			if tfrag != null:
+				tier_val = int(tfrag)
+
+		status = "Equipped"
+		var sfrag: Variant = _p(_current_fragment, "building_status", null)
+		if sfrag != null and String(sfrag).strip_edges() != "":
+			status = String(sfrag)
+
+		in_entries = _io_to_entries(def.get("inputs", null))
+		out_entries = _io_to_entries(def.get("outputs", null))
+
+		if in_entries.is_empty():
+			in_entries = _io_to_entries(def.get("in", null))
+		if out_entries.is_empty():
+			out_entries = _io_to_entries(def.get("out", null))
+		if out_entries.is_empty():
+			out_entries = _io_to_entries(def.get("produces", null))
 
 	if _building_name_label:
 		_building_name_label.text = display_name
@@ -1327,20 +1418,13 @@ func _update_building_tab() -> void:
 		_building_tier_label.text = ("T%d" % tier_val) if tier_val > 0 else ""
 		_building_tier_label.add_theme_font_size_override("font_size", font_small)
 
-	# IO lists
-	var in_entries: Array = _io_to_entries(def.get("inputs", null))
-	var out_entries: Array = _io_to_entries(def.get("outputs", null))
+	if using_placed_building:
+		_populate_entries(_building_inputs_list, in_entries, "Original kit cost unavailable")
+		_populate_entries(_building_outputs_list, out_entries, "Outputs handled by assigned jobs/modules")
+	else:
+		_populate_entries(_building_inputs_list, in_entries, "No inputs")
+		_populate_entries(_building_outputs_list, out_entries, "No outputs")
 
-	# Common alt keys
-	if in_entries.is_empty():
-		in_entries = _io_to_entries(def.get("in", null))
-	if out_entries.is_empty():
-		out_entries = _io_to_entries(def.get("out", null))
-	if out_entries.is_empty():
-		out_entries = _io_to_entries(def.get("produces", null))
-
-	_populate_entries(_building_inputs_list, in_entries, "No inputs")
-	_populate_entries(_building_outputs_list, out_entries, "No outputs")
 	_set_section_visible(_building_io_row, true)
 	_set_buttons_enabled(_building_buttons_row, true)
 
@@ -1348,21 +1432,46 @@ func _update_building_tab() -> void:
 func _set_button_icon_from_id(btn: Button, id: String) -> void:
 	if btn == null:
 		return
+
 	var clean: String = id.strip_edges()
 	if clean == "":
 		btn.icon = null
 		btn.tooltip_text = "Empty"
 		return
+
 	var tex: Texture2D = _resolve_item_icon(StringName(clean))
 	btn.icon = tex
 	btn.tooltip_text = clean
 
 
+func _get_placed_building_state() -> Dictionary:
+	if _construction == null:
+		return {}
+
+	if not _construction.has_method("get_building_at"):
+		return {}
+
+	var v: Variant = _construction.call("get_building_at", _current_coord)
+	if v is Dictionary:
+		return v as Dictionary
+
+	return {}
+
+
 func _get_equipped_building_id(frag: Node) -> String:
+	var placed := _get_placed_building_state()
+	if not placed.is_empty():
+		var base_item := String(placed.get("base_item_id", "")).strip_edges()
+		if base_item != "":
+			return base_item
+
+		var recipe_id := String(placed.get("recipe_id", "")).strip_edges()
+		if recipe_id != "":
+			return recipe_id
+
 	if frag == null or not is_instance_valid(frag):
 		return ""
 
-	# Try a bunch of likely keys (keeps this script resilient to schema changes)
 	var keys: Array[String] = [
 		"equipped_building_id",
 		"building_id",
@@ -1370,6 +1479,7 @@ func _get_equipped_building_id(frag: Node) -> String:
 		"building",
 		"base_building",
 	]
+
 	for k in keys:
 		var v: Variant = frag.get(k)
 		if v != null:
@@ -1377,7 +1487,6 @@ func _get_equipped_building_id(frag: Node) -> String:
 			if s != "":
 				return s
 
-	# Meta fallback (SAFE: only call get_meta if it exists)
 	var mv: Variant = _meta(frag, "building_id", null)
 	if mv != null:
 		var ms: String = String(mv).strip_edges()
@@ -1388,12 +1497,24 @@ func _get_equipped_building_id(frag: Node) -> String:
 
 
 func _get_equipped_modules(frag: Node) -> Array[String]:
+	var placed := _get_placed_building_state()
+	if not placed.is_empty():
+		var out_placed: Array[String] = []
+		var modules_v: Variant = placed.get("modules", [])
+		if modules_v is Array:
+			for it in modules_v as Array:
+				var s := String(it).strip_edges()
+				if s != "":
+					out_placed.append(s)
+		return out_placed
+
 	var out: Array[String] = []
 	if frag == null or not is_instance_valid(frag):
 		return out
 
 	var v: Variant = null
 	var keys: Array[String] = ["equipped_modules", "modules", "module_ids"]
+
 	for k in keys:
 		var vv: Variant = frag.get(k)
 		if vv is Array:
@@ -1402,9 +1523,9 @@ func _get_equipped_modules(frag: Node) -> Array[String]:
 
 	if v is Array:
 		for it in (v as Array):
-			var s: String = String(it).strip_edges()
-			if s != "":
-				out.append(s)
+			var s2: String = String(it).strip_edges()
+			if s2 != "":
+				out.append(s2)
 
 	return out
 
@@ -1415,7 +1536,6 @@ func _get_building_def(building_id: String) -> Dictionary:
 	if id == "":
 		return out
 
-	# Preferred: ConstructionSystem method
 	if _construction != null:
 		if _construction.has_method("get_building_def"):
 			var dv: Variant = _construction.call("get_building_def", id)
@@ -1427,7 +1547,16 @@ func _get_building_def(building_id: String) -> Dictionary:
 			if dv2 is Dictionary:
 				return dv2 as Dictionary
 
-		# Direct table fallback
+		if _construction.has_method("get_building_item_info"):
+			var info_v: Variant = _construction.call("get_building_item_info", StringName(id))
+			if info_v is Dictionary and not (info_v as Dictionary).is_empty():
+				return info_v as Dictionary
+
+		if _construction.has_method("get_recipe_by_id"):
+			var rec_v: Variant = _construction.call("get_recipe_by_id", StringName(id))
+			if rec_v is Dictionary and not (rec_v as Dictionary).is_empty():
+				return rec_v as Dictionary
+
 		var tbl_v: Variant = _construction.get("BUILDINGS")
 		if tbl_v is Dictionary:
 			var tbl: Dictionary = tbl_v as Dictionary
@@ -1451,7 +1580,7 @@ func _io_to_entries(io_v: Variant) -> Array:
 			if id == "":
 				continue
 			var icon_tex: Texture2D = _resolve_item_icon(StringName(id))
-			var txt: String = "%s ×%d" % [id, max(1, qty)]
+			var txt: String = "%s ×%d" % [_resolve_item_label(StringName(id)), max(1, qty)]
 			entries.append({"text": txt, "icon": icon_tex, "header": false})
 		return entries
 
@@ -1465,17 +1594,83 @@ func _io_to_entries(io_v: Variant) -> Array:
 				if id2 == "":
 					continue
 				var icon2: Texture2D = _resolve_item_icon(StringName(id2))
-				var txt2: String = "%s ×%d" % [id2, max(1, qty2)]
+				var txt2: String = "%s ×%d" % [_resolve_item_label(StringName(id2)), max(1, qty2)]
 				entries.append({"text": txt2, "icon": icon2, "header": false})
 			else:
 				var id3: String = String(e).strip_edges()
 				if id3 == "":
 					continue
 				var icon3: Texture2D = _resolve_item_icon(StringName(id3))
-				entries.append({"text": id3, "icon": icon3, "header": false})
+				entries.append({"text": _resolve_item_label(StringName(id3)), "icon": icon3, "header": false})
 		return entries
 
 	return entries
+
+
+func _resolve_item_label(id: StringName) -> String:
+	if _items and _items.has_method("is_valid") and _items.has_method("display_name"):
+		var ok_v: Variant = _items.call("is_valid", id)
+		if bool(ok_v):
+			return String(_items.call("display_name", id))
+
+	if _construction and _construction.has_method("get_part_display_name"):
+		var label_v: Variant = _construction.call("get_part_display_name", String(id))
+		var label := String(label_v).strip_edges()
+		if label != "":
+			return label
+
+	return String(id)
+
+
+# -------------------------
+# Building placement
+# -------------------------
+func request_place_building_item(item_id: StringName) -> void:
+	if _construction == null:
+		push_warning("[SelectionHUD] Cannot place building: ConstructionSystem missing.")
+		return
+
+	if not _construction.has_method("get_place_building_block_reason"):
+		push_warning("[SelectionHUD] Cannot place building: ConstructionSystem missing get_place_building_block_reason().")
+		return
+
+	if not _construction.has_method("place_building_item_at"):
+		push_warning("[SelectionHUD] Cannot place building: ConstructionSystem missing place_building_item_at().")
+		return
+
+	var block_reason: String = String(_construction.call(
+		"get_place_building_block_reason",
+		_current_coord,
+		item_id
+	))
+
+	if block_reason != "":
+		push_warning("[SelectionHUD] Cannot place building: %s" % block_reason)
+		return
+
+	var item_name := _resolve_item_label(item_id)
+
+	var dialog := ConfirmationDialog.new()
+	dialog.title = "Install Building"
+	dialog.dialog_text = "Install %s on this tile?\n\nThis will consume 1x %s from your bank." % [
+		item_name,
+		item_name,
+	]
+
+	add_child(dialog)
+
+	dialog.confirmed.connect(func() -> void:
+		var placed := bool(_construction.call("place_building_item_at", _current_coord, item_id))
+		if placed:
+			_apply_fragment()
+		dialog.queue_free()
+	)
+
+	dialog.canceled.connect(func() -> void:
+		dialog.queue_free()
+	)
+
+	dialog.popup_centered()
 
 
 # -------------------------
@@ -1484,9 +1679,11 @@ func _io_to_entries(io_v: Variant) -> Array:
 func _p(obj: Object, key: String, default_value: Variant = null) -> Variant:
 	if obj == null:
 		return default_value
+
 	var v: Variant = obj.get(key)
 	if v == null:
 		return default_value
+
 	return v
 
 
@@ -1494,21 +1691,24 @@ func _p_str(obj: Object, key: String, default_value: String = "") -> String:
 	var v: Variant = _p(obj, key, null)
 	if v == null:
 		return default_value
+
 	return String(v)
 
 
-# SAFE meta getter (fixes your runtime error)
 func _meta(obj: Object, key: String, default_value: Variant = null) -> Variant:
 	if obj == null:
 		return default_value
+
 	if obj.has_meta(StringName(key)):
 		return obj.get_meta(StringName(key))
+
 	return default_value
 
 
 func _clear_container(c: Node) -> void:
 	if c == null:
 		return
+
 	for child in c.get_children():
 		child.queue_free()
 
@@ -1564,6 +1764,7 @@ func _apply_full_width_constraints() -> void:
 func _force_fill_control(c: Control) -> void:
 	if c == null:
 		return
+
 	c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	c.anchor_left = 0.0
 	c.anchor_right = 1.0
@@ -1586,7 +1787,6 @@ func _sync_coord_from_fragment(frag: Node) -> void:
 		_current_coord = ax_v as Vector2i
 		return
 
-	# SAFE meta (avoid “no meta values with key ...”)
 	var meta_ax: Variant = _meta(frag, "coord", null)
 	if meta_ax is Vector2i:
 		_current_coord = meta_ax as Vector2i
@@ -1607,11 +1807,9 @@ func _apply_readability_pass() -> void:
 		if lbl:
 			lbl.add_theme_font_size_override("font_size", font_section_title)
 
-	# Make modifier expand button readable
 	if _tile_modifiers_expand:
 		_tile_modifiers_expand.add_theme_font_size_override("font_size", font_small)
 
-	# Make building labels readable
 	if _building_name_label:
 		_building_name_label.add_theme_font_size_override("font_size", font_section_title)
 	if _building_status_label:
@@ -1619,7 +1817,6 @@ func _apply_readability_pass() -> void:
 	if _building_tier_label:
 		_building_tier_label.add_theme_font_size_override("font_size", font_small)
 
-	# Make tile labels readable
 	if _tile_name_label:
 		_tile_name_label.add_theme_font_size_override("font_size", font_tile_title)
 	if _tile_coord_label:

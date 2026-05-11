@@ -22,14 +22,17 @@ func list_saves() -> Array[Dictionary]:
 	_ensure_dir()
 	if not DirAccess.dir_exists_absolute(SAVE_DIR):
 		return out
+
 	var files: PackedStringArray = DirAccess.get_files_at(SAVE_DIR)
 	for f in files:
 		if not f.ends_with(".json"):
 			continue
+
 		var p: String = "%s/%s" % [SAVE_DIR, f]
 		var d: Dictionary = _try_read_json(p)
 		if d.is_empty():
 			continue
+
 		var meta: Dictionary = {}
 		var meta_v: Variant = d.get("meta", {})
 		if meta_v is Dictionary:
@@ -42,14 +45,17 @@ func list_saves() -> Array[Dictionary]:
 			fh.close()
 
 		out.append({
-			"id": f.get_basename(),                                  # "slot_1" or "autosave"
+			"id": f.get_basename(), # "slot_1" or "autosave"
 			"version": int(d.get("version", 1)),
 			"timestamp": int(meta.get("timestamp", d.get("timestamp", 0))),
 			"label": String(meta.get("label", d.get("label", f.get_basename()))),
 			"size_bytes": size_bytes,
 		})
+
 	out.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return int(a.get("timestamp", 0)) > int(b.get("timestamp", 0)))
+		return int(a.get("timestamp", 0)) > int(b.get("timestamp", 0))
+	)
+
 	return out
 
 func has_any_save() -> bool:
@@ -57,10 +63,11 @@ func has_any_save() -> bool:
 
 func latest_save_id() -> String:
 	var s: Array[Dictionary] = list_saves()
-	return String(s[0].get("id","")) if s.size() > 0 else ""
+	return String(s[0].get("id", "")) if s.size() > 0 else ""
 
 func save_grove(slot_id: String, label: String = "") -> bool:
 	_ensure_dir()
+
 	var path: String = _slot_path(slot_id)
 	var tmp: String = path + ".tmp"
 
@@ -72,22 +79,27 @@ func save_grove(slot_id: String, label: String = "") -> bool:
 			"label": (label if label != "" else slot_id),
 		},
 	}
+
 	for k in snapshot.keys():
-		payload[k] = snapshot[k]                          # ⬅ pulls current world snapshot
+		payload[k] = snapshot[k]
 
 	var json_str: String = JSON.stringify(payload, "\t")
 	var f: FileAccess = FileAccess.open(tmp, FileAccess.WRITE)
 	if f == null:
 		push_error("Save failed: cannot open temp file")
 		return false
+
 	f.store_string(json_str)
 	f.flush()
 	f.close()
 
 	if FileAccess.file_exists(path):
 		DirAccess.remove_absolute(path)
+
 	var ok: bool = (DirAccess.rename_absolute(tmp, path) == OK)
-	if ok: emit_signal("saves_changed")
+	if ok:
+		emit_signal("saves_changed")
+
 	return ok
 
 func save_autosave() -> void:
@@ -99,13 +111,17 @@ func load_grove(slot_id: String) -> bool:
 	if data.is_empty():
 		push_error("Load failed: bad or missing file")
 		return false
+
 	var v: int = int(data.get("version", 1))
 	var grove: Dictionary = _normalize_payload(data)
+
 	if v != VERSION:
 		grove = _migrate(grove, v, VERSION)
+
 	if typeof(GameState) != TYPE_NIL and GameState.has_method("reset_runtime_state"):
 		GameState.reset_runtime_state()
-	GameState.from_dict(grove)                                         # ⬅ puts dict into pending
+
+	GameState.from_dict(grove)
 	return true
 
 func delete_save(slot_id: String) -> void:
@@ -117,11 +133,14 @@ func delete_save(slot_id: String) -> void:
 func _try_read_json(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):
 		return {}
+
 	var f: FileAccess = FileAccess.open(path, FileAccess.READ)
 	if f == null:
 		return {}
+
 	var txt: String = f.get_as_text()
 	f.close()
+
 	var v: Variant = JSON.parse_string(txt)
 	return (v as Dictionary) if v is Dictionary else {}
 
@@ -129,11 +148,18 @@ func _normalize_payload(data: Dictionary) -> Dictionary:
 	if data.has("grove"):
 		var grove_v: Variant = data.get("grove", {})
 		var grove: Dictionary = grove_v as Dictionary if grove_v is Dictionary else {}
-		if grove.has("world") or grove.has("bank") or grove.has("villagers") or grove.has("villager_manager"):
+
+		if grove.has("world") \
+		or grove.has("bank") \
+		or grove.has("villagers") \
+		or grove.has("villager_manager") \
+		or grove.has("construction_system"):
 			return grove.duplicate(true)
+
 		return { "world": grove.duplicate(true) }
 
 	var normalized: Dictionary = {}
+
 	var world_v: Variant = data.get("world", null)
 	if world_v is Dictionary:
 		normalized["world"] = world_v
@@ -146,6 +172,7 @@ func _normalize_payload(data: Dictionary) -> Dictionary:
 		"villager_manager",
 		"mining_system",
 		"herbalism_system",
+		"construction_system",
 		"settings",
 	]:
 		var section_v: Variant = data.get(k, null)
@@ -157,6 +184,7 @@ func _normalize_payload(data: Dictionary) -> Dictionary:
 func _migrate(grove: Dictionary, from_v: int, to_v: int) -> Dictionary:
 	var data: Dictionary = grove.duplicate(true)
 	var v: int = from_v
+
 	while v < to_v:
 		match v:
 			1:
@@ -164,8 +192,10 @@ func _migrate(grove: Dictionary, from_v: int, to_v: int) -> Dictionary:
 					data["settings"] = {"auto_ward_threshold": 30}
 			_:
 				pass
+
 		v += 1
+
 	return data
-	
+
 func load_run(slot_id: String) -> bool:
 	return load_grove(slot_id)
