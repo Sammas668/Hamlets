@@ -1,5 +1,20 @@
 extends Control
 
+## craft_menu.gd
+##
+## Drop-in Craft Menu replacement updated for the tile-based Construction project flow.
+##
+## Important construction behaviour:
+## - Normal material / Tier 1 building recipes still behave like Craft 1 / Craft X / Craft All.
+## - Construction project recipes are detected by:
+##     is_construction_project == true
+##     kind == "construction_project"
+##     id begins with "construction_project:"
+## - Construction projects show project progress, failure chance, and per-action materials.
+## - Construction projects assign the villager with repeat=true so VillagerManager works until
+##   completion, missing resources, invalid state, or reassignment.
+## - Remove-building remains a one-shot tile action.
+
 var _v_idx: int = -1
 var _job: StringName = &"none"
 var _ax: Vector2i = Vector2i.ZERO
@@ -31,7 +46,9 @@ var _title_label: Label
 var _left_label: Label
 var _inputs_label: Label
 
-# Tier selector for tiered recipes
+# Tier selector for older tiered recipes.
+# New Construction should expose T1 bases as normal recipes and T2/T3 as project recipes,
+# so most Construction recipes will no longer use this selector.
 var _tier_panel: PanelContainer
 var _tier_box: HBoxContainer
 var _tier_label: Label
@@ -100,6 +117,13 @@ func setup(v_idx: int, job: StringName, ax: Vector2i, recipes: Array) -> void:
 			has_frag = bool(world.call("_has_fragment_at", _ax))
 		_is_summon = not has_frag
 
+	_apply_job_labels()
+
+	_init_filters_from_recipes()
+	_apply_filters(false)
+
+
+func _apply_job_labels() -> void:
 	if _title_label:
 		match _job:
 			&"mining":
@@ -134,7 +158,7 @@ func setup(v_idx: int, job: StringName, ax: Vector2i, recipes: Array) -> void:
 			&"scrying":
 				_left_label.text = "Options"
 			&"construction":
-				_left_label.text = "Blueprints"
+				_left_label.text = "Blueprints & Tile Projects"
 			_:
 				_left_label.text = "Recipes"
 
@@ -160,9 +184,6 @@ func setup(v_idx: int, job: StringName, ax: Vector2i, recipes: Array) -> void:
 
 	if _craft_all_btn:
 		_craft_all_btn.text = "Gather All" if _job == &"mining" else "Craft All"
-
-	_init_filters_from_recipes()
-	_apply_filters(false)
 
 
 # -------------------------------------------------------------------
@@ -306,6 +327,7 @@ func _build_layout() -> void:
 	name_box.add_child(_detail_desc)
 
 	_detail_req = Label.new()
+	_detail_req.autowrap_mode = TextServer.AUTOWRAP_WORD
 	_detail_req.add_theme_font_size_override("font_size", 20)
 	name_box.add_child(_detail_req)
 
@@ -390,7 +412,7 @@ func _build_layout() -> void:
 
 	_craft_1_btn = Button.new()
 	_craft_1_btn.text = "Craft 1"
-	_craft_1_btn.custom_minimum_size = Vector2(110, 40)
+	_craft_1_btn.custom_minimum_size = Vector2(140, 40)
 	_craft_1_btn.focus_mode = Control.FOCUS_NONE
 	footer.add_child(_craft_1_btn)
 
@@ -402,7 +424,7 @@ func _build_layout() -> void:
 
 	_craft_all_btn = Button.new()
 	_craft_all_btn.text = "Craft All"
-	_craft_all_btn.custom_minimum_size = Vector2(110, 40)
+	_craft_all_btn.custom_minimum_size = Vector2(150, 40)
 	_craft_all_btn.focus_mode = Control.FOCUS_NONE
 	footer.add_child(_craft_all_btn)
 
@@ -509,6 +531,11 @@ func _wire_basic() -> void:
 
 	if _craft_all_btn:
 		_craft_all_btn.pressed.connect(func() -> void:
+			var rec := _selected_recipe()
+			if _is_construction_project_recipe(rec):
+				_start_craft(1)
+				return
+
 			var max_count := _max_craftable_count()
 			if max_count > 0:
 				_start_craft(max_count)
@@ -516,6 +543,11 @@ func _wire_basic() -> void:
 
 	if _craft_x_btn:
 		_craft_x_btn.pressed.connect(func() -> void:
+			var rec := _selected_recipe()
+			if _is_construction_project_recipe(rec):
+				_start_craft(1)
+				return
+
 			var x := _parse_x_input()
 			if x <= 0:
 				return
@@ -697,6 +729,7 @@ func _apply_filters(keep_selection: bool) -> void:
 		if _recipe_passes_filters(rec):
 			_recipes.append(rec)
 
+	_sort_recipes_for_display()
 	_populate_recipes()
 
 	var new_idx := -1
@@ -719,6 +752,47 @@ func _apply_filters(keep_selection: bool) -> void:
 		_update_start_button_state()
 
 
+func _sort_recipes_for_display() -> void:
+	_recipes.sort_custom(func(a: Variant, b: Variant) -> bool:
+		if not (a is Dictionary) or not (b is Dictionary):
+			return false
+
+		var da: Dictionary = a as Dictionary
+		var db: Dictionary = b as Dictionary
+
+		var ca := _recipe_category_rank(da)
+		var cb := _recipe_category_rank(db)
+		if ca != cb:
+			return ca < cb
+
+		var la := String(da.get("label", da.get("id", ""))).to_lower()
+		var lb := String(db.get("label", db.get("id", ""))).to_lower()
+		return la < lb
+	)
+
+
+func _recipe_category_rank(rec: Dictionary) -> int:
+	if _is_remove_recipe(rec):
+		return 90
+
+	if _is_construction_project_recipe(rec):
+		return 20
+
+	var kind := String(rec.get("kind", "")).strip_edges().to_lower()
+	var group := String(rec.get("group", "")).strip_edges().to_lower()
+
+	if kind == "material" or group == "building_material":
+		return 0
+
+	if kind == "base" or group == "building_base":
+		return 10
+
+	if kind == "module" or group == "building_module":
+		return 15
+
+	return 50
+
+
 func _recipe_passes_filters(rec: Dictionary) -> bool:
 	if _filter_use_skill != &"":
 		var use := _recipe_use_skill(rec)
@@ -726,6 +800,12 @@ func _recipe_passes_filters(rec: Dictionary) -> bool:
 			return false
 
 	if _filter_tier != -1:
+		if _is_construction_project_recipe(rec):
+			var ft_project := _recipe_fixed_tier(rec)
+			if _filter_tier == 0:
+				return ft_project <= 0
+			return ft_project == _filter_tier
+
 		if rec.has("tier_min") and rec.has("tier_max"):
 			if _filter_tier == 0:
 				return false
@@ -744,6 +824,9 @@ func _recipe_passes_filters(rec: Dictionary) -> bool:
 
 
 func _recipe_output_item_id(rec: Dictionary) -> StringName:
+	if _is_construction_project_recipe(rec):
+		return StringName()
+
 	var outputs_v: Variant = rec.get("outputs", [])
 	if outputs_v is Array:
 		var outputs: Array = outputs_v as Array
@@ -802,6 +885,9 @@ func _recipe_output_item_id(rec: Dictionary) -> StringName:
 
 
 func _recipe_use_skill(rec: Dictionary) -> StringName:
+	if _is_construction_project_recipe(rec):
+		return &"construction"
+
 	if _is_action_recipe(rec):
 		return &"construction"
 
@@ -886,6 +972,9 @@ func _recipe_use_skill(rec: Dictionary) -> StringName:
 	if p.begins_with("chisel_") or p.begins_with("saw_") or p.begins_with("construction_"):
 		return &"construction"
 
+	if p.begins_with("building_"):
+		return &"construction"
+
 	if p.begins_with("sword_") or p.begins_with("dagger_") or p.begins_with("mace_") or p.begins_with("scimitar_") \
 	or p.begins_with("longsword_") or p.begins_with("warhammer_") or p.begins_with("battleaxe_") \
 	or p.begins_with("two_handed_sword_") or p.begins_with("bow_") or p.begins_with("spear_"):
@@ -899,11 +988,23 @@ func _recipe_use_skill(rec: Dictionary) -> StringName:
 
 
 func _recipe_fixed_tier(rec: Dictionary) -> int:
+	if rec.has("target_tier"):
+		return int(rec.get("target_tier", 0))
+
+	if rec.has("build_tier"):
+		return int(rec.get("build_tier", 0))
+
 	if rec.has("tier"):
 		return int(rec.get("tier", 0))
 
 	if rec.has("mat_tier"):
 		return int(rec.get("mat_tier", 0))
+
+	if rec.has("module_tier"):
+		return int(rec.get("module_tier", 0))
+
+	if rec.has("min_building_tier"):
+		return int(rec.get("min_building_tier", 0))
 
 	if rec.has("tier_req"):
 		return int(rec.get("tier_req", 0))
@@ -921,6 +1022,9 @@ func _recipe_fixed_tier(rec: Dictionary) -> int:
 
 func _has_real_tiers_for_recipe(rec: Dictionary) -> bool:
 	if _job != &"construction":
+		return false
+
+	if _is_construction_project_recipe(rec):
 		return false
 
 	if not rec.has("base_id"):
@@ -946,6 +1050,71 @@ func _has_real_tiers_for_recipe(rec: Dictionary) -> bool:
 
 
 # -------------------------------------------------------------------
+# Recipe type helpers
+# -------------------------------------------------------------------
+func _is_remove_recipe(rec: Dictionary) -> bool:
+	var rid := String(rec.get("id", ""))
+	return rid.begins_with("remove_building:") \
+		or String(rec.get("kind", "")).strip_edges().to_lower() == "remove_building" \
+		or bool(rec.get("is_remove_recipe", false))
+
+
+func _is_construction_project_recipe(rec: Dictionary) -> bool:
+	if rec.is_empty():
+		return false
+
+	var rid := String(rec.get("id", ""))
+	var kind := String(rec.get("kind", "")).strip_edges().to_lower()
+
+	return bool(rec.get("is_construction_project", false)) \
+		or kind == "construction_project" \
+		or rid.begins_with("construction_project:")
+
+
+func _is_action_recipe(rec: Dictionary) -> bool:
+	if _is_construction_project_recipe(rec):
+		return false
+
+	if _is_remove_recipe(rec):
+		return true
+
+	var rid: String = String(rec.get("id", ""))
+
+	if String(rec.get("kind", "")).strip_edges().to_lower() == "action":
+		return true
+
+	if bool(rec.get("is_action", false)):
+		return true
+
+	# Keep generic zero-IO action detection narrow so normal gathering recipes
+	# with empty outputs do not become action recipes.
+	if _job == &"construction":
+		var inputs: Array = _as_array(rec.get("inputs", []))
+		var outputs: Array = _as_array(rec.get("outputs", []))
+		var group := String(rec.get("group", ""))
+		var kind := String(rec.get("kind", "")).strip_edges().to_lower()
+
+		if inputs.is_empty() and outputs.is_empty() and (group == "" or kind == "action"):
+			return true
+
+	return false
+
+
+func _as_array(v: Variant) -> Array:
+	return v as Array if v is Array else []
+
+
+func _inputs_for_display(rec: Dictionary) -> Array:
+	if _is_construction_project_recipe(rec):
+		var per_action_v: Variant = rec.get("per_action_inputs", rec.get("inputs", []))
+		if per_action_v is Array:
+			return per_action_v as Array
+		return []
+
+	return _as_array(rec.get("inputs", []))
+
+
+# -------------------------------------------------------------------
 # Populate + selection
 # -------------------------------------------------------------------
 func _populate_recipes() -> void:
@@ -954,6 +1123,15 @@ func _populate_recipes() -> void:
 
 	for c in _recipes_vbox.get_children():
 		c.queue_free()
+
+	if _recipes.is_empty():
+		var none := Label.new()
+		none.text = "No available recipes or actions."
+		none.autowrap_mode = TextServer.AUTOWRAP_WORD
+		none.add_theme_font_size_override("font_size", int(20 * _ui_scale))
+		none.add_theme_color_override("font_color", Color(1.0, 0.8, 0.6))
+		_recipes_vbox.add_child(none)
+		return
 
 	for i in range(_recipes.size()):
 		var rec_v: Variant = _recipes[i]
@@ -970,16 +1148,10 @@ func _populate_recipes() -> void:
 		btn.custom_minimum_size = Vector2(0, 44 * _ui_scale)
 		btn.add_theme_font_size_override("font_size", int(20 * _ui_scale))
 
-		var label_str := String(rec.get("label", "Recipe"))
-		var level_req := int(rec.get("level_req", 0))
-
-		if level_req > 0:
-			label_str += "  (Lv %d)" % level_req
-
-		if _is_action_recipe(rec):
-			label_str = "⚙ %s" % label_str
+		var label_str := _recipe_row_label(rec)
 
 		btn.text = label_str
+		btn.disabled = bool(rec.get("disabled", false))
 		btn.set_meta("recipe_index", i)
 
 		btn.pressed.connect(func() -> void:
@@ -989,6 +1161,40 @@ func _populate_recipes() -> void:
 		)
 
 		_recipes_vbox.add_child(btn)
+
+
+func _recipe_row_label(rec: Dictionary) -> String:
+	var label_str := String(rec.get("label", "Recipe"))
+	var level_req := int(rec.get("level_req", 0))
+	var prefix := ""
+
+	if _is_construction_project_recipe(rec):
+		prefix = "🏗 "
+	elif _is_remove_recipe(rec):
+		prefix = "⚠ "
+	elif _is_action_recipe(rec):
+		prefix = "⚙ "
+
+	if level_req > 0:
+		label_str += "  (Lv %d)" % level_req
+
+	var progress := _project_progress_short(rec)
+	if progress != "":
+		label_str += "  " + progress
+
+	return prefix + label_str
+
+
+func _project_progress_short(rec: Dictionary) -> String:
+	if not _is_construction_project_recipe(rec):
+		return ""
+
+	var done := int(rec.get("successful_actions", 0))
+	var needed := int(rec.get("required_successes", 0))
+	if needed <= 0:
+		return ""
+
+	return "[%d/%d]" % [done, needed]
 
 
 func _select_recipe(idx: int) -> void:
@@ -1011,6 +1217,7 @@ func _select_recipe(idx: int) -> void:
 
 	var rec: Dictionary = rec_v
 	var is_action := _is_action_recipe(rec)
+	var is_project := _is_construction_project_recipe(rec)
 
 	var label_str := String(rec.get("label", "Recipe"))
 	var desc_str := String(rec.get("desc", rec.get("effect_raw", "")))
@@ -1021,7 +1228,9 @@ func _select_recipe(idx: int) -> void:
 		_detail_name.text = label_str
 
 	if _detail_desc:
-		if desc_str != "":
+		if is_project:
+			_detail_desc.text = _project_description_text(rec, desc_str)
+		elif desc_str != "":
 			_detail_desc.text = desc_str
 		elif is_action:
 			_detail_desc.text = "Perform this one-time tile action."
@@ -1029,6 +1238,9 @@ func _select_recipe(idx: int) -> void:
 			_detail_desc.text = "No description yet."
 
 	if _detail_req:
+		if _detail_req.has_theme_color_override("font_color"):
+			_detail_req.remove_theme_color_override("font_color")
+
 		var req_parts: Array[String] = []
 
 		if level_req > 0:
@@ -1036,9 +1248,17 @@ func _select_recipe(idx: int) -> void:
 			req_parts.append("%s level %d required" % [skill_name, level_req])
 
 		if xp > 0:
-			req_parts.append("%d XP per cycle" % xp)
+			if is_project:
+				req_parts.append("%d XP per successful action" % xp)
+			else:
+				req_parts.append("%d XP per cycle" % xp)
 
-		if is_action:
+		if is_project:
+			req_parts.append("Tile project")
+			var fail_text := _fail_chance_text(rec)
+			if fail_text != "":
+				req_parts.append("Failure chance: %s" % fail_text)
+		elif is_action:
 			req_parts.append("One-time action")
 
 		_detail_req.text = " • ".join(req_parts)
@@ -1092,6 +1312,49 @@ func _select_recipe(idx: int) -> void:
 	_update_start_button_state()
 
 
+func _project_description_text(rec: Dictionary, fallback_desc: String) -> String:
+	var parts: Array[String] = []
+
+	if fallback_desc != "":
+		parts.append(fallback_desc)
+
+	var ptype := String(rec.get("project_type", ""))
+	if ptype != "":
+		parts.append("Project type: %s" % ptype.replace("_", " ").capitalize())
+
+	var done := int(rec.get("successful_actions", 0))
+	var required := int(rec.get("required_successes", 0))
+	if required > 0:
+		parts.append("Progress: %d / %d successful actions." % [done, required])
+
+	var failed := int(rec.get("failed_actions", 0))
+	if failed > 0:
+		parts.append("Failures: %d." % failed)
+
+	var req_con := int(rec.get("req_con_lv", rec.get("construction_level_req", rec.get("level_req", 0))))
+	if req_con > 0:
+		parts.append("True Construction requirement: %d." % req_con)
+
+	var fail_text := _fail_chance_text(rec)
+	if fail_text != "":
+		parts.append("Failure chance this worker: %s." % fail_text)
+
+	parts.append("Each completed action consumes the per-action packet. Success adds progress. Failure adds no progress and refunds 25% of consumed materials, rounded down.")
+
+	return "\n".join(parts)
+
+
+func _fail_chance_text(rec: Dictionary) -> String:
+	if not rec.has("fail_chance"):
+		return ""
+
+	var fail_chance := float(rec.get("fail_chance", 0.0))
+	if fail_chance < 0.0:
+		return "Cannot attempt"
+
+	return "%d%%" % int(round(fail_chance * 100.0))
+
+
 func _populate_requirement_rows(rec: Dictionary, is_action: bool) -> void:
 	if _detail_inputs_vbox == null:
 		return
@@ -1099,15 +1362,21 @@ func _populate_requirement_rows(rec: Dictionary, is_action: bool) -> void:
 	for c in _detail_inputs_vbox.get_children():
 		c.queue_free()
 
-	var inputs: Array = rec.get("inputs", []) as Array
+	var is_project := _is_construction_project_recipe(rec)
+	var inputs: Array = _inputs_for_display(rec)
 
 	if _inputs_label:
-		if is_action:
+		if is_project:
+			_inputs_label.text = "Per-action materials:"
+		elif is_action:
 			_inputs_label.text = "Action:"
 		elif _job == &"mining":
 			_inputs_label.text = "Result:"
 		else:
 			_inputs_label.text = "Required materials:"
+
+	if is_project:
+		_add_project_summary_rows(rec)
 
 	if inputs.is_empty():
 		var lbl := Label.new()
@@ -1115,7 +1384,10 @@ func _populate_requirement_rows(rec: Dictionary, is_action: bool) -> void:
 		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
 		lbl.add_theme_font_size_override("font_size", int(20 * _ui_scale))
 
-		if is_action:
+		if is_project:
+			lbl.text = "No per-action materials listed. This project can still be assigned if ConstructionSystem accepts it."
+			lbl.add_theme_color_override("font_color", Color(0.85, 0.95, 1.0))
+		elif is_action:
 			lbl.text = "No materials required. This is a one-time tile action."
 			lbl.add_theme_color_override("font_color", Color(0.85, 0.95, 1.0))
 		else:
@@ -1182,6 +1454,39 @@ func _populate_requirement_rows(rec: Dictionary, is_action: bool) -> void:
 
 		row.add_child(lbl2)
 		_detail_inputs_vbox.add_child(row)
+
+
+func _add_project_summary_rows(rec: Dictionary) -> void:
+	var summary: Array[String] = []
+
+	var done := int(rec.get("successful_actions", 0))
+	var required := int(rec.get("required_successes", 0))
+	if required > 0:
+		summary.append("Progress: %d / %d successes" % [done, required])
+
+	var failed := int(rec.get("failed_actions", 0))
+	summary.append("Failures: %d" % failed)
+
+	if rec.has("status"):
+		summary.append("Status: %s" % String(rec.get("status", "")).replace("_", " ").capitalize())
+
+	if rec.has("assigned_worker"):
+		var worker := int(rec.get("assigned_worker", -1))
+		if worker >= 0:
+			summary.append("Assigned worker: #%d" % worker)
+
+	var fail_text := _fail_chance_text(rec)
+	if fail_text != "":
+		summary.append("Failure chance: %s" % fail_text)
+
+	for line in summary:
+		var lbl := Label.new()
+		lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		lbl.autowrap_mode = TextServer.AUTOWRAP_WORD
+		lbl.add_theme_font_size_override("font_size", int(20 * _ui_scale))
+		lbl.add_theme_color_override("font_color", Color(0.85, 0.95, 1.0))
+		lbl.text = line
+		_detail_inputs_vbox.add_child(lbl)
 
 
 func _clear_detail() -> void:
@@ -1275,32 +1580,6 @@ func _selected_recipe() -> Dictionary:
 	return rec_v as Dictionary
 
 
-func _is_action_recipe(rec: Dictionary) -> bool:
-	var rid: String = String(rec.get("id", ""))
-
-	if rid.begins_with("remove_building:"):
-		return true
-
-	if String(rec.get("kind", "")).strip_edges().to_lower() == "action":
-		return true
-
-	if bool(rec.get("is_action", false)):
-		return true
-
-	# Keep generic zero-IO action detection narrow so normal gathering recipes
-	# with empty outputs do not become action recipes.
-	if _job == &"construction":
-		var inputs: Array = rec.get("inputs", []) as Array
-		var outputs: Array = rec.get("outputs", []) as Array
-		var group := String(rec.get("group", ""))
-		var kind := String(rec.get("kind", "")).strip_edges().to_lower()
-
-		if inputs.is_empty() and outputs.is_empty() and (group == "" or kind == "action"):
-			return true
-
-	return false
-
-
 # -------------------------------------------------------------------
 # Requirements + Buttons
 # -------------------------------------------------------------------
@@ -1311,6 +1590,12 @@ func _can_craft_selected() -> bool:
 
 	if bool(rec.get("disabled", false)):
 		return false
+
+	if _is_construction_project_recipe(rec):
+		if rec.has("fail_chance") and float(rec.get("fail_chance", 0.0)) < 0.0:
+			return false
+
+		return _max_craftable_count() > 0
 
 	var level_req: int = int(rec.get("level_req", 0))
 	var skill_id: StringName = StringName(rec.get("skill", _job))
@@ -1328,7 +1613,7 @@ func _max_craftable_count() -> int:
 	if rec.is_empty():
 		return 0
 
-	var inputs: Array = rec.get("inputs", []) as Array
+	var inputs: Array = _inputs_for_display(rec)
 	if inputs.is_empty():
 		return 1
 
@@ -1357,7 +1642,7 @@ func _max_craftable_count() -> int:
 			max_count = possible
 
 	if max_count == 1_000_000_000:
-		return 0
+		return 1
 
 	return max_count
 
@@ -1390,13 +1675,34 @@ func _is_single_run_job() -> bool:
 func _update_start_button_state() -> void:
 	var rec := _selected_recipe()
 	var is_action := false
+	var is_project := false
 	if not rec.is_empty():
 		is_action = _is_action_recipe(rec)
+		is_project = _is_construction_project_recipe(rec)
 
 	var can1 := _can_craft_selected()
 	var max_count := 0
 	if can1:
 		max_count = _max_craftable_count()
+
+	if is_project:
+		if _x_label:
+			_x_label.visible = false
+		if _x_input:
+			_x_input.visible = false
+		if _craft_x_btn:
+			_craft_x_btn.visible = false
+			_craft_x_btn.disabled = true
+		if _craft_all_btn:
+			_craft_all_btn.visible = false
+			_craft_all_btn.disabled = true
+
+		if _craft_1_btn:
+			_craft_1_btn.visible = true
+			_craft_1_btn.disabled = not can1
+			_craft_1_btn.text = "Work Until Complete"
+
+		return
 
 	if _is_single_run_job() or is_action:
 		if _x_label:
@@ -1460,14 +1766,20 @@ func _start_craft(count: int) -> void:
 	if count <= 0:
 		return
 
-	if not _can_craft_selected():
-		return
-
 	var rec := _selected_recipe()
 	if rec.is_empty():
 		return
 
 	var recipe_id := StringName(rec.get("id", &""))
+	if recipe_id == StringName():
+		return
+
+	if _is_construction_project_recipe(rec):
+		_start_construction_project(recipe_id)
+		return
+
+	if not _can_craft_selected():
+		return
 
 	if _is_action_recipe(rec) or _is_single_run_job():
 		count = 1
@@ -1486,3 +1798,35 @@ func _start_craft(count: int) -> void:
 			VillagerManager.assign_job(_v_idx, _job)
 
 	queue_free()
+
+
+func _start_construction_project(recipe_id: StringName) -> void:
+	if _job != &"construction":
+		return
+
+	if not _can_craft_selected():
+		return
+
+	if typeof(ConstructionSystem) != TYPE_NIL \
+	and ConstructionSystem.has_method("start_or_continue_project"):
+		var started_v: Variant = ConstructionSystem.start_or_continue_project(_ax, recipe_id, _v_idx)
+		if started_v is Dictionary:
+			var started: Dictionary = started_v as Dictionary
+			if not bool(started.get("ok", false)):
+				_show_inline_error(String(started.get("reason", "Cannot start construction project.")))
+				return
+
+	if typeof(VillagerManager) != TYPE_NIL and VillagerManager.has_method("assign_job_with_recipe"):
+		# Construction projects intentionally repeat until ConstructionSystem/VillagerManager
+		# stops them because the project completed, resources ran out, or state became invalid.
+		VillagerManager.assign_job_with_recipe(_v_idx, _job, _ax, recipe_id, 1, true)
+		queue_free()
+		return
+
+	_show_inline_error("VillagerManager cannot assign construction jobs.")
+
+
+func _show_inline_error(message: String) -> void:
+	if _detail_req:
+		_detail_req.text = message
+		_detail_req.add_theme_color_override("font_color", Color(1.0, 0.55, 0.45))

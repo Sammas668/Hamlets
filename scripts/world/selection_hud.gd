@@ -147,7 +147,8 @@ func _ready() -> void:
 		if debug_logging:
 			print("[SelectionHUD] Selection autoload missing or has no fragment_selected signal.")
 
-	# Wire ConstructionSystem placed-building refresh
+	# Wire ConstructionSystem placed-building / project refresh.
+	# ConstructionSystem emits building_changed when buildings or active projects mutate.
 	if _construction != null and _construction.has_signal("building_changed"):
 		var cb_building_changed := Callable(self, "_on_construction_building_changed")
 		if not _construction.is_connected("building_changed", cb_building_changed):
@@ -1306,27 +1307,22 @@ func _update_building_tab() -> void:
 	var using_placed_building := not placed.is_empty()
 
 	var building_id: String = ""
-	var modules: Array[String] = []
+	var module_ids: Array[String] = []
 
 	if using_placed_building:
 		building_id = String(placed.get("base_item_id", placed.get("recipe_id", ""))).strip_edges()
-
-		var modules_v: Variant = placed.get("modules", [])
-		if modules_v is Array:
-			for m in modules_v as Array:
-				var ms := String(m).strip_edges()
-				if ms != "":
-					modules.append(ms)
+		module_ids = _get_module_ids_from_placed_state(placed)
 	else:
 		building_id = _get_equipped_building_id(_current_fragment)
-		modules = _get_equipped_modules(_current_fragment)
+		module_ids = _get_equipped_modules(_current_fragment)
 
 	# Slot icons
 	_set_button_icon_from_id(_building_slot, building_id)
+
 	for i in range(_module_slots.size()):
 		var id: String = ""
-		if i >= 0 and i < modules.size():
-			id = modules[i]
+		if i >= 0 and i < module_ids.size():
+			id = module_ids[i]
 		_set_button_icon_from_id(_module_slots[i], id)
 
 	# No building equipped/placed
@@ -1374,8 +1370,12 @@ func _update_building_tab() -> void:
 		else:
 			status = "Installed."
 
+		var project_status := _active_project_status_short(_current_coord)
+		if project_status != "":
+			status += " %s" % project_status
+
 		in_entries = _io_to_entries(placed.get("inputs", []))
-		out_entries = []
+		out_entries = _placed_building_detail_entries(placed, _current_coord)
 	else:
 		var def: Dictionary = _get_building_def(building_id)
 
@@ -1420,13 +1420,236 @@ func _update_building_tab() -> void:
 
 	if using_placed_building:
 		_populate_entries(_building_inputs_list, in_entries, "Original kit cost unavailable")
-		_populate_entries(_building_outputs_list, out_entries, "Outputs handled by assigned jobs/modules")
+		_populate_entries(_building_outputs_list, out_entries, "No modules or active project")
 	else:
 		_populate_entries(_building_inputs_list, in_entries, "No inputs")
 		_populate_entries(_building_outputs_list, out_entries, "No outputs")
 
 	_set_section_visible(_building_io_row, true)
 	_set_buttons_enabled(_building_buttons_row, true)
+
+
+func _get_module_ids_from_placed_state(placed: Dictionary) -> Array[String]:
+	var out: Array[String] = []
+
+	var modules_v: Variant = placed.get("modules", [])
+	if not (modules_v is Array):
+		return out
+
+	for m_v in modules_v as Array:
+		var module_id := _module_id_from_state(m_v)
+		if module_id != "":
+			out.append(module_id)
+
+	return out
+
+
+func _module_id_from_state(m_v: Variant) -> String:
+	if m_v is Dictionary:
+		var m: Dictionary = m_v as Dictionary
+		return String(m.get("id", m.get("module_id", ""))).strip_edges()
+
+	return String(m_v).strip_edges()
+
+
+func _module_level_from_state(m_v: Variant) -> int:
+	if m_v is Dictionary:
+		var m: Dictionary = m_v as Dictionary
+		return max(1, int(m.get("level", 1)))
+
+	return 1
+
+
+func _module_label(module_id: String) -> String:
+	var clean := module_id.strip_edges()
+	if clean == "":
+		return ""
+
+	return _resolve_item_label(StringName(clean))
+
+
+func _placed_building_detail_entries(placed: Dictionary, ax: Vector2i) -> Array:
+	var entries: Array = []
+
+	entries.append({
+		"text": "Modules",
+		"icon": null,
+		"header": true,
+	})
+
+	var modules: Array = []
+	var modules_v: Variant = placed.get("modules", [])
+	if modules_v is Array:
+		modules = modules_v as Array
+
+	var tier_val := int(placed.get("tier", 1))
+	var slot_count := _module_slot_count_for_tier(tier_val)
+
+	for i in range(slot_count):
+		if i < modules.size():
+			var m_v: Variant = modules[i]
+			var module_id := _module_id_from_state(m_v)
+			var level := _module_level_from_state(m_v)
+
+			if module_id != "":
+				entries.append({
+					"text": "Slot %d: %s — Level %d" % [
+						i + 1,
+						_module_label(module_id),
+						level
+					],
+					"icon": _resolve_item_icon(StringName(module_id)),
+					"header": false,
+				})
+			else:
+				entries.append({
+					"text": "Slot %d: Empty" % [i + 1],
+					"icon": null,
+					"header": false,
+				})
+		else:
+			entries.append({
+				"text": "Slot %d: Empty" % [i + 1],
+				"icon": null,
+				"header": false,
+			})
+
+	var max_visible_slots := maxi(slot_count, _module_slots.size())
+	for locked_i in range(slot_count, max_visible_slots):
+		entries.append({
+			"text": "Slot %d: Locked" % [locked_i + 1],
+			"icon": null,
+			"header": false,
+		})
+
+	var project_text := _describe_active_construction_project(ax)
+	if project_text != "":
+		entries.append({
+			"text": "",
+			"icon": null,
+			"header": false,
+		})
+
+		entries.append({
+			"text": "Construction Project",
+			"icon": null,
+			"header": true,
+		})
+
+		for line in project_text.split("\n", false):
+			entries.append({
+				"text": String(line),
+				"icon": null,
+				"header": false,
+			})
+
+	return entries
+
+
+func _module_slot_count_for_tier(tier: int) -> int:
+	if _construction != null and _construction.has_method("get_module_slot_count_for_tier"):
+		return max(0, int(_construction.call("get_module_slot_count_for_tier", tier)))
+
+	# Locked construction rule fallback:
+	# T1 = 1 module slot, T2 = 2, T3 = 3.
+	return clampi(tier, 1, 3)
+
+
+func _active_project_status_short(ax: Vector2i) -> String:
+	if _construction == null:
+		return ""
+
+	if not _construction.has_method("get_active_project"):
+		return ""
+
+	var project_v: Variant = _construction.call("get_active_project", ax)
+	if not (project_v is Dictionary):
+		return ""
+
+	var project: Dictionary = project_v as Dictionary
+	if project.is_empty():
+		return ""
+
+	var done := int(project.get("successful_actions", 0))
+	var needed := int(project.get("required_successes", 0))
+	if needed > 0:
+		return "Project %d/%d." % [done, needed]
+
+	return "Project active."
+
+
+func _describe_active_construction_project(ax: Vector2i) -> String:
+	if _construction == null:
+		return ""
+
+	if not _construction.has_method("get_active_project"):
+		return ""
+
+	var project_v: Variant = _construction.call("get_active_project", ax)
+	if not (project_v is Dictionary):
+		return ""
+
+	var project: Dictionary = project_v as Dictionary
+	if project.is_empty():
+		return "No active construction project."
+
+	var lines: Array[String] = []
+
+	var ptype := String(project.get("type", project.get("project_type", ""))).strip_edges()
+	var title := String(project.get("label", "")).strip_edges()
+
+	if title == "":
+		match ptype:
+			"upgrade_building":
+				title = "Upgrade to Tier %d" % int(project.get("target_tier", 0))
+			"install_module":
+				var module_id := String(project.get("module_id", "")).strip_edges()
+				if module_id != "":
+					title = "Install %s" % _module_label(module_id)
+				else:
+					title = "Install Module"
+			"upgrade_module":
+				var module_id2 := String(project.get("module_id", "")).strip_edges()
+				var target_level := int(project.get("target_level", 0))
+				if module_id2 != "" and target_level > 0:
+					title = "Upgrade %s to Level %d" % [_module_label(module_id2), target_level]
+				elif module_id2 != "":
+					title = "Upgrade %s" % _module_label(module_id2)
+				else:
+					title = "Upgrade Module"
+			_:
+				title = "Construction Project"
+
+	lines.append("Active Project: %s" % title)
+
+	var required := int(project.get("required_successes", 1))
+	lines.append("Progress: %d / %d successes" % [
+		int(project.get("successful_actions", 0)),
+		max(1, required)
+	])
+
+	lines.append("Failures: %d" % int(project.get("failed_actions", 0)))
+
+	var status := String(project.get("status", "working")).strip_edges()
+	if status != "":
+		lines.append("Status: %s" % status.replace("_", " ").capitalize())
+
+	var worker := int(project.get("assigned_worker", -1))
+	if worker >= 0:
+		lines.append("Assigned Worker: #%d" % worker)
+
+	var req := int(project.get("req_con_lv", project.get("construction_level_req", 0)))
+	if req > 0:
+		lines.append("Required Construction: %d" % req)
+
+	var fail_chance := float(project.get("fail_chance", 999.0))
+	if fail_chance != 999.0:
+		if fail_chance < 0.0:
+			lines.append("Failure Chance: Cannot attempt")
+		else:
+			lines.append("Failure Chance: %d%%" % int(round(fail_chance * 100.0)))
+
+	return "\n".join(lines)
 
 
 func _set_button_icon_from_id(btn: Button, id: String) -> void:
@@ -1499,14 +1722,7 @@ func _get_equipped_building_id(frag: Node) -> String:
 func _get_equipped_modules(frag: Node) -> Array[String]:
 	var placed := _get_placed_building_state()
 	if not placed.is_empty():
-		var out_placed: Array[String] = []
-		var modules_v: Variant = placed.get("modules", [])
-		if modules_v is Array:
-			for it in modules_v as Array:
-				var s := String(it).strip_edges()
-				if s != "":
-					out_placed.append(s)
-		return out_placed
+		return _get_module_ids_from_placed_state(placed)
 
 	var out: Array[String] = []
 	if frag == null or not is_instance_valid(frag):
