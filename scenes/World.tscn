@@ -277,135 +277,153 @@ layout_mode = 2
 text = "Close"
 
 [node name="SelectionHUD" type="Panel" parent="CanvasLayer" unique_id=1144713739]
-custom_minimum_size = Vector2(640, 520)
-offset_top = 59.0
-offset_right = 427.0
-offset_bottom = 379.0
+custom_minimum_size = Vector2(560, 430)
+offset_left = 16.0
+offset_top = 120.0
+offset_right = 576.0
+offset_bottom = 550.0
 script = ExtResource("2_32lhk")
 debug_logging = true
 
 [node name="Margin" type="MarginContainer" parent="CanvasLayer/SelectionHUD" unique_id=1138386885]
-custom_minimum_size = Vector2(620, 0)
-layout_mode = 0
-offset_left = 10.0
-offset_right = 630.0
-theme_override_constants/margin_left = 18
-theme_override_constants/margin_top = 18
-theme_override_constants/margin_right = 18
-theme_override_constants/margin_bottom = 18
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
 
 [node name="RootVBox" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin" unique_id=1101217282]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 12
+theme_override_constants/separation = 8
 
 [node name="ModeHeader" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox" unique_id=532107717]
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
 [node name="TileTabButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeHeader" unique_id=1199615562]
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 text = "Tile"
 
 [node name="BuildingTabButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/ModeHeader" unique_id=1644234315]
-custom_minimum_size = Vector2(0, 36)
+custom_minimum_size = Vector2(0, 34)
 layout_mode = 2
 size_flags_horizontal = 3
 toggle_mode = true
 text = "Building"
 
 [node name="Scroll" type="ScrollContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox" unique_id=422991289]
-custom_minimum_size = Vector2(0, 1)
+custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
 [node name="ScrollContent" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll" unique_id=1780955912]
-custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 10
+size_flags_vertical = 0
+theme_override_constants/separation = 8
 
 [node name="ModeTabs" type="TabContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent" unique_id=2118582473]
-custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 0
 current_tab = 0
 tabs_visible = false
 
 [node name="TileTab" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs" unique_id=1020976525]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 0
 theme_override_constants/separation = 10
 metadata/_tab_index = 0
 
 [node name="TileHeaderRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab" unique_id=970050966]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="TileIcon" type="TextureRect" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow" unique_id=19682092]
-custom_minimum_size = Vector2(44, 44)
+custom_minimum_size = Vector2(52, 52)
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
 expand_mode = 2
 stretch_mode = 5
 
 [node name="TileHeaderText" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow" unique_id=454701262]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 4
 theme_override_constants/separation = 2
 
 [node name="TileName" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileHeaderText" unique_id=160414072]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Tile Name"
+autowrap_mode = 3
 
 [node name="TileCoord" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileHeaderText" unique_id=634011255]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "(0,0)"
+autowrap_mode = 3
 
 [node name="TileTierChip" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow" unique_id=1028438236]
-custom_minimum_size = Vector2(-17.63, 0)
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
 
 [node name="TileTierLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow/TileTierChip" unique_id=1848236790]
 layout_mode = 2
 text = "T1"
 
-[node name="TileIcon2" type="TextureRect" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileHeaderRow" unique_id=1064344218]
-custom_minimum_size = Vector2(52, 52)
-layout_mode = 2
-expand_mode = 2
-stretch_mode = 5
-
 [node name="TileModifiersSection" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab" unique_id=610531042]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [node name="TileModifiersHeader" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection" unique_id=1808902011]
 layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
 
 [node name="TileModifiersTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader" unique_id=1227408852]
 layout_mode = 2
+size_flags_horizontal = 0
 text = "Modifiers"
 
-[node name="TileModifiersExpand" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader" unique_id=1486471835]
+[node name="TileModifiersHeaderSpacer" type="Control" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader" unique_id=648840874]
 layout_mode = 2
 size_flags_horizontal = 3
+
+[node name="TileModifiersExpand" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection/TileModifiersHeader" unique_id=1486471835]
+visible = false
+custom_minimum_size = Vector2(64, 28)
+layout_mode = 2
+size_flags_horizontal = 0
 text = "+0"
 
 [node name="TileModifiersGrid" type="GridContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileModifiersSection" unique_id=48320491]
 layout_mode = 2
-columns = 5
+size_flags_horizontal = 3
+columns = 4
 
 [node name="TileResourcesSection" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab" unique_id=786949189]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [node name="TileResourcesTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileResourcesSection" unique_id=918891428]
@@ -414,10 +432,12 @@ text = "Resource Nodes"
 
 [node name="TileResourcesList" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileResourcesSection" unique_id=1387783451]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
 [node name="TileEffectsSection" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab" unique_id=973870422]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 6
 
 [node name="TileEffectsTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileEffectsSection" unique_id=1033948976]
@@ -426,18 +446,20 @@ text = "Effects"
 
 [node name="TileEffectsList" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/TileTab/TileEffectsSection" unique_id=920520112]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
 [node name="BuildingTab" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs" unique_id=1760606578]
 visible = false
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 0
 theme_override_constants/separation = 10
 metadata/_tab_index = 1
 
 [node name="EquippedSection" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab" unique_id=1259657342]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 8
 
 [node name="EquippedTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection" unique_id=278765262]
@@ -446,11 +468,14 @@ text = "Equipped"
 
 [node name="BuildingRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection" unique_id=305323200]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 12
 
 [node name="BuildingSlot" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow" unique_id=895720341]
-custom_minimum_size = Vector2(68, 68)
+custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
 script = ExtResource("7_b3faq")
 
 [node name="BuildingSummary" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow" unique_id=2073077467]
@@ -460,11 +485,15 @@ theme_override_constants/separation = 4
 
 [node name="BuildingName" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary" unique_id=122597394]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Building"
+autowrap_mode = 3
 
 [node name="BuildingStatus" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary" unique_id=1336741507]
 layout_mode = 2
+size_flags_horizontal = 3
 text = "Status"
+autowrap_mode = 3
 
 [node name="BuildingTierChip" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/BuildingRow/BuildingSummary" unique_id=892104182]
 layout_mode = 2
@@ -478,59 +507,24 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="ModuleSlot1" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/ModulesRow" unique_id=269392803]
-custom_minimum_size = Vector2(52, 52)
+custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="ModuleSlot2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/ModulesRow" unique_id=266725824]
-custom_minimum_size = Vector2(52, 52)
+custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="ModuleSlot3" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/EquippedSection/ModulesRow" unique_id=605955703]
-custom_minimum_size = Vector2(52, 52)
+custom_minimum_size = Vector2(44, 44)
 layout_mode = 2
-
-[node name="BuildingChipsRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab" unique_id=1848795977]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="ChipWorkers" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow" unique_id=316639597]
-layout_mode = 2
-
-[node name="ChipWorkersLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipWorkers" unique_id=903321068]
-layout_mode = 2
-text = "Workers: 0"
-
-[node name="ChipQueue" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow" unique_id=915042581]
-layout_mode = 2
-
-[node name="ChipQueueLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipQueue" unique_id=1937532498]
-layout_mode = 2
-text = "Queue: 0"
-
-[node name="ChipUpkeep" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow" unique_id=435507091]
-layout_mode = 2
-
-[node name="ChipUpkeepLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipUpkeep" unique_id=1586137602]
-layout_mode = 2
-text = "Upkeep: -"
-
-[node name="ChipIntegrity" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow" unique_id=1617152541]
-layout_mode = 2
-
-[node name="ChipIntegrityLabel" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipIntegrity" unique_id=276526910]
-layout_mode = 2
-text = "Integrity: 100%"
-
-[node name="ChipIntegrityLabel2" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow/ChipIntegrity" unique_id=455987595]
-layout_mode = 2
-text = "Integrity: 100%"
-
-[node name="ChipIntegrity2" type="PanelContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingChipsRow" unique_id=1016427768]
-layout_mode = 2
+size_flags_horizontal = 0
 
 [node name="BuildingIORow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab" unique_id=308060504]
 layout_mode = 2
-theme_override_constants/separation = 12
+size_flags_horizontal = 3
+theme_override_constants/separation = 0
 
 [node name="BuildingInputs" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow" unique_id=2063528815]
 layout_mode = 2
@@ -539,99 +533,29 @@ theme_override_constants/separation = 4
 
 [node name="BuildingInputsTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs" unique_id=318356093]
 layout_mode = 2
-text = "Inputs"
+text = "Building Details"
 
 [node name="BuildingInputsList" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs" unique_id=1890777997]
 layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="BuildingInputsTitle2" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs" unique_id=766968672]
-layout_mode = 2
-text = "Inputs"
-
-[node name="BuildingInputsList2" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingInputs" unique_id=443033239]
-layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 2
 
 [node name="BuildingOutputs" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow" unique_id=994151165]
+visible = false
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 0
 theme_override_constants/separation = 4
 
 [node name="BuildingOutputsTitle" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs" unique_id=451624159]
+visible = false
 layout_mode = 2
 text = "Outputs"
 
 [node name="BuildingOutputsList" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs" unique_id=1462701512]
+visible = false
 layout_mode = 2
 theme_override_constants/separation = 2
-
-[node name="BuildingOutputsTitle2" type="Label" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs" unique_id=1329845461]
-layout_mode = 2
-text = "Outputs"
-
-[node name="BuildingOutputsList2" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow/BuildingOutputs" unique_id=1556467960]
-layout_mode = 2
-theme_override_constants/separation = 2
-
-[node name="BuildingInputs2" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow" unique_id=1942305097]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="BuildingOutputs2" type="VBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingIORow" unique_id=2007107103]
-layout_mode = 2
-size_flags_horizontal = 3
-theme_override_constants/separation = 4
-
-[node name="BuildingButtonsRow" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab" unique_id=547312320]
-layout_mode = 2
-theme_override_constants/separation = 8
-
-[node name="AssignButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow" unique_id=648320232]
-layout_mode = 2
-text = "Assign"
-
-[node name="UpgradeButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow" unique_id=247322524]
-layout_mode = 2
-text = "Upgrade"
-
-[node name="EquipModuleButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow" unique_id=1923527266]
-layout_mode = 2
-text = "Equip Module"
-
-[node name="OpenQueueButton" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow" unique_id=1047917040]
-layout_mode = 2
-text = "Open Queue"
-
-[node name="AssignButton2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow" unique_id=1781426499]
-layout_mode = 2
-text = "Assign"
-
-[node name="UpgradeButton2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow" unique_id=845035097]
-layout_mode = 2
-text = "Upgrade"
-
-[node name="EquipModuleButton2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow" unique_id=324320042]
-layout_mode = 2
-text = "Equip Module"
-
-[node name="OpenQueueButton2" type="Button" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab/BuildingButtonsRow" unique_id=960507427]
-layout_mode = 2
-text = "Open Queue"
-
-[node name="BuildingIORow2" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab" unique_id=250381229]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="BuildingButtonsRow2" type="HBoxContainer" parent="CanvasLayer/SelectionHUD/Margin/RootVBox/Scroll/ScrollContent/ModeTabs/BuildingTab" unique_id=529856451]
-layout_mode = 2
-theme_override_constants/separation = 8
 
 [node name="RightDock" parent="CanvasLayer" unique_id=1217689981 instance=ExtResource("8_b3faq")]
 
-[node name="RightDock2" parent="CanvasLayer" unique_id=1871564940 instance=ExtResource("8_b3faq")]
-
 [node name="Cam" type="Camera2D" parent="." unique_id=1521041932]
-
-[node name="Cam2" type="Camera2D" parent="." unique_id=1974683989]
